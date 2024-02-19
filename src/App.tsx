@@ -3,11 +3,14 @@ import Chat from "./components/chat"
 import Header from "./components/header"
 import Message from "./components/message"
 import Sidebar from "./components/sidebar"
+import Login from "./components/loginForm"
 
 function App() {
   return (
     <div>
-      <div className="flex">
+
+      <Login/>
+      {/* <div className="flex">
         <Categories />
         <Sidebar />
 
@@ -16,7 +19,7 @@ function App() {
           <Message />
           <Chat />
         </div>
-      </div>
+      </div> */}
     </div>
   )
 }
