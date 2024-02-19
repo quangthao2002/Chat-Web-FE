@@ -1,7 +1,8 @@
 import React, { useState } from "react"
 import "./style.css"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faLock, faMobileScreenButton } from "@fortawesome/free-solid-svg-icons"
+// import "./script.js"
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+// import { faLock, faMobileScreenButton } from "@fortawesome/free-solid-svg-icons"
 
 const Login = () => {
   const [isActive, setIsActive] = useState(false);
@@ -38,7 +39,7 @@ const Login = () => {
             <input type="text" name="phone" id="phone" placeholder="Phone number" />
             {/* <FontAwesomeIcon icon={faLock} /> */}
             <input type="password" name="password" id="password" placeholder="Password" />
-            <a class="inline-block align-baseline font-weight-400 text-sm text-gray-500 hover:text-blue-800" href="#">
+            <a className="inline-block align-baseline font-weight-400 text-sm text-gray-500 hover:text-blue-800" href="#">
               Forgot Password?
             </a>
             <button >
@@ -46,9 +47,9 @@ const Login = () => {
             </button>
           </form>
         </div>
-        <div class="toggle-container">
-            <div class="toggle">
-                <div class="toggle-panel toggle-left">
+        <div className="toggle-container">
+            <div className="toggle-wr">
+                <div className="toggle-panel toggle-left">
                     <h1>Welcome Back!</h1>
                     <p>Enter your personal details to use all of site features</p>
                     <button className="hd" id="login" onClick={handleAddClassActice}>Sign In</button>
