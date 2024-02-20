@@ -1,20 +1,20 @@
 import Categories from "./components/categories"
 import Chat from "./components/chat"
-import Header from "./components/header"
-import Message from "./components/message"
+import Header from "./components/header/HeaderMessage"
+import MessageContainer from "./components/message/MessageContainer"
 import Sidebar from "./components/sidebar"
-// import Login from "./components/loginForm"
+import LoginSignUp from "./components/LoginSignup/LoginSignup"
 
 function App() {
   return (
     <div>
-      {/* <Login/> */}
-      <div className="flex">
+      {/* <LoginSignUp/> */}
+      <div className="flex overflow-hidden max-h-screen">
         <Categories />
         <Sidebar />
-        <div className="flex flex-col flex-1">
+        <div className="md:min-w-[450px] flex flex-col flex-1">
           <Header />
-          <Message />
+          <MessageContainer />
           <Chat />
         </div>
       </div>

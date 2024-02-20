@@ -1,5 +1,3 @@
-import React from "react"
-
 const Conversation = () => {
   return (
     <>
@@ -11,7 +9,7 @@ const Conversation = () => {
         </div>
         <div className="flex flex-1 flex-col">
           <div className="flex gap-3 justify-between">
-            <p className="text-lg font-semibold">John Doe</p>
+            <p className="text-lg font-semibold">Quang Thảo</p>
             <span className="text-xs text-gray-400">10:30 AM</span>
           </div>
         </div>

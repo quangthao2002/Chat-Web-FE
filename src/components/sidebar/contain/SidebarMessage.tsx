@@ -1,8 +1,6 @@
-import React from "react";
 import Conversation from "./Conversation";
-
 const SidebarMessage = () => {
-  return <div className="py-2 flex flex-col overflow-auto">
+  return <div className="py-2 flex flex-col max-h-screen overflow-auto ">
         <Conversation />
         <Conversation />
         <Conversation />
@@ -11,7 +9,10 @@ const SidebarMessage = () => {
         <Conversation />
         <Conversation />
         <Conversation />
-
+        <Conversation />
+        <Conversation />
+        <Conversation />
+        <Conversation />
     </div>;
 };
 

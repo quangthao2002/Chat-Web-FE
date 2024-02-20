@@ -1,15 +1,17 @@
 import ChatInput from "./ChatInput";
-import Action1 from "./actions/Action1";
-import Action2 from "./actions/Action2";
-
+import Sticker from "./actions/Sticker";
+import Image from "./actions/Image";
+import File from "./actions/File";
 const Chat = () => {
   return (
-    <div>
-      <div className="flex items-center border-y h-[46px] pl-2">
-        <Action1 />
-        <Action2 />
+    <div className="bg-white">
+      <div className="flex items-center border-y h-[46px] pl-2 cursor-pointer gap-5 ">
+        <Sticker />
+        <Image/>
+        <File/>
+        <Image/>
+        <File/>
       </div>
-
       <ChatInput />
     </div>
   );

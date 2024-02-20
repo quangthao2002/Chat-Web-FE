@@ -2,8 +2,8 @@ import { BiMessageRoundedDetail } from "react-icons/bi"
 import { TiContacts } from "react-icons/ti";
 import { RiCalendarTodoLine } from "react-icons/ri";
 import { CiCloudOn } from "react-icons/ci";
-import { IoSettingsSharp } from "react-icons/io5";
-import { FaToolbox } from "react-icons/fa";
+import { IoSettingsOutline } from "react-icons/io5";
+import { PiToolboxLight } from "react-icons/pi";
 const Categories = () => {
   return (
     <div className="w-[64px] h-screen bg-primary ">
@@ -14,25 +14,25 @@ const Categories = () => {
           </div>
         </div>
         <div className="flex flex-col items-center gap-2.5">
-          <button className="btn btn-circle  text-primary">
+          <button className="btn btn-circle  text-white bg-primary border-none">  
             <BiMessageRoundedDetail size={35} />
           </button>
-          <button className="btn btn-circle  text-primary">
+          <button className="btn btn-circle   text-white bg-primary border-none">
           <TiContacts size={35} />
           </button>
-          <button className="btn btn-circle  text-primary">
+          <button className="btn btn-circle   text-white bg-primary border-none">
           <RiCalendarTodoLine size={35} />
           </button>
         </div>
         <div className="flex flex-col mt-64 gap-2">
-          <button className="btn btn-circle  text-primary">
+          <button className="btn btn-circle   text-white bg-primary border-none">
             <CiCloudOn  size={35} />
           </button>
-          <button className="btn btn-circle  text-primary">
-          <FaToolbox size={35} />
+          <button className="btn btn-circle   text-white bg-primary border-none">
+          <PiToolboxLight size={32} />
           </button>
-          <button className="btn btn-circle  text-primary">
-          <IoSettingsSharp  size={35} />
+          <button className="btn btn-circle  text-white bg-primary border-none">
+          <IoSettingsOutline  size={35} />
           </button>
         </div>
       </div>

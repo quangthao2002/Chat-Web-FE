@@ -6,18 +6,24 @@
 
 *::after,
 *::before,
-body {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-h1 {
-  @apply text-2xl;
-  @apply font-bold;
 
+
+/* dark mode looking scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  margin: 0 2px;
+  height: 50px;
 }
 
-input {
-  @apply border border-gray-500;
+::-webkit-scrollbar-track {
+  background: white !important;
 }
 
+::-webkit-scrollbar-thumb {
+  background: #7589A3 !important;;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #242424;
+}

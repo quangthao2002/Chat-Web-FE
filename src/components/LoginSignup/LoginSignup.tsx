@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import  { useState } from "react"
 import "./style.css"
 // import "./script.js"
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -10,19 +10,13 @@ const Login = () => {
   const handleAddClassActice = () => {
     setIsActive(!isActive);
   };
-
-
-
-
-
-
   return (
     <div className="wrapper-page">
       <div className={`container ${isActive ? 'active' : ''}`} id="container">
         <div className="form-container sign-up">
           <form >
             <h1>Create Account</h1>
-            <input type="text" name="name" id="name" placeholder="full name" required />
+            <input type="text" name="name" id="name" placeholder="Full name" required />
             {/* <FontAwesomeIcon icon={faMobileScreenButton} /> */}
             <input type="text" name="phone" id="phone" placeholder="Phone number" />
             {/* <FontAwesomeIcon icon={faLock} /> */}
