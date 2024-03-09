@@ -1,4 +1,4 @@
-import RouteNavigate from "@/provider/RouteNavigate"
+import RouteNavigate from "./provider/RouteNavigate"
 
 function App() {
   return (

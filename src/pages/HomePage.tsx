@@ -3,7 +3,7 @@ import Header from "@/components/header/HeaderMessage"
 import MessageContainer from "@/components/message/MessageContainer"
 import MainLayout from "@/layouts/MainLayout"
 
-const Home = () => {
+const HomePage = () => {
   return (
     <MainLayout>
       <div className="md:min-w-[450px] flex flex-col flex-1">
@@ -15,4 +15,4 @@ const Home = () => {
   )
 }
 
-export default Home
+export default HomePage

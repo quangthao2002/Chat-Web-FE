@@ -1,6 +1,5 @@
-import React from "react"
-import { createBrowserRouter, RouterProvider, Route, Link } from "react-router-dom"
 import { HomePage, LoginPage } from "@/pages"
+import { RouterProvider, createBrowserRouter } from "react-router-dom"
 
 const router = createBrowserRouter([
   {
