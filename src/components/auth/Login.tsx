@@ -24,9 +24,7 @@ const Login = () => {
         <div className="form-container sign-in">
           <form>
             <h1>Login</h1>
-            {/* <FontAwesomeIcon icon={faMobileScreenButton} /> */}
             <input type="text" name="phone" id="phone" placeholder="Phone number" />
-            {/* <FontAwesomeIcon icon={faLock} /> */}
             <input type="password" name="password" id="password" placeholder="Password" />
             <a className="inline-block align-baseline font-weight-400 text-sm text-gray-500 hover:text-blue-800" href="#">
               Forgot Password?
