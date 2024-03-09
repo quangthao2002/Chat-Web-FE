@@ -8,7 +8,7 @@ import LoginSignUp from "./components/LoginSignup/LoginSignup"
 function App() {
   return (
     <div>
-      {/* <LoginSignUp/> */}
+      <LoginSignUp/>
       <div className="flex overflow-hidden max-h-screen">
         <Categories />
         <Sidebar />

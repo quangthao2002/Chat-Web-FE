@@ -1,8 +1,5 @@
 import  { useState } from "react"
 import "./style.css"
-// import "./script.js"
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-// import { faLock, faMobileScreenButton } from "@fortawesome/free-solid-svg-icons"
 
 const Login = () => {
   const [isActive, setIsActive] = useState(false);
@@ -17,9 +14,7 @@ const Login = () => {
           <form >
             <h1>Create Account</h1>
             <input type="text" name="name" id="name" placeholder="Full name" required />
-            {/* <FontAwesomeIcon icon={faMobileScreenButton} /> */}
             <input type="text" name="phone" id="phone" placeholder="Phone number" />
-            {/* <FontAwesomeIcon icon={faLock} /> */}
             <input type="password" name="password" id="password" placeholder="Password" />
             <button >
               Sign up
