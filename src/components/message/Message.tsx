@@ -13,7 +13,7 @@ const Message = () => {
     Quang Thảo
     <time className="text-xs opacity-50 ml-1">12:45</time>
   </div>
-  <div className="chat-bubble">Hi! Xin chào bạn !!</div>
+  <div className="chat-bubble chat-bubble-info">Hi! Xin chào bạn !!</div>
   
 </div>
 <div className="chat chat-end">
@@ -26,12 +26,11 @@ const Message = () => {
     Ngọc Lan
     <time className="text-xs opacity-50 ml-1">12:46</time>
   </div>
-  <div className="chat-bubble">Chào bạn</div>
+  <div className="chat-bubble ">Chào bạn</div>
   <div className="chat-footer opacity-50">
     Seen at 12:46
   </div>
 </div>
-
  </>
   )
 }
