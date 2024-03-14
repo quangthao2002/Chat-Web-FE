@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react"
 import io, { Socket } from "socket.io-client"
 import { SOCKET_CONSTANTS, SOCKET_URL } from "../../lib/constants.js"
-import Message from "./Message.jsx"
 import ChatInput from "../chat/ChatInput.js"
+import Message from "./Message.jsx"
 
 const Messages = () => {
   const [socket, setSocket] = useState<Socket>()
@@ -32,7 +32,7 @@ const Messages = () => {
 
   return (
     <div className="px-4 flex-1 overflow-auto">
-      {messages.map((message, index) => (
+      {messages.map((_, index) => (
         <Message key={index} name="Quang Thảo" time={"12:45"} message="Hi" isMe />
       ))}
 

@@ -1,12 +1,9 @@
-import { BiMessageRoundedDetail } from "react-icons/bi"
-import { TiContacts } from "react-icons/ti"
-import { RiCalendarTodoLine } from "react-icons/ri"
-import { CiCloudOn } from "react-icons/ci"
-import { IoSettingsOutline } from "react-icons/io5"
-import { CiLogout } from "react-icons/ci";
-import { PiToolboxLight } from "react-icons/pi"
-import { BiLogOut } from "react-icons/bi";
 import useLogOut from "@/hooks/useLogOut"
+import { BiLogOut, BiMessageRoundedDetail } from "react-icons/bi"
+import { CiCloudOn } from "react-icons/ci"
+import { PiToolboxLight } from "react-icons/pi"
+import { RiCalendarTodoLine } from "react-icons/ri"
+import { TiContacts } from "react-icons/ti"
 const Categories = () => {
   const { loading, logout } = useLogOut()
   return (

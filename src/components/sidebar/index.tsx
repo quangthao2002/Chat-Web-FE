@@ -1,15 +1,14 @@
-import React from "react";
-import Search from "./search/Search";
-import SidebarMessage from "./contain/SidebarMessage";
+import SidebarMessage from "./contain/SidebarMessage"
+import Search from "./search/Search"
 
 const Sidebar = () => {
   return (
     <div className="w-[339px] h-screen bg-white border-r">
       <Search />
       {/* <div className="divider px-0"/> */}
-        <SidebarMessage />
+      <SidebarMessage />
     </div>
-  );
-};
+  )
+}
 
-export default Sidebar;
+export default Sidebar
