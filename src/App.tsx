@@ -1,10 +1,12 @@
+import { Toaster } from "react-hot-toast"
 import RouteNavigate from "./provider/RouteNavigate"
 
 function App() {
   return (
-    <div>
-      <RouteNavigate />
-    </div>
+    <>
+    <RouteNavigate />
+    <Toaster />
+  </>
   )
 }
 

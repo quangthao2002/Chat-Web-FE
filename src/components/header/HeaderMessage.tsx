@@ -8,13 +8,13 @@ const Header = ({}: IProps) => {
   return (
     <div className="h-[68px] border-b flex px-2 bg-white items-center justify-between">
       <div className="flex gap-2">
-        <div className="avatar mt-1">
+        <div className="avatar mt-1 ml-2">
           <div className="w-12 rounded-full">
             <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
           </div>
         </div>
         <div className="flex flex-col  justify-center">
-          <p className="font-black">Quang Thảo</p>
+          <p className="text-custom-color font-semibold text-lg">Quang Thảo</p>
           <p className="text-xs opacity-50">Active 12m ago</p>
         </div>
       </div>

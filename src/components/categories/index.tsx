@@ -1,10 +1,14 @@
 import { BiMessageRoundedDetail } from "react-icons/bi"
-import { TiContacts } from "react-icons/ti";
-import { RiCalendarTodoLine } from "react-icons/ri";
-import { CiCloudOn } from "react-icons/ci";
-import { IoSettingsOutline } from "react-icons/io5";
-import { PiToolboxLight } from "react-icons/pi";
+import { TiContacts } from "react-icons/ti"
+import { RiCalendarTodoLine } from "react-icons/ri"
+import { CiCloudOn } from "react-icons/ci"
+import { IoSettingsOutline } from "react-icons/io5"
+import { CiLogout } from "react-icons/ci";
+import { PiToolboxLight } from "react-icons/pi"
+import { BiLogOut } from "react-icons/bi";
+import useLogOut from "@/hooks/useLogOut"
 const Categories = () => {
+  const { loading, logout } = useLogOut()
   return (
     <div className="w-[64px] h-screen bg-primary ">
       <div className="flex flex-col items-center gap-9 justify-between">
@@ -14,25 +18,29 @@ const Categories = () => {
           </div>
         </div>
         <div className="flex flex-col items-center gap-2.5">
-          <button className="btn btn-circle  text-white bg-primary border-none">  
+          <button className="btn btn-circle  text-white bg-primary border-none">
             <BiMessageRoundedDetail size={35} />
           </button>
           <button className="btn btn-circle   text-white bg-primary border-none">
-          <TiContacts size={35} />
+            <TiContacts size={35} />
           </button>
           <button className="btn btn-circle   text-white bg-primary border-none">
-          <RiCalendarTodoLine size={35} />
+            <RiCalendarTodoLine size={35} />
           </button>
         </div>
         <div className="flex flex-col mt-64 gap-2">
           <button className="btn btn-circle   text-white bg-primary border-none">
-            <CiCloudOn  size={35} />
+            <CiCloudOn size={35} />
           </button>
           <button className="btn btn-circle   text-white bg-primary border-none">
-          <PiToolboxLight size={32} />
+            <PiToolboxLight size={32} />
           </button>
           <button className="btn btn-circle  text-white bg-primary border-none">
-          <IoSettingsOutline  size={35} />
+            {loading ? (
+              <div className="spinner spinner-primary"></div>
+            ) : (
+              <BiLogOut size={35} onClick={() => logout()} />
+            )}
           </button>
         </div>
       </div>

@@ -14,7 +14,7 @@ const Conversation = () => {
           </div>
         </div>
       </div>
-      <div className="divider my-0 py-0 mx-1 h-1"/>
+      <div className="divider my-0 py-0 mx-1 h-1 "/>
     </>
   )
 }
