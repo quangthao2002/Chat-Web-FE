@@ -12,7 +12,7 @@ const Chat = () => {
         <Image />
         <File />
       </div>
-      <ChatInput handleSend={() => {}} />
+      <ChatInput />
     </div>
   )
 }
