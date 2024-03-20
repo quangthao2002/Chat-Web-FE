@@ -22,9 +22,9 @@ const Login = () => {
     password: "",
   })
   const { loading, signUp } = useSign()
-  const { loadingLogin,login } = useLogin()
+  const { loadingLogin, login } = useLogin()
 
-  const handleSubmitSignUp = async (e) => {
+  const handleSubmitSignUp = async (e: any) => {
     e.preventDefault()
     try {
       await signUp(inputsSignUp)
@@ -32,10 +32,10 @@ const Login = () => {
       console.log(error)
     }
   }
-  const handleSignIn = async (e) => {
+  const handleSignIn = async (e: any) => {
     e.preventDefault()
     try {
-      await login(inputsSignIn);
+      await login(inputsSignIn)
     } catch (error) {
       console.log(error)
     }

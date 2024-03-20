@@ -10,6 +10,6 @@ export function extractTime(dateString) {
     return strTime
 }
 
-// function padZero(number) {
-//     return number.toString().padStart(2, '0')
-// }
+function padZero(number) {
+    return number.toString().padStart(2, '0')
+}
