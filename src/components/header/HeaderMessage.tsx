@@ -6,7 +6,7 @@ import useConversation from "@/zustand/useConversation";
 interface IProps {}
 
 const Header = ({}: IProps) => {
-  const {selectedConversation,setSelectedConversation} =useConversation()
+  const {selectedConversation} =useConversation()
   return (
     <div className="h-[68px] border-b flex px-2 bg-white items-center justify-between">
       <div className="flex gap-2">

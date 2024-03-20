@@ -44,7 +44,5 @@ const ChatInput = () => {
       </button>
     </div>
   </form>
-  )
-}
-
-export default ChatInput
+  )};
+    export default ChatInput;

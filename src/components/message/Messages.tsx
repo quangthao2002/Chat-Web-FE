@@ -25,6 +25,7 @@ const Messages = () => {
         ))}
 
       {loading && [1, 2, 3, 4].map((i) => <MessageSkeleton key={i} />)}
+
     </div>
   )
 }
