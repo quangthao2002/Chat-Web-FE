@@ -4,7 +4,7 @@ import toast from "react-hot-toast"
 
 const useLogin = () => {
     const [loadingLogin, setLoading] = useState(false)
-    const { setAuthUser } = useAuthContext();
+    const { authUser, setAuthUser } = useAuthContext();
 
     const login = async({ username, password }) => {
         const success = handleInputValidation({ username, password })
@@ -25,7 +25,6 @@ const useLogin = () => {
                 throw new Error(data.message)
             }
             toast.success("Login successfully")
-                // localStorage.setItem("chat-user", JSON.stringify(data.user))
             localStorage.setItem("tokens-user", JSON.stringify(data))
 
             setAuthUser(data)

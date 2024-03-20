@@ -12,9 +12,10 @@ export const useAuthContext = () => {
 //  Các component con của AuthContextProvider có thể sử dụng Hook useContext để truy cập vào giá trị của AuthContext
 export const AuthContextProvider = ({ children }) => {
     const [authUser,setAuthUser] = useState(JSON.parse(localStorage.getItem("tokens-user")) || null)
+    // console.log('Auth user:', authUser)
     return (
         <AuthContext.Provider value={{authUser,setAuthUser}}>
             {children}
         </AuthContext.Provider>
-    )
+    )    
 }

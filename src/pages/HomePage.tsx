@@ -3,12 +3,19 @@ import Header from "@/components/header/HeaderMessage"
 import MessageContainer from "@/components/message/MessageContainer"
 import MainLayout from "@/layouts/MainLayout"
 import { NoChatSelected } from "./NoChatSelected"
+import useConversation from "@/zustand/useConversation"
+import { useEffect } from "react"
 
 const HomePage = () => {
-  const noChatSelected = false
+ const {selectedConversation,setSelectedConversation} =useConversation()
+ useEffect(() => {
+  return () => {
+    setSelectedConversation(null)
+  }
+}, [setSelectedConversation])
   return (
     <MainLayout>
-      {noChatSelected ? (
+      {!selectedConversation ? (
         <NoChatSelected />
       ) : (
         <>

@@ -2,9 +2,11 @@ import { CiSearch } from "react-icons/ci";
 import { MdVideoCall } from "react-icons/md";
 import { IoIosInformationCircle } from "react-icons/io";
 import { MdGroupAdd } from "react-icons/md";
+import useConversation from "@/zustand/useConversation";
 interface IProps {}
 
 const Header = ({}: IProps) => {
+  const {selectedConversation,setSelectedConversation} =useConversation()
   return (
     <div className="h-[68px] border-b flex px-2 bg-white items-center justify-between">
       <div className="flex gap-2">
@@ -14,7 +16,7 @@ const Header = ({}: IProps) => {
           </div>
         </div>
         <div className="flex flex-col  justify-center">
-          <p className="text-custom-color font-semibold text-lg">Quang Thảo</p>
+          <p className="text-custom-color font-semibold text-lg">{selectedConversation.username}</p>
           <p className="text-xs opacity-50">Active 12m ago</p>
         </div>
       </div>
