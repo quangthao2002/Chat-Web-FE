@@ -1,5 +1,5 @@
 import { useAuthContext } from "@/context/AuthContext"
-import { extractTime } from "@/untils/extractTime"
+import { extractTime } from "@/utils/extractTime"
 import useConversation from "@/zustand/useConversation"
 
 const Message = ({ message }) => {
@@ -28,7 +28,6 @@ const Message = ({ message }) => {
         <div className="chat-footer opacity-50 text-xs gap-1 items-center">{formatTime}</div>
       </div>
     </>
-
   )
 }
 

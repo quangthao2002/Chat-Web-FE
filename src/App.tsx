@@ -1,12 +1,13 @@
 import { Toaster } from "react-hot-toast"
-import RouteNavigate from "./provider/RouteNavigate"
+import { ModalProvider, RouteNavigate } from "./provider"
 
 function App() {
   return (
-    <>
-    <RouteNavigate />
-    <Toaster />
-  </>
+    <div>
+      <RouteNavigate />
+      <ModalProvider />
+      <Toaster />
+    </div>
   )
 }
 
