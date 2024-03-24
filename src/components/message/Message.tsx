@@ -8,7 +8,7 @@ const Message = ({ message }) => {
   const { selectedConversation } = useConversation()
 
   const fromMe = message.user?.id === authUser.user.id
-  const formatTime = extractTime(message.created_at)
+  const formatTime = extractTime(message.createdAt)
   const chatClassName = fromMe ? "chat chat-end" : "chat chat-start"
   const avatarClassName = fromMe ? authUser.user.avatar : selectedConversation.avatar
   const bubbleBgColor = fromMe ? "bg-blue-500" : ""
