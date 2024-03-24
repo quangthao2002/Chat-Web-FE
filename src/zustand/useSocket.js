@@ -1,27 +1,35 @@
-import useConversation from '@/zustand/useConversation.js'
-import { useEffect, useRef } from 'react';
-import { io } from 'socket.io-client';
+import useConversation from "@/zustand/useConversation.js"
+import { useEffect, useRef } from "react"
+import { io } from "socket.io-client"
 
 const useSocket = (userId) => {
-    const socketRef = useRef();
-    const { setMessages } = useConversation();
+  const socketRef = useRef()
+  const { setMessages, messages } = useConversation()
+  const user = JSON.parse(localStorage.getItem("tokens-user"))
+  const token = user.tokens.accessToken
 
-    useEffect(() => {
-        socketRef.current = io.connect('http://localhost:3000');
+  useEffect(() => {
+    socketRef.current = io("http://localhost:3000", {
+      query: {
+        token: token,
+      },
+    })
 
-        socketRef.current.on('message', (newMessage) => {
-            setMessages((oldMessages) => [...oldMessages, newMessage]);
-        });
+    socketRef.current.on("message", (newMessage) => {
+      console.log("newMessage: ", newMessage)
+      console.log("List Messages: ", messages)
+      setMessages([...messages, newMessage])
+    })
 
-        return () => {
-            socketRef.current.disconnect();
-        };
-    }, [userId, setMessages]);
+    return () => {
+      socketRef.current.disconnect()
+    }
+  }, [userId, messages])
 
-    const sendMessage = (recipientId, text) => {
-        socketRef.current.emit('message', { userId, recipientId, text });
-    };
+  const sendMessage = (newMessage) => {
+    socketRef.current.emit("message", newMessage)
+  }
 
-    return { sendMessage };
-};
-export default useSocket;
+  return { sendMessage }
+}
+export default useSocket
