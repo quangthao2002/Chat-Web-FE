@@ -9,7 +9,7 @@ import VideoControls from "./VideoControls"
 import { VoiceVisualizer } from "./VoiceVisualizer"
 
 const Room = () => {
-  const { "*": room } = useParams()
+  const room = 1
   const galleryRef = useRef<any>()
   const localVideoRef = useRef<any>()
   const mainRef = useRef<any>()
@@ -21,7 +21,7 @@ const Room = () => {
     localVideoRef,
   )
 
-  useCalculateVideoLayout(galleryRef, connectedUsers.length + 1)
+  // useCalculateVideoLayout(galleryRef, connectedUsers.length + 1)
 
   async function handleScreenSharing(share: any) {
     if (share) {
@@ -49,7 +49,7 @@ const Room = () => {
         )}
 
         <div className={connectedUsers?.length > 0 ? "w-[20%] fixed bottom-0 right-0" : "object-cover"}>
-          <VoiceVisualizer id={"local"} />
+          {/* <VoiceVisualizer id={"local"} /> */}
           <video ref={localVideoRef} className="w-full h-full" autoPlay playsInline muted />
         </div>
       </div>

@@ -11,7 +11,6 @@ export const useStartPeerSession = (room, userMediaStream, localVideoRef) => {
     if (userMediaStream) {
       peerVideoConnection.joinRoom(room)
       peerVideoConnection.onAddUser((user) => {
-        console.log("user: ", user)
         setConnectedUsers((users) => [...users, user])
         peerVideoConnection.addPeerConnection(`${user}`, userMediaStream, (_stream) => {
           document.getElementById(user).srcObject = _stream

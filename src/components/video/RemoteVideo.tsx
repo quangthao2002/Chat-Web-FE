@@ -29,8 +29,8 @@ const RemoteVideo = ({ id, autoPlay, playsInline }: IProps) => {
   }, [id])
 
   return (
-    <div className="w-[3rem] h-[3rem]">
-      <VoiceVisualizer id={id} />
+    <div className="flex-1">
+      {/* <VoiceVisualizer id={id} /> */}
       <video id={id} className="w-full h-full" autoPlay={autoPlay} playsInline={playsInline} />
     </div>
   )
