@@ -16,8 +16,6 @@ const useSocket = (userId) => {
     })
 
     socketRef.current.on("message", (newMessage) => {
-      console.log("newMessage: ", newMessage)
-      console.log("List Messages: ", messages)
       setMessages([...messages, newMessage])
     })
 
