@@ -8,7 +8,7 @@ const ChatInput = () => {
   const { selectedConversation, messages, setMessages } = useConversation()
   const { authUser } = useAuthContext()
   const currentUserId = authUser.user.id
-  // console.log("currentId",currentUserId)
+
   const { sendMessage } = useSocket(currentUserId)
 
   const [message, setMessage] = useState("")
@@ -27,12 +27,12 @@ const ChatInput = () => {
       created_at: new Date(),
       user: authUser.user,
     }
+    if (message.trim() == "") {
+      return
+    }
     // thêm tin mới vào danh sách tin nhắn
     sendMessage(newMessage)
     setMessages([...messages, newMessage])
-
-    console.log(newMessage)
-
     setMessage("")
   }
   return (

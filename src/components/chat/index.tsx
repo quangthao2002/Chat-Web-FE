@@ -9,8 +9,6 @@ const Chat = () => {
         <Sticker />
         <Image />
         <File />
-        <Image />
-        <File />
       </div>
       <ChatInput />
     </div>
