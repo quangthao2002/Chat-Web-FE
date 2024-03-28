@@ -7,7 +7,6 @@ const useGetMessages = () => {
     const [loading, setLoading] = useState(false)
     const { messages, setMessages, selectedConversation } = useConversation()
     const userId = JSON.parse(localStorage.getItem("tokens-user")).user.id
-
     useEffect(() => {
             const getMessages = async() => {
                 setLoading(true)
@@ -28,11 +27,10 @@ const useGetMessages = () => {
             if (selectedConversation.id) {
                 getMessages()
             }
-
         }, [userId, selectedConversation.id, setMessages]) // Include 'recipientId' in the dependency array
     setTimeout(() => {
-        setLoading(false);
-    }, 500);
+        setLoading(false)
+    }, 500)
     return { loading, messages }
 }
 

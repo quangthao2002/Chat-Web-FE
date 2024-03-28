@@ -36,7 +36,6 @@ class PeerConnectionSession {
     this.peerConnections[id].addEventListener("connectionstatechange", this.listeners[id])
 
     this.peerConnections[id].ontrack = function ({ streams: [stream] }) {
-      console.log({ id, stream })
       callback(stream)
     }
 

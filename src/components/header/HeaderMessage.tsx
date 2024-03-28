@@ -5,6 +5,7 @@ const Header = () => {
   return (
     <div className="h-[68px] border-b flex px-2 bg-white items-center justify-between">
       <InfoAccount />
+      
       <GroupButton />
     </div>
   )
