@@ -1,6 +1,7 @@
 import { useAuthContext } from "@/context/AuthContext"
 import { extractTime } from "@/utils/extractTime"
 import useConversation from "@/zustand/useConversation"
+import { create } from 'zustand';
 
 const Message = ({ message }) => {
   const { authUser } = useAuthContext()
@@ -8,7 +9,9 @@ const Message = ({ message }) => {
   const { selectedConversation } = useConversation()
 
   const fromMe = message.user?.id === authUser.user.id
-  const formatTime = extractTime(message.createdAt)
+
+  const formatTime = extractTime(message.created_at)
+  console.log(formatTime, "formatTime")
   const chatClassName = fromMe ? "chat chat-end" : "chat chat-start"
   const avatarClassName = fromMe ? authUser.user.avatar : selectedConversation.avatar
   const bubbleBgColor = fromMe ? "bg-blue-500" : ""

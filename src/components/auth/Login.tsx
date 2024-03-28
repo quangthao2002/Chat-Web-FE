@@ -28,6 +28,16 @@ const Login = () => {
     e.preventDefault()
     try {
       await signUp(inputsSignUp)
+      setInputsSignUp({
+        username: "",
+        fullName: "",
+        password: "",
+        phone: "",
+        age: 0,
+        avatar: "",
+        is_admin: false,
+      })
+      handleAddClassActive()
     } catch (error) {
       console.log(error)
     }
@@ -36,6 +46,7 @@ const Login = () => {
     e.preventDefault()
     try {
       await login(inputsSignIn)
+
     } catch (error) {
       console.log(error)
     }
@@ -100,7 +111,7 @@ const Login = () => {
               value={inputsSignUp.avatar}
               onChange={(e) => setInputsSignUp({ ...inputsSignUp, avatar: e.target.value })}
             />
-            <div className="flex relative right-72 ">
+            {/* <div className="flex relative right-72 ">
               <label htmlFor="is_admin" className="label gap-1 cursor-pointer font-bold">
                 Is Admin
               </label>
@@ -112,7 +123,7 @@ const Login = () => {
                 checked={inputsSignUp.is_admin} // Use checked attribute instead of value
                 onChange={(e) => setInputsSignUp({ ...inputsSignUp, is_admin: e.target.checked })} // Convert string value to boolean
               />
-            </div>
+            </div> */}
             <button disabled={loading}>
               {loading ? <span className="loading loading-spinner"></span> : "Sign Up"}
             </button>

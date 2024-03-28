@@ -7,7 +7,6 @@ const useGetMessages = () => {
     const [loading, setLoading] = useState(false)
     const { messages, setMessages, selectedConversation } = useConversation()
     const userId = JSON.parse(localStorage.getItem("tokens-user")).user.id
-
     useEffect(() => {
             const getMessages = async() => {
                 setLoading(true)
