@@ -4,16 +4,16 @@ import Modal from "react-modal"
 import { IoMdClose } from "react-icons/io"
 import { FaCamera } from "react-icons/fa"
 import { io } from "socket.io-client"
-import AWS from 'aws-sdk';
-// import AWS from 'aws-sdk';
 import { useAuthContext } from '@/context/AuthContext';
 
 const UserListModal = ({ onClose }) => {
-  const { conversation } = useGetConversations()
+  const { conversation,addConversation } = useGetConversations()
   const [selectedUsers, setSelectedUsers] = useState([])
   const [groupName, setGroupName] = useState("")
   const {authUser} = useAuthContext()
   const ownerId = authUser.user.id
+
+  Modal.setAppElement('#root');
 
   const handleUserSelect = (userId) => {
     setSelectedUsers((prevSelectedUsers) => [...prevSelectedUsers, userId])
@@ -26,63 +26,47 @@ const UserListModal = ({ onClose }) => {
   const handleGroupNameChange = (event) => {
     setGroupName(event.target.value)
   }
-  const handleFileChange = (event) => {
+  const handleFileChange = async (event) => {
     const file = event.target.files[0];
-
-    // Configure AWS with your access and secret key.
-    const { ACCESS_KEY_ID, SECRET_ACCESS_KEY, REGION, S3_BUCKET_NAME } = process.env; // Replace with your keys and bucket name
-    
-    const s3 = new AWS.S3({
-      accessKeyId: ACCESS_KEY_ID,
-      secretAccessKey: SECRET_ACCESS_KEY,
-      region: REGION
-    });
+  
     if (file) {
-      const params = {
-        Bucket: S3_BUCKET_NAME,
-        Key: file.name,
-        Body: file
-      };
-
-      s3.upload(params, function(err, data) {
-        if (err) {
-          console.error("Error uploading file:", err);
-        } else {
-          setGroupAvatar(data.Location);
-        }
+      const formData = new FormData();
+      formData.append('image', file);
+  
+      const response = await fetch('http://localhost:3000/messages/uploadImageAndGetUrl', {
+        method: 'POST',
+        body: formData,
       });
+  
+      if (response.ok) {
+        const data = await response.json();
+        setGroupAvatar(data.imageUrl);
+      } else {
+        console.error('Error uploading file');
+      }
     }
   };
- 
-
-
-  
-  
 
 
   // Connect to backend to create group
   const socket = io("http://localhost:3000")
 
-  socket.on("connect", () => {
-    console.log("Connected to the server")
-  })
-
   useEffect(() => {
     socket.on("roomCreated", (roomId) => {
-      // server sẽ gửi sự kiện 'roomCreated' sau khi tạo nhóm mới, roomId is the id of the room created nhan tu server
-      console.log("Created room with ID:", roomId)
+
+      console.log("hello")
+      console.log("Received roomCreated message:", roomId)
+      addConversation({ id: roomId, name: groupName, avatar: groupAvatar, userIds: selectedUsers, ownerId: ownerId })
     })
     return () => {
       socket.off("roomCreated")
     }
-  }, [socket])
-
+  }, [socket, addConversation, groupAvatar, groupName, ownerId, selectedUsers])
   const handleCreateGroup = () => {
-    // Send a 'createRoom' message to the server with the group information
-    console.log("Sending createRoom message:",groupAvatar, groupName, selectedUsers)
+    console.log("Sending createRoom message:", groupAvatar, groupName, selectedUsers)
     socket.emit("createRoom", {
-       name: groupName,
-      userIds: selectedUsers ,
+      name: groupName,
+      userIds: selectedUsers,
       avatar: groupAvatar,
       ownerId: ownerId
     })

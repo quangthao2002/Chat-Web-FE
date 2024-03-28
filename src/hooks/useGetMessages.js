@@ -27,11 +27,10 @@ const useGetMessages = () => {
             if (selectedConversation.id) {
                 getMessages()
             }
-
         }, [userId, selectedConversation.id, setMessages]) // Include 'recipientId' in the dependency array
     setTimeout(() => {
-        setLoading(false);
-    }, 500);
+        setLoading(false)
+    }, 500)
     return { loading, messages }
 }
 
