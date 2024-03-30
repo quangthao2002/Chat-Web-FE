@@ -4,12 +4,13 @@ import { useState } from "react"
 import toast from "react-hot-toast"
 import { AiOutlineUsergroupAdd } from "react-icons/ai"
 import UserListModal from "@/components/modal/UserListModal"
-import { IoPersonAddOutline } from "react-icons/io5";
+import { IoPersonAddOutline } from "react-icons/io5"
 import AddFriend from "@/components/modal/AddFriend"
+
 const Search = () => {
   const [search, setSearch] = useState("")
-  const [isModalOpenCreateGroup,setIsModalOpenCreateGroup] = useState(false)
-  const [isModalOpenAddFriend,setIsModalOpenAddFriend] = useState(false)
+  const [isModalOpenCreateGroup, setIsModalOpenCreateGroup] = useState(false)
+  const [isModalOpenAddFriend, setIsModalOpenAddFriend] = useState(false)
   const { setSelectedConversation } = useConversation()
   const { conversation } = useGetConversations()
 
@@ -28,8 +29,6 @@ const Search = () => {
 
   const handleOpenModalCreateGroup = () => {
     setIsModalOpenCreateGroup(true)
-    
-    
   }
   const handleCloseModalCreateGroup = () => {
     setIsModalOpenCreateGroup(false)
@@ -51,15 +50,25 @@ const Search = () => {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-      
-        <button type="submit" className="btn btn-circle border-none bg-gray-200  text-white" title="Thêm bạn" onClick={handleOpenModalAddFriend}>
+
+        <button
+          type="submit"
+          className="btn btn-circle border-none bg-gray-200  text-white"
+          title="Thêm bạn"
+          onClick={handleOpenModalAddFriend}
+        >
           <IoPersonAddOutline />
         </button>
-        {isModalOpenAddFriend && <AddFriend  onClose={handleCloseModalAddFriend} />}
-        <button type="submit" className="btn btn-circle border-none bg-gray-200  text-white" title="Tạo nhóm chat" onClick={handleOpenModalCreateGroup}>
+        {isModalOpenAddFriend && <AddFriend onClose={handleCloseModalAddFriend} />}
+        <button
+          type="submit"
+          className="btn btn-circle border-none bg-gray-200  text-white"
+          title="Tạo nhóm chat"
+          onClick={handleOpenModalCreateGroup}
+        >
           <AiOutlineUsergroupAdd />
         </button>
-        {isModalOpenCreateGroup && <UserListModal onClose ={handleCloseModalCreateGroup} />}
+        {isModalOpenCreateGroup && <UserListModal onClose={handleCloseModalCreateGroup} />}
       </form>
       <div className="divider my-0 py-0 mx-0 h-1 " />
     </>
