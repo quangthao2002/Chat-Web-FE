@@ -2,9 +2,25 @@ import React, { useEffect, useState } from "react"
 import Modal from "react-modal"
 import { IoMdClose } from "react-icons/io"
 import { FaCamera } from "react-icons/fa"
-
+import axios from "axios"
+const user = JSON.parse(localStorage.getItem("tokens-user"))
+const token = user.tokens.accessToken
 function AddFriend({ onClose }) {
+  const [search, setSearch] = useState(null)
+  const [phone, setPhone] = useState("")
   Modal.setAppElement("#root")
+  const handleSearchUser = async () => {
+    try {
+      const response = await axios.get(`http://localhost:3000/user/search-user/${phone}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      console.log(response)
+      setSearch(response.data) // Assuming setSearch is a function to set the state
+    } catch (error) {
+      console.error("Error occurred while fetching user data:", error)
+      // Handle errors, if any
+    }
+  }
 
   return (
     <Modal
@@ -25,21 +41,28 @@ function AddFriend({ onClose }) {
         </button>
       </div>
       <div className="divider my-0 py-0 mx-1 h-1 " />
-        
+
       <input
+        onChange={(e) => setPhone(e.target.value)}
         type="text"
         placeholder="Nhập số điện thoại"
         className="input input-bordered w-full max-w-xs bg-gray-300 m-3"
       />
       <div className="divider my-0 py-0 mx-1 h-1 " />
       <div className="h-60 flex flex-col">
-        <p className="text-black whitespace-nowrap font-normal  mt-6">Không tìm thấy kết quả nào gần đây</p>
+        {search ? (
+          <>{search.username}</>
+        ) : (
+          <p className="text-black whitespace-nowrap font-normal  mt-6">Không tìm thấy kết quả nào gần đây</p>
+        )}
       </div>
       <div className="flex justify-end  gap-2">
         <button className="btn btn-md" onClick={onClose}>
           Close
         </button>
-        <button className="btn btn-neutral btn-md">Search</button>
+        <button className="btn btn-neutral btn-md" onClick={handleSearchUser}>
+          Search
+        </button>
       </div>
     </Modal>
   )
