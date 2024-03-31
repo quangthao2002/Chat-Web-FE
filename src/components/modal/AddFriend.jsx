@@ -4,7 +4,7 @@ import { IoMdClose } from "react-icons/io"
 import { FaCamera } from "react-icons/fa"
 import axios from "axios"
 const user = JSON.parse(localStorage.getItem("tokens-user"))
-const token = user.tokens.accessToken
+const token = user?.tokens?.accessToken
 function AddFriend({ onClose }) {
   const [search, setSearch] = useState(null)
   const [phone, setPhone] = useState("")

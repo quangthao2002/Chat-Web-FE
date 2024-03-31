@@ -15,7 +15,6 @@ const Login = () => {
     email: "",
     phone: "",
     avatar: "",
-    is_admin: false,
   })
   const [inputsSignIn, setInputsSignIn] = useState({
     username: "",
@@ -32,10 +31,9 @@ const Login = () => {
         username: "",
         fullName: "",
         password: "",
+        email: "",
         phone: "",
-        age: 0,
         avatar: "",
-        is_admin: false,
       })
       handleAddClassActive()
     } catch (error) {
@@ -46,7 +44,6 @@ const Login = () => {
     e.preventDefault()
     try {
       await login(inputsSignIn)
-
     } catch (error) {
       console.log(error)
     }
