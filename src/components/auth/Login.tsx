@@ -12,8 +12,8 @@ const Login = () => {
     username: "",
     fullName: "",
     password: "",
+    email: "",
     phone: "",
-    age: 0,
     avatar: "",
     is_admin: false,
   })
@@ -74,6 +74,14 @@ const Login = () => {
               onChange={(e) => setInputsSignUp({ ...inputsSignUp, password: e.target.value })}
             />
             <input
+              type="email"
+              name="Email"
+              id="Email"
+              placeholder="Email "
+              value={inputsSignUp.email}
+              onChange={(e) => setInputsSignUp({ ...inputsSignUp, email: e.target.value })}
+            />
+            <input
               type="text"
               name="phone"
               id="phone"
@@ -81,16 +89,7 @@ const Login = () => {
               value={inputsSignUp.phone}
               onChange={(e) => setInputsSignUp({ ...inputsSignUp, phone: e.target.value })}
             />
-            <input
-              type="number"
-              name="age"
-              id="age"
-              placeholder="Age"
-              required
-              value={inputsSignUp.age}
-              min={16}
-              onChange={(e) => setInputsSignUp({ ...inputsSignUp, age: parseInt(e.target.value) })}
-            />
+
             <input
               type="file"
               name="avatar"
