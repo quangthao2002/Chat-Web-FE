@@ -27,15 +27,15 @@ const Login = () => {
     e.preventDefault()
     try {
       await signUp(inputsSignUp)
-      setInputsSignUp({
-        username: "",
-        fullName: "",
-        password: "",
-        email: "",
-        phone: "",
-        avatar: "",
-      })
-      handleAddClassActive()
+      // setInputsSignUp({
+      //   username: "",
+      //   fullName: "",
+      //   password: "",
+      //   email: "",
+      //   phone: "",
+      //   avatar: "",
+      // })
+      // handleAddClassActive()
     } catch (error) {
       console.log(error)
     }

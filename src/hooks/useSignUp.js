@@ -18,16 +18,16 @@ const useSignUp = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username, fullName, password, email, phone, avatar }),
+        body: JSON.stringify({ username, fullName, password, email, phone, avatar, is_admin: false, is_verify: false }),
       })
       const data = await res.json()
       if (!res.ok) {
         throw new Error(data.message)
       }
-      toast.success("Sign up successfully")
+      toast.success("Please check email to verify account")
       //localStorage
       // localStorage.setItem("chat-user", JSON.stringify(data.user)) // lưu trữ thông tin người dùng giữa các phiên làm việc
-      localStorage.setItem("tokens-user", JSON.stringify(data)) // lưu trữ thông tin người dùng giữa các phiên làm việc
+      // localStorage.setItem("tokens-user", JSON.stringify(data)) // lưu trữ thông tin người dùng giữa các phiên làm việc
 
       //context
       setAuthUser(data.user) //để cung cấp thông tin người dùng cho các component khác sử dụng AuthContext
