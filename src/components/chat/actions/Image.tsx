@@ -4,12 +4,12 @@ import { CiImageOn } from "react-icons/ci"
 import toast from "react-hot-toast"
 import axios from "axios"
 
-const Action2 = () => {
+const Image = () => {
   const { selectedConversation, messages, setMessages } = useConversation()
   const { authUser } = useAuthContext()
   const currentUserId = authUser.user.id
 
-  const handleFileSelect = (event) => {
+  const handleImageSelect = async (event) => {
     const selectedFile = event.target.files[0]
 
     if (!selectedFile) {
@@ -21,54 +21,32 @@ const Action2 = () => {
       return
     }
 
-    const readFileAsDataURL = (file) => {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader()
-
-        reader.onload = (event) => {
-          resolve(event.target.result)
-        }
-
-        reader.onerror = (err) => {
-          reject(err)
-        }
-
-        reader.readAsDataURL(file)
-      })
-    }
-
-    readFileAsDataURL(selectedFile)
-      .then((dataUrl) => {
-        const newMessage = {
-          text: dataUrl,
-          userId: currentUserId,
-          recipientId: selectedConversation.id,
-          created_at: new Date(),
-          user: authUser.user,
-        }
-        setMessages([...messages, newMessage])
-      })
-      .catch((error) => {
-        console.error("Error reading file:", error)
-      })
-
     const formData = new FormData()
     formData.append("image", selectedFile)
     formData.append("userId", currentUserId)
     formData.append("recipientId", selectedConversation.id)
     formData.append("created_at", new Date())
 
-    sendFileToServer(formData)
+    const fileUrl = await sendFileToServer(formData)
+
+    const newMessage = {
+      text: fileUrl,
+      userId: currentUserId,
+      recipientId: selectedConversation.id,
+      created_at: new Date(),
+      user: authUser.user,
+    }
+    setMessages([...messages, newMessage])
   }
 
   const sendFileToServer = async (formData) => {
     try {
-      const response = await axios.post("http://localhost:3000/messages/uploadImage", formData, {
+      const response = await axios.post("http://localhost:3000/messages/uploadFile", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       })
-      console.log("Image uploaded successfully:", response.data)
+      return response.data
     } catch (error) {
       console.error("Error uploading image:", error)
     }
@@ -76,12 +54,12 @@ const Action2 = () => {
 
   return (
     <div>
-      <label htmlFor="fileInput">
+      <label htmlFor="imageInput">
         <CiImageOn size={25} />
-        <input id="fileInput" type="file" accept="" onChange={handleFileSelect} style={{ display: "none" }} />
+        <input id="imageInput" type="file" accept="image/*" onChange={handleImageSelect} style={{ display: "none" }} />
       </label>
     </div>
   )
 }
 
-export default Action2
+export default Image

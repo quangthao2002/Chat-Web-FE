@@ -1,6 +1,7 @@
 import { FaFileWord, FaFilePdf, FaFilePowerpoint, FaFile, FaFileExcel } from "react-icons/fa" // Import icons for different file types
 import { saveAs } from "file-saver"
 import { FiDownload } from "react-icons/fi"
+
 const FileMessage = ({ url }) => {
   const getFileTypeIcon = (url) => {
     const extension = url.substring(url.lastIndexOf(".")).toLowerCase()
@@ -22,9 +23,8 @@ const FileMessage = ({ url }) => {
   }
 
   const getFileName = (url) => {
-    if (url.startsWith("data:")) return "File"
-    const filename = url.split("/").pop().split("_").slice(1).join("_")
-    return filename
+    const filenameFromUrl = url.split("/").pop().split("_").slice(1).join("_")
+    return filenameFromUrl
   }
 
   const openFile = () => {
@@ -37,10 +37,10 @@ const FileMessage = ({ url }) => {
     e.stopPropagation()
     console.log(url)
 
-    const filename = url.split("/").pop().split("_").slice(1).join("_")
+    const filenameToSave = url.split("/").pop().split("_").slice(1).join("_")
     // Fetch the file
 
-    saveAs(url, filename)
+    saveAs(url, filenameToSave)
   }
 
   const getBoxColor = (url) => {

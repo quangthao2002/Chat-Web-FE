@@ -10,10 +10,9 @@ const Message = ({ message }) => {
   const { authUser } = useAuthContext()
   const [isDeleted, setIsDeleted] = useState(false)
   const isImage = (url) => {
-    const isImageUrl = url.startsWith("data:image/")
     const imageExtensions = [".jpg", ".jpeg", ".png", ".gif", ".bmp"] // Add more extensions if needed
     const extension = url.substring(url.lastIndexOf(".")).toLowerCase()
-    if (imageExtensions.includes(extension) || isImageUrl) {
+    if (imageExtensions.includes(extension)) {
       return true
     } else {
       return false
@@ -45,11 +44,6 @@ const Message = ({ message }) => {
     ] // Add more extensions if needed
 
     // Check if URL starts with "data:application/"
-    const isImageData = url.startsWith("data:application/")
-
-    if (isImageData) {
-      return true // It's an image URL
-    }
 
     const extension = url.substring(url.lastIndexOf(".")).toLowerCase()
 
