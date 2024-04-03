@@ -59,7 +59,7 @@ const File = () => {
         <input
           id="fileInput"
           type="file"
-          accept=".doc,.docx,.pdf,.ppt,.pptx,.xls,.xlsx,.zip,.rar,.7z,.txt,.csv"
+          accept=".doc,.docx,.pdf,.ppt,.pptx,.xls,.xlsx,.zip,.rar,.7z,.txt,.csv,.mp4, .avi, .mov, .wmv, .flv"
           style={{ display: "none" }}
           onChange={handleFileSelect}
         />

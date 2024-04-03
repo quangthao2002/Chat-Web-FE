@@ -74,7 +74,7 @@ const FileMessage = ({ url }) => {
         </div>
       </div>
       <div className="flex flex-col items-center justify-center">
-        <div className="text-gray-400 text-sm mb-2 opacity-50 hover:opacity-100">Click to open</div>
+        <div className="text-gray-400 text-sm mb-2 opacity-50 hover:opacity-100">Download</div>
         <button
           type="button"
           onClick={(e) => handleDownload(e, url)}
