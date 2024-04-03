@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react"
-import Modal from "react-modal"
-import { IoMdClose } from "react-icons/io"
-import { FaCamera } from "react-icons/fa"
 import axios from "axios"
-const user = JSON.parse(localStorage.getItem("tokens-user"))
-const token = user?.tokens?.accessToken
+import { useState } from "react"
+import { IoMdClose } from "react-icons/io"
+import Modal from "react-modal"
+import Conversation from "../sidebar/contain/Conversation"
+import AccountItem from "../sidebar/contain/AccountItem"
+
 function AddFriend({ onClose }) {
+  const user = JSON.parse(localStorage.getItem("tokens-user"))
+  const token = user?.tokens?.accessToken
   const [search, setSearch] = useState(null)
   const [phone, setPhone] = useState("")
   Modal.setAppElement("#root")
@@ -51,7 +53,7 @@ function AddFriend({ onClose }) {
       <div className="divider my-0 py-0 mx-1 h-1 " />
       <div className="h-60 flex flex-col">
         {search ? (
-          <>{search.username}</>
+          <AccountItem data={search} />
         ) : (
           <p className="text-black whitespace-nowrap font-normal  mt-6">Không tìm thấy kết quả nào gần đây</p>
         )}

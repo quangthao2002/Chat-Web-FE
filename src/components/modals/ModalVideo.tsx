@@ -1,4 +1,4 @@
-import useModalVideoCall from "@/zustand/useVideoCall"
+import useModalVideoCall from "@/hooks/video/useVideoCall"
 import Room from "../video/Room"
 
 const ModalVideo = () => {
