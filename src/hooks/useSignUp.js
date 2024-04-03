@@ -6,8 +6,8 @@ const useSignUp = () => {
   const [loading, setLoading] = useState(false)
   const { setAuthUser } = useAuthContext()
 
-  const signUp = async ({ username, fullName, password, phone, age, avatar, is_admin }) => {
-    const success = handleInputValidation({ username, fullName, password, phone, age, avatar })
+  const signUp = async ({ username, fullName, password, email, phone, avatar }) => {
+    const success = handleInputValidation({ username, fullName, password, email, phone, avatar })
     if (!success) {
       return
     }
@@ -18,17 +18,16 @@ const useSignUp = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username, fullName, password, phone, age, avatar, is_admin }),
+        body: JSON.stringify({ username, fullName, password, email, phone, avatar, is_admin: false, is_verify: false }),
       })
       const data = await res.json()
-
       if (!res.ok) {
         throw new Error(data.message)
       }
-      toast.success("Sign up successfully")
+      toast.success("Please check email to verify account")
       //localStorage
       // localStorage.setItem("chat-user", JSON.stringify(data.user)) // lưu trữ thông tin người dùng giữa các phiên làm việc
-      localStorage.setItem("tokens-user", JSON.stringify(data)) // lưu trữ thông tin người dùng giữa các phiên làm việc
+      // localStorage.setItem("tokens-user", JSON.stringify(data)) // lưu trữ thông tin người dùng giữa các phiên làm việc
 
       //context
       setAuthUser(data.user) //để cung cấp thông tin người dùng cho các component khác sử dụng AuthContext
@@ -43,10 +42,10 @@ const useSignUp = () => {
 
 export default useSignUp
 
-function handleInputValidation({ username, fullName, password, phone, age, avatar }) {
+function handleInputValidation({ username, fullName, password, phone, avatar }) {
   const phoneRegex = /^[0-9]{10,}$/ // bắt đầu từ 0-9, có từ 10 ký tự trở lên
 
-  if (!username || !fullName || !password || !phone || !age || !avatar) {
+  if (!username || !fullName || !password || !phone || !avatar) {
     toast.error("All fields are required")
     return false
   }
@@ -64,10 +63,6 @@ function handleInputValidation({ username, fullName, password, phone, age, avata
   }
   if (!phoneRegex.test(phone)) {
     toast.error("Phone must be a valid number with at least 10 digits")
-    return false
-  }
-  if (isNaN(age) || age < 18) {
-    toast.error("Age must be a number and at least 18")
     return false
   }
   if (!avatar) {

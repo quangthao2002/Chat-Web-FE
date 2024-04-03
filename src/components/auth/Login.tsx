@@ -12,10 +12,9 @@ const Login = () => {
     username: "",
     fullName: "",
     password: "",
+    email: "",
     phone: "",
-    age: 0,
     avatar: "",
-    is_admin: false,
   })
   const [inputsSignIn, setInputsSignIn] = useState({
     username: "",
@@ -28,16 +27,15 @@ const Login = () => {
     e.preventDefault()
     try {
       await signUp(inputsSignUp)
-      setInputsSignUp({
-        username: "",
-        fullName: "",
-        password: "",
-        phone: "",
-        age: 0,
-        avatar: "",
-        is_admin: false,
-      })
-      handleAddClassActive()
+      // setInputsSignUp({
+      //   username: "",
+      //   fullName: "",
+      //   password: "",
+      //   email: "",
+      //   phone: "",
+      //   avatar: "",
+      // })
+      // handleAddClassActive()
     } catch (error) {
       console.log(error)
     }
@@ -46,7 +44,6 @@ const Login = () => {
     e.preventDefault()
     try {
       await login(inputsSignIn)
-
     } catch (error) {
       console.log(error)
     }
@@ -85,6 +82,14 @@ const Login = () => {
               onChange={(e) => setInputsSignUp({ ...inputsSignUp, password: e.target.value })}
             />
             <input
+              type="email"
+              name="Email"
+              id="Email"
+              placeholder="Email "
+              value={inputsSignUp.email}
+              onChange={(e) => setInputsSignUp({ ...inputsSignUp, email: e.target.value })}
+            />
+            <input
               type="text"
               name="phone"
               id="phone"
@@ -92,16 +97,7 @@ const Login = () => {
               value={inputsSignUp.phone}
               onChange={(e) => setInputsSignUp({ ...inputsSignUp, phone: e.target.value })}
             />
-            <input
-              type="number"
-              name="age"
-              id="age"
-              placeholder="Age"
-              required
-              value={inputsSignUp.age}
-              min={16}
-              onChange={(e) => setInputsSignUp({ ...inputsSignUp, age: parseInt(e.target.value) })}
-            />
+
             <input
               type="file"
               name="avatar"

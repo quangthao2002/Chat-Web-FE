@@ -7,12 +7,14 @@ import useConversation from "@/zustand/useConversation"
 import { useEffect } from "react"
 
 const HomePage = () => {
- const {selectedConversation,setSelectedConversation} =useConversation()
- useEffect(() => {
-  return () => {
-    setSelectedConversation(null)
-  }
-}, [setSelectedConversation])
+  const { selectedConversation, setSelectedConversation } = useConversation()
+
+  useEffect(() => {
+    return () => {
+      setSelectedConversation(null)
+    }
+  }, [setSelectedConversation])
+
   return (
     <MainLayout>
       {!selectedConversation ? (

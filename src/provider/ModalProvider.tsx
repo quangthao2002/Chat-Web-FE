@@ -1,6 +1,6 @@
 import ModalVideo from "@/components/modals/ModalVideo"
 
-const ModalProvider = () => {
+const ModalProvider: React.FC = () => {
   return (
     <>
       <ModalVideo />
