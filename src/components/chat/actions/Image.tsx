@@ -78,7 +78,7 @@ const Action2 = () => {
     <div>
       <label htmlFor="fileInput">
         <CiImageOn size={25} />
-        <input id="fileInput" type="file" accept="image/*" onChange={handleFileSelect} style={{ display: "none" }} />
+        <input id="fileInput" type="file" accept="" onChange={handleFileSelect} style={{ display: "none" }} />
       </label>
     </div>
   )

@@ -4,6 +4,7 @@ import useConversation from "@/zustand/useConversation"
 import axios from "axios"
 import { useState } from "react"
 import { IoIosMore } from "react-icons/io"
+import FileMessage from "./FileMessage"
 
 const Message = ({ message }) => {
   const { authUser } = useAuthContext()
@@ -18,6 +19,47 @@ const Message = ({ message }) => {
       return false
     }
   }
+  const isVideo = (url) => {
+    const videoExtensions = [".mp4", ".avi", ".mov", ".wmv", ".flv"] // Add more extensions if needed
+    const extension = url.substring(url.lastIndexOf(".")).toLowerCase()
+    if (videoExtensions.includes(extension)) {
+      return true
+    } else {
+      return false
+    }
+  }
+  const isFile = (url) => {
+    const fileExtensions = [
+      ".doc",
+      ".docx",
+      ".pdf",
+      ".ppt",
+      ".pptx",
+      ".xls",
+      ".xlsx",
+      ".zip",
+      ".rar",
+      ".7z",
+      ".txt",
+      ".csv",
+    ] // Add more extensions if needed
+
+    // Check if URL starts with "data:application/"
+    const isImageData = url.startsWith("data:application/")
+
+    if (isImageData) {
+      return true // It's an image URL
+    }
+
+    const extension = url.substring(url.lastIndexOf(".")).toLowerCase()
+
+    if (fileExtensions.includes(extension)) {
+      return true // It's a file URL
+    } else {
+      return false // It's neither a file nor an image URL
+    }
+  }
+
   const { selectedConversation } = useConversation()
 
   const fromMe = message.user?.id === authUser.user.id
@@ -43,6 +85,24 @@ const Message = ({ message }) => {
       setIsDeleted(true)
     }
   }
+  const renderMessage = () => {
+    if (isImage(message.text)) {
+      return <img style={{ maxWidth: "400px", maxHeight: "400px" }} src={message.text} alt="Uploaded" />
+    }
+    if (isVideo(message.text)) {
+      return (
+        <video width="320" height="240" controls>
+          <source src={message.text} type="video/mp4" />
+        </video>
+      )
+    }
+    if (isFile(message.text)) {
+      return <FileMessage url={message.text} />
+    }
+
+    return <div className={`chat-bubble text-white mt-1  ${bubbleBgColor}`}>{message.text}</div>
+  }
+
   return (
     <>
       <div className={`chat ${chatClassName}`}>
@@ -59,35 +119,29 @@ const Message = ({ message }) => {
           <div className="chat-bubble text-white mt-1 bg-red-500">Tin nhắn đã được thu hồi</div>
         ) : (
           <>
-            {message && isImage(message.text) ? (
-              <img style={{ maxWidth: "400px", maxHeight: "400px" }} src={message.text} alt="Uploaded" />
-            ) : (
-              <div
-                className={`flex ${!fromMe ? "flex-row-reverse" : ""}`}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-              >
-                <div
-                  className={`chat-options ${showOptions ? "opacity-100" : "opacity-0"} ${fromMe ? "mr-2" : "ml-2"}`}
-                >
-                  <div className={`dropdown dropdown-${fromMe ? "left" : "right"}`}>
-                    <div tabIndex={0} role="button">
-                      <IoIosMore size={15} />
-                    </div>
-                    {showOptions && (
-                      <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-gray-200 rounded-box w-52">
-                        <li>
-                          <a onClick={handleDeleteMessage} className="text-red-500">
-                            {fromMe ? "Thu hồi tin nhắn" : "Xóa tin nhắn ở phía tôi"}
-                          </a>
-                        </li>
-                      </ul>
-                    )}
+            <div
+              className={`flex ${!fromMe ? "flex-row-reverse" : ""}`}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+            >
+              <div className={`chat-options ${showOptions ? "opacity-100" : "opacity-0"} ${fromMe ? "mr-2" : "ml-2"}`}>
+                <div className={`dropdown dropdown-${fromMe ? "left" : "right"}`}>
+                  <div tabIndex={0} role="button">
+                    <IoIosMore size={15} />
                   </div>
+                  {showOptions && (
+                    <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-gray-200 rounded-box w-52">
+                      <li>
+                        <a onClick={handleDeleteMessage} className="text-red-500">
+                          {fromMe ? "Thu hồi tin nhắn" : "Xóa tin nhắn ở phía tôi"}
+                        </a>
+                      </li>
+                    </ul>
+                  )}
                 </div>
-                <div className={`chat-bubble text-white mt-1  ${bubbleBgColor}`}>{message.text}</div>
               </div>
-            )}
+              {renderMessage()}
+            </div>
           </>
         )}
 
