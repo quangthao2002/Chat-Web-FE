@@ -2,7 +2,8 @@ import { useAuthContext } from "@/context/AuthContext"
 import useConversation from "@/zustand/useConversation"
 import { CiImageOn } from "react-icons/ci"
 import toast from "react-hot-toast"
-import axios from "axios"
+
+import { sendFileToServer } from "@/features/uploadFile/uploadFile"
 
 const Image = () => {
   const { selectedConversation, messages, setMessages } = useConversation()
@@ -10,53 +11,55 @@ const Image = () => {
   const currentUserId = authUser.user.id
 
   const handleImageSelect = async (event) => {
-    const selectedFile = event.target.files[0]
+    const files = event.target.files
 
-    if (!selectedFile) {
+    if (!files) {
       toast.error("No file selected.")
-      return
-    }
-    if (selectedFile.size > 5 * 1024 * 1024) {
-      toast.error("File size exceeds the limit.")
       return
     }
 
     const formData = new FormData()
-    formData.append("image", selectedFile)
+
+    Array.from(files).forEach((file: unknown) => {
+      const typedFile = file as File
+
+      if (typedFile.size > 5 * 1024 * 1024) {
+        toast.error(`File "${typedFile.name}" size exceeds the limit.`)
+        return
+      }
+      formData.append("image", typedFile)
+    })
     formData.append("userId", currentUserId)
     formData.append("recipientId", selectedConversation.id)
     formData.append("created_at", new Date())
 
     const fileUrl = await sendFileToServer(formData)
-
-    const newMessage = {
-      text: fileUrl,
-      userId: currentUserId,
-      recipientId: selectedConversation.id,
-      created_at: new Date(),
-      user: authUser.user,
+    const newMessages = []
+    for (const file of fileUrl) {
+      const newMessage = {
+        text: file,
+        userId: currentUserId,
+        recipientId: selectedConversation.id,
+        created_at: new Date(),
+        user: authUser.user,
+      }
+      newMessages.push(newMessage)
     }
-    setMessages([...messages, newMessage])
-  }
-
-  const sendFileToServer = async (formData) => {
-    try {
-      const response = await axios.post("http://localhost:3000/messages/uploadFile", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      return response.data
-    } catch (error) {
-      console.error("Error uploading image:", error)
-    }
+    setMessages([...messages, ...newMessages])
   }
 
   return (
     <div>
       <label htmlFor="imageInput">
         <CiImageOn size={25} />
-        <input id="imageInput" type="file" accept="image/*" onChange={handleImageSelect} style={{ display: "none" }} />
+        <input
+          id="imageInput"
+          type="file"
+          multiple
+          accept="image/*"
+          onChange={handleImageSelect}
+          style={{ display: "none" }}
+        />
       </label>
     </div>
   )

@@ -65,12 +65,14 @@ const FileMessage = ({ url }) => {
   return (
     <div
       onClick={openFile}
-      className={`flex items-center justify-between p-4 border border-gray-300 rounded-lg cursor-pointer hover:shadow-md w-30rem ${getBoxColor(url)}`}
+      className={`flex items-center justify-between p-4 border border-gray-300 w-96 h-24 rounded-lg cursor-pointer hover:shadow-md w-30rem ${getBoxColor(url)}`}
     >
       <div className="flex items-center">
         <div className="mr-4 text-xl">{getFileTypeIcon(url)}</div>
         <div>
-          <div className="font-bold text-gray-600">{getFileName(url)}</div>
+          <div className="font-bold text-gray-600 overflow-hidden whitespace-nowrap truncate w-56 h-6">
+            {getFileName(url)}
+          </div>
         </div>
       </div>
       <div className="flex flex-col items-center justify-center">
