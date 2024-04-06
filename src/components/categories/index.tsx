@@ -30,8 +30,7 @@ const Categories = () => {
         {showUserInfo && (
           <PersonalInformation user={authUser?.user} onRequestClose={handleModalClose} isOpen={showUserInfo} />
         )}
-        <div className="flex flex-col justify-between h-screen">
-          <div className="flex flex-col items-center gap-2.5">
+          <div className="flex flex-col items-center gap-2.5 mb-6">
             <button className="btn btn-circle text-white bg-primary border-none">
               <BiMessageRoundedDetail size={35} />
             </button>
@@ -42,7 +41,7 @@ const Categories = () => {
               <RiCalendarTodoLine size={35} />
             </button>
           </div>
-          <div className="sticky bottom-5 flex flex-col gap-2 mb-4">
+          <div className="sticky bottom-0 flex flex-col gap-2 mb-4">
             <button className="btn btn-circle text-white bg-primary border-none">
               <CiCloudOn size={35} />
             </button>
@@ -59,7 +58,6 @@ const Categories = () => {
           </div>
         </div>
       </div>
-    </div>
   )
 }
 
