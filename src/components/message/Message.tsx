@@ -138,8 +138,15 @@ const Message = ({ message }) => {
             </div>
           </>
         )}
-
-        <div className="chat-footer opacity-50 text-xs gap-1 items-center">{formatTime}</div>
+        <div className="flex ">
+          <div className="chat-footer opacity-50 text-xs gap-1 items-center">{formatTime}</div>
+          <img
+            style={{ width: "20px", height: "20px", borderRadius: "50%" }}
+            alt="Tailwind CSS chat bubble component"
+            src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
+            // src={avatarClassName}
+          />
+        </div>
       </div>
     </>
   )
