@@ -1,11 +1,9 @@
-import { createContext, useContext, useEffect, useState } from "react"
-import { useLocation } from "react-router-dom"
-
-export const AuthContext = createContext()
-
 export const useAuthContext = () => {
   return useContext(AuthContext)
 }
+import { createContext, useContext, useState } from "react"
+
+export const AuthContext = createContext()
 
 export const AuthContextProvider = ({ children }) => {
   const token = JSON.parse(localStorage.getItem("tokens-user")) || null
