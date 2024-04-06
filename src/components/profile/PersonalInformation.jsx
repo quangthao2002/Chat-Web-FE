@@ -5,16 +5,14 @@ import { IoMdClose } from "react-icons/io"
 import Modal from "react-modal"
 import PersonalUpdate from "./PersonalUpdate"
 import { toast } from "react-hot-toast"
-import CustomFileInput from "./CustomFIleInput"
 import ChangeAvatar from "./ChangeAvatar"
 
-Modal.setAppElement("#root")
 
 const PersonalInformation = ({ user, isOpen, onRequestClose }) => {
   const [showChangeAvatar, setShowChangeAvatar] = useState(false)
   const [showPersonalUpdate, setShowPersonalUpdate] = useState(false)
-  const [userAvatar, setUserAvatar] = useState(user.avatar)
   const { authUser, setAuthUser } = useAuthContext()
+  const avatarUser = authUser.user.avatar
 
   const handleOpenChangeAvatar = () => {
     setShowChangeAvatar(true)
@@ -27,10 +25,10 @@ const PersonalInformation = ({ user, isOpen, onRequestClose }) => {
     setShowPersonalUpdate(true)
   }
 
-  const handleImageUpload = async(file) => {
-    if(file){
+  const handleImageUpload = async(selectFile) => {
+    if(selectFile){
       const formData = new FormData()
-      formData.append("avatar", file) 
+      formData.append("avatar", selectFile) 
       formData.append("userId", user.id)
       const rs = await fetch("http://localhost:3000/user/updateAvatar", {
         method: "POST",
@@ -38,9 +36,10 @@ const PersonalInformation = ({ user, isOpen, onRequestClose }) => {
       })
       if(rs.ok){
         const imgUpdate = await rs.json()
-        setUserAvatar(imgUpdate.avatarUrl)
-        // cap nhat lai avatar trong authUser
-        setAuthUser({...authUser, user: {...authUser.user, avatar: imgUpdate.avatarUrl}})
+        console.log(imgUpdate)
+        const updatedAuthUser = {...authUser, user: {...authUser.user, avatar: imgUpdate.avatarUrl}};
+        setAuthUser(updatedAuthUser)
+        localStorage.setItem('tokens-user', JSON.stringify(updatedAuthUser));
       }else{
         toast.error("Cập nhật ảnh đại diện thất bại")
       }
@@ -65,7 +64,7 @@ const PersonalInformation = ({ user, isOpen, onRequestClose }) => {
         <div className="flex gap-1">
           <img
             onClick={handleOpenChangeAvatar}
-            src={userAvatar}
+            src={avatarUser}
             alt={user.fullName}
             className="rounded-full w-20 h-20 mb-2 mt-2"
           />

@@ -1,8 +1,7 @@
-// File ChangeAvatar.js
 import React, { useState } from "react";
 import { FaCamera } from "react-icons/fa";
 
-const ChangeAvatar = ({ user, onSave, onClose }) => {
+const ChangeAvatar = ({  onSave, onClose }) => {
   const [selectedFile, setSelectedFile] = useState(null);
 
   const handleFileChange = (e) => {
@@ -15,6 +14,7 @@ const ChangeAvatar = ({ user, onSave, onClose }) => {
   const handleSave = () => {
     if (selectedFile) {
       onSave(selectedFile);
+      onClose();
     }
   };
 

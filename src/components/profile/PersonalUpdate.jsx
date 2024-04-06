@@ -9,18 +9,18 @@ const PersonalUpdate = ({ user, onRequestClose, isOpen }) => {
   const [phone, setPhone] = useState(user.phone)
   const { authUser, setAuthUser } = useAuthContext()
 
-  const validateInput = async () => {
+  const validateInput = async (updatedUserData) => {
     // Kiểm tra định dạng email
     const emailRegex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/
-    if (!emailRegex.test(email)) {
-      alert("Email không hợp lệ")
+    if (!emailRegex.test(updatedUserData.email)) {
+      toast.error("Email không hợp lệ")
       return false
     }
 
     // Kiểm tra định dạng số điện thoại
     const phoneRegex = /^[0-9]{10,11}$/
-    if (!phoneRegex.test(phone)) {
-      alert("Số điện thoại không hợp lệ")
+    if (!phoneRegex.test(updatedUserData.phone)) {
+      toast.error("Số điện thoại không hợp lệ")
       return false
     }
 
@@ -30,21 +30,40 @@ const PersonalUpdate = ({ user, onRequestClose, isOpen }) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email, phone }),
+      body: JSON.stringify({
+        email: updatedUserData.email,
+        phone: updatedUserData.phone,
+      }),
     })
+    if (!response.ok) {
+      console.log("Error checking email and phone:", response.statusText)
+      return false
+    }
 
     const data = await response.json()
 
-    if (data.exists) {
-      toast.error("Email hoặc số điện thoại đã tồn tại")
-      return false
-    }
+
+      if (data.emailExists && data.phoneExists) {
+        toast.error("Email và số điện thoại của bạn đã tồn tại")
+        return false
+      }
+      if (data.emailExists) {
+        toast.error("Email đã tồn tại")
+        return false
+      }
+      if (data.phoneExists) {
+        toast.error("Số điện thoại đã tồn tại")
+        return false
+      }
 
     return true
   }
 
   const handleProfileUpdate = async (updatedUserData) => {
-    if (!validateInput()) return
+    const isValid = await validateInput(updatedUserData)
+    if (!isValid) {
+      return
+    }
     try {
       const response = await fetch("http://localhost:3000/user/updateProfile", {
         method: "PATCH",
@@ -53,16 +72,15 @@ const PersonalUpdate = ({ user, onRequestClose, isOpen }) => {
         },
         body: JSON.stringify(updatedUserData),
       })
-      console.log("Response status:", response.status)
 
       if (response.ok) {
-        console.log(response)
         const updatedUser = await response.json()
-        console.log("Updated user:", updatedUser)
-        setAuthUser({ ...authUser, user: updatedUser })
+        setAuthUser((prevState) => ({ ...prevState, user: updatedUser }))
+        const updatedAuthUser = { ...authUser, user: updatedUser }
+        localStorage.setItem("tokens-user", JSON.stringify(updatedAuthUser))
         onRequestClose()
       } else {
-        alert("Failed to update profile")
+        console.log("Error updating profile:", response.statusText)
       }
     } catch (error) {
       console.error("Error updating profile:", error.message)
@@ -92,7 +110,7 @@ const PersonalUpdate = ({ user, onRequestClose, isOpen }) => {
       >
         <div className="mt-10">
           <div className="flex justify-start mb-2">
-            <label  className="font-bold text-base text-slate-950 w-60">Tên người dùng:</label>{" "}
+            <label className="font-bold text-base text-slate-950 w-60">Tên người dùng:</label>{" "}
             <input
               className="input input-bordered input-info bg-slate-200 w-full h-12"
               type="text"
