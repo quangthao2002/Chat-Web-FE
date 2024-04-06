@@ -4,7 +4,7 @@ import useSign from "../../hooks/useSignUp.js"
 import useLogin from "@/hooks/useLogin.js"
 const Login = () => {
   const [isActive, setIsActive] = useState(false)
-
+  const [avatar, setAvatar] = useState("")
   const handleAddClassActive = () => {
     setIsActive(!isActive)
   }
@@ -14,7 +14,7 @@ const Login = () => {
     password: "",
     email: "",
     phone: "",
-    avatar: "",
+    avatar: avatar,
   })
   const [inputsSignIn, setInputsSignIn] = useState({
     username: "",
@@ -22,10 +22,11 @@ const Login = () => {
   })
   const { loading, signUp } = useSign()
   const { loadingLogin, login } = useLogin()
-
+  
   const handleSubmitSignUp = async (e: any) => {
     e.preventDefault()
     try {
+      console.log(inputsSignUp)
       await signUp(inputsSignUp)
       // setInputsSignUp({
       //   username: "",
@@ -46,6 +47,28 @@ const Login = () => {
       await login(inputsSignIn)
     } catch (error) {
       console.log(error)
+    }
+  }
+
+  const handleFileChange = async (event) => {
+    const file = event.target.files[0]
+
+    if (file) {
+      const formData = new FormData()
+      formData.append("image", file)
+
+      const response = await fetch("http://localhost:3000/messages/uploadImageAndGetUrl", {
+        method: "POST",
+        body: formData,
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setAvatar(data.imageUrl)
+        setInputsSignUp({ ...inputsSignUp, avatar: data.imageUrl }) // Cập nhật giá trị avatar trong inputsSignUp
+      } else {
+        console.error("Error uploading file")
+      }
     }
   }
 
@@ -102,10 +125,9 @@ const Login = () => {
               type="file"
               name="avatar"
               id="avatar"
+              onChange={handleFileChange}
               placeholder="Avatar"
               required
-              value={inputsSignUp.avatar}
-              onChange={(e) => setInputsSignUp({ ...inputsSignUp, avatar: e.target.value })}
             />
             {/* <div className="flex relative right-72 ">
               <label htmlFor="is_admin" className="label gap-1 cursor-pointer font-bold">

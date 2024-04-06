@@ -7,7 +7,7 @@ const InfoAccount = () => {
     <div className="flex gap-2">
       <div className="avatar mt-1 ml-2">
         <div className="w-12 rounded-full">
-          <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+          <img src={selectedConversation.avatar} />
         </div>
       </div>
       <div className="flex flex-col  justify-center">
