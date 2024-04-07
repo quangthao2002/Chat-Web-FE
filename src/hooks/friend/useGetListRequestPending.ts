@@ -1,22 +1,23 @@
-import { useEffect, useState } from "react"
+import { useFriendStore } from "@/zustand/useFriendStore"
+import { useEffect } from "react"
 import useSocketClient from "../useSocketClient"
 
 const useGetListRequestPending = () => {
   const { getSocket, userId } = useSocketClient()
-  const [pendingRequests, setPendingRequests] = useState([])
+  const { setListPendingRequest } = useFriendStore()
 
   const getListFriendRequestPending = () => {
-    getSocket()?.emit("get-list-friend-request-pending", { userId })
+    getSocket()?.emit("get-list-friend-request-pending", { senderId: userId })
   }
 
   useEffect(() => {
     getSocket()?.on("list-friend-request-pending", (friendRequests) => {
       console.log("Received list of pending friend requests:", friendRequests)
-      setPendingRequests(friendRequests)
+      setListPendingRequest(friendRequests)
     })
-  }, [getSocket()])
+  }, [getSocket(), userId])
 
-  return { getListFriendRequestPending, pendingRequests }
+  return { getListFriendRequestPending, userId }
 }
 
 export default useGetListRequestPending

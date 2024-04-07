@@ -7,15 +7,19 @@ interface ButtonProps {
   onClick?: () => void
   children?: React.ReactNode
   badgeNumber?: number
+  isActive?: boolean
 }
 
-const ButtonCategories: React.FC<ButtonProps> = ({ Icon, size, onClick, children, badgeNumber }) => {
+const ButtonCategories: React.FC<ButtonProps> = ({ Icon, size, onClick, children, badgeNumber, isActive }) => {
   return (
-    <button className="btn btn-circle text-white bg-primary border-none relative" onClick={onClick}>
+    <button
+      className={`${isActive ? "bg-[#006edc] " : "bg-primary hover:bg-[#006edc] "} text-white  border-none relative p-3`}
+      onClick={onClick}
+    >
       <Icon size={size} />
       {children}
       {badgeNumber && badgeNumber > 0 && (
-        <div className="absolute -top-2 -right-2 w-5 h-5 bg-red-400 rounded-full flex items-center justify-center text-white text-sm">
+        <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-400 rounded-full flex items-center justify-center text-white text-sm">
           {badgeNumber}
         </div>
       )}

@@ -45,8 +45,11 @@ const VerifyEmailPage = () => {
             <h2 className="text-2xl font-bold mb-8 text-center">Confirm Email Successfully</h2>
             <p className="mb-4 text-gray-700 text-center">Now you can can login to your account.</p>
 
-            <Link to={"/"} className="w-full text-center py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-500">
-              Back to homepage
+            <Link
+              to={"/login"}
+              className="w-full text-center py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-500"
+            >
+              Back to login
             </Link>
           </>
         ) : (

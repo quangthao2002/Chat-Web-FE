@@ -1,28 +1,52 @@
+import useSendFriendRequest from "@/hooks/friend/useSendFriendRequest"
+import { useFriendStore } from "@/zustand/useFriendStore"
 import axios from "axios"
-import { useState } from "react"
+import { useCallback, useState } from "react"
+import toast from "react-hot-toast"
 import { IoMdClose } from "react-icons/io"
 import Modal from "react-modal"
-import Conversation from "../sidebar/contain/Conversation"
 import AccountItem from "../sidebar/contain/AccountItem"
 
 function AddFriend({ onClose }) {
+  Modal.setAppElement("#root")
   const user = JSON.parse(localStorage.getItem("tokens-user"))
   const token = user?.tokens?.accessToken
+
   const [search, setSearch] = useState(null)
   const [phone, setPhone] = useState("")
-  Modal.setAppElement("#root")
+  const { listPendingRequest } = useFriendStore()
+  const { sendFriendRequest } = useSendFriendRequest()
+
+  const isFriend = listPendingRequest.find((item) => item.phone === search?.phone)
+  const isMe = search?.phone === user?.user?.phone
+
   const handleSearchUser = async () => {
     try {
       const response = await axios.get(`http://localhost:3000/user/search-user/${phone}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       console.log(response)
-      setSearch(response.data) // Assuming setSearch is a function to set the state
+      setSearch(response.data)
     } catch (error) {
       console.error("Error occurred while fetching user data:", error)
-      // Handle errors, if any
     }
   }
+
+  const handleAddFriend = useCallback(async (item) => {
+    if (item?.id) {
+      await sendFriendRequest(item.id)
+      await handleSearchUser()
+      toast.success(`Đã gửi lời mời kết bạn đến ${item?.username}`)
+    }
+  }, [])
+
+  const handleCancelFriend = useCallback(async (item) => {
+    if (item?.id) {
+      await sendFriendRequest(item.id)
+      await handleSearchUser()
+      toast.error(`Đã gửi lời mời kết bạn đến ${item?.username}`)
+    }
+  }, [])
 
   return (
     <Modal
@@ -52,8 +76,12 @@ function AddFriend({ onClose }) {
       />
       <div className="divider my-0 py-0 mx-1 h-1 " />
       <div className="h-60 flex flex-col">
-        {search ? (
+        {isMe ? (
           <AccountItem data={search} />
+        ) : search && isFriend ? (
+          <AccountItem data={search} onClick={handleCancelFriend(search)} title={"Hủy bạn"} />
+        ) : search && !isFriend ? (
+          <AccountItem data={search} onClick={() => handleAddFriend(search)} title={"Kết bạn"} />
         ) : (
           <p className="text-black whitespace-nowrap font-normal  mt-6">Không tìm thấy kết quả nào gần đây</p>
         )}

@@ -1,22 +1,22 @@
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import useSocketClient from "../useSocketClient"
+import useGetListRequestPending from "./useGetListRequestPending"
 
 const useAcceptFriendRequest = () => {
-  const { getSocket } = useSocketClient()
-  const [status, setStatus] = useState<"success" | "fail">("fail")
+  const { getSocket, userId } = useSocketClient()
+  const { getListFriendRequestPending } = useGetListRequestPending()
 
-  const acceptFriendRequest = (senderId: string, receiverId: string) => {
-    getSocket()?.emit("accept-friend-request", { senderId, receiverId })
+  const acceptFriendRequest = (receiverId: string) => {
+    getSocket()?.emit("accept-friend-request", { senderId: receiverId, receiverId: userId })
   }
 
   useEffect(() => {
     getSocket()?.on("friend-request-accepted", (payload) => {
-      setStatus("success")
-      console.log(`Friend request accepted from ${payload.senderId} to ${payload.receiverId}`)
+      getListFriendRequestPending()
     })
   }, [getSocket()])
 
-  return { acceptFriendRequest, status }
+  return { acceptFriendRequest }
 }
 
 export default useAcceptFriendRequest
