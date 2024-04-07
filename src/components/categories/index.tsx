@@ -39,9 +39,9 @@ const Categories: React.FC = () => {
   return (
     <div className="h-screen bg-primary flex flex-col py-2">
       <div className="flex flex-col items-center gap-6 ">
-        <div className="avatar cursor-pointer">
-          <div className="w-12 mt-1 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-            <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" alt="avatar" />
+        <div className="avatar cursor-pointer" onClick={handleAvatarClick}>
+          <div className="w-12 mt-6 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+            <img src={avatar} />
           </div>
         </div>
 
