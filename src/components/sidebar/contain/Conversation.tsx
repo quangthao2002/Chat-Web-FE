@@ -1,10 +1,10 @@
 import useConversation from "@/zustand/useConversation"
+import axios from "axios"
 import { useEffect, useState } from "react"
-
 
 const Conversation = ({ conversation, lastIndex }) => {
   const [time, setTime] = useState(new Date())
-
+  const { selectedConversation, setSelectedConversation, lastMessage, setLastMessage } = useConversation()
   useEffect(() => {
     const timer = setInterval(() => {
       setTime(new Date())
@@ -13,15 +13,23 @@ const Conversation = ({ conversation, lastIndex }) => {
       clearInterval(timer)
     }
   }, [])
-
-  const { selectedConversation, setSelectedConversation } = useConversation()
-
- 
+  useEffect(() => {
+    const getLatestMessage = async () => {
+      const response = await axios.get(`http://localhost:3000/messages/latestMessage/${conversation.id}`)
+      if (response.data) {
+        setLastMessage(response.data.text)
+      }
+    }
+    getLatestMessage()
+  }, [])
 
   const isSelected = selectedConversation?.id === conversation.id
   return (
     <>
-      <div className={`flex gap-2 items-center hover:bg-sky-500 rounded p-2 py-1 cursor-pointer ${isSelected ? "bg-sky-500" :""}`} onClick={()=> setSelectedConversation(conversation)}>
+      <div
+        className={`flex gap-2 items-center hover:bg-sky-500 rounded p-2 py-1 cursor-pointer ${isSelected ? "bg-sky-500" : ""}`}
+        onClick={() => setSelectedConversation(conversation)}
+      >
         <div className="avatar online ">
           <div className="w-12 rounded-full">
             <img src={conversation.avatar} alt="user avatar" />
@@ -29,7 +37,10 @@ const Conversation = ({ conversation, lastIndex }) => {
         </div>
         <div className="flex flex-1 flex-col">
           <div className="flex gap-3 justify-between">
-            <p className="text-lg font-semibold">{conversation.username}</p>
+            <div className="flex flex-col">
+              <p className="text-lg font-semibold">{conversation.username}</p>
+              <p className="text-sm">{lastMessage}</p>
+            </div>
             <span className="text-xs  text-gray-400">
               {time.toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" })}
             </span>

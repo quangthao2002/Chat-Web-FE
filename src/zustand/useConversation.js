@@ -7,6 +7,15 @@ const useConversation = create((set) => ({
   setSelectedConversation: (selectedConversation) => set({ selectedConversation }),
   messages: [],
   setMessages: (messages) => set({ messages }),
+
+  isTyping: false,
+  setIsTyping: (isTyping) => set({ isTyping }),
+
+  lastMessage: "hihi",
+  setLastMessage: (lastMessage) => set({ lastMessage }),
+
+  lastMessageSeen: null,
+  setLastMessageSeen: (lastMessageSeen) => set({ lastMessageSeen }),
 }))
 
 export default useConversation
