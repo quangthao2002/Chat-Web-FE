@@ -1,19 +1,23 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import useGetConversations from "@/hooks/useGetConversations"
 import Modal from "react-modal"
 import { IoMdClose } from "react-icons/io"
 import { FaCamera } from "react-icons/fa"
 import { io } from "socket.io-client"
-import { useAuthContext } from '@/context/AuthContext';
+import { useAuthContext } from "@/context/AuthContext"
 
 const UserListModal = ({ onClose }) => {
-  const { conversation,addConversation } = useGetConversations()
+  const socketRef = useRef()
+  const {  conversation, addConversation} = useGetConversations()
   const [selectedUsers, setSelectedUsers] = useState([])
+  const [groupAvatar, setGroupAvatar] = useState("")
   const [groupName, setGroupName] = useState("")
-  const {authUser} = useAuthContext()
+  const { authUser } = useAuthContext()
   const ownerId = authUser.user.id
+  socketRef.current = io("http://localhost:3000")
 
-  Modal.setAppElement('#root');
+
+  Modal.setAppElement("#root")
 
   const handleUserSelect = (userId) => {
     setSelectedUsers((prevSelectedUsers) => [...prevSelectedUsers, userId])
@@ -21,61 +25,56 @@ const UserListModal = ({ onClose }) => {
   const handleUserDeselect = (userId) => {
     setSelectedUsers((prevSelectedUsers) => prevSelectedUsers.filter((id) => id !== userId))
   }
-  const [groupAvatar, setGroupAvatar] = useState("")
 
   const handleGroupNameChange = (event) => {
     setGroupName(event.target.value)
   }
   const handleFileChange = async (event) => {
-    const file = event.target.files[0];
-  
+    const file = event.target.files[0]
+
     if (file) {
-      const formData = new FormData();
-      formData.append('image', file);
-  
-      const response = await fetch('http://localhost:3000/messages/uploadImageAndGetUrl', {
-        method: 'POST',
+      const formData = new FormData()
+      formData.append("image", file)
+
+      const response = await fetch("http://localhost:3000/messages/uploadImageAndGetUrl", {
+        method: "POST",
         body: formData,
-      });
-  
+      })
+
       if (response.ok) {
-        const data = await response.json();
-        setGroupAvatar(data.imageUrl);
+        const data = await response.json()
+        setGroupAvatar(data.imageUrl)
       } else {
-        console.error('Error uploading file');
+        console.error("Error uploading file")
       }
     }
-  };
-
-
-  // Connect to backend to create group
-  const socket = io("http://localhost:3000")
-
+  }
   useEffect(() => {
-    socket.on("roomCreated", (roomId) => {
-
-      console.log("hello")
-      console.log("Received roomCreated message:", roomId)
-      addConversation({ id: roomId, name: groupName, avatar: groupAvatar, userIds: selectedUsers, ownerId: ownerId })
-    })
-    return () => {
-      socket.off("roomCreated")
-    }
-  }, [socket, addConversation, groupAvatar, groupName, ownerId, selectedUsers])
-  const handleCreateGroup = () => {
+    console.log(conversation);
+  }, [conversation]);
+  const handleCreateGroup = async () => {
     console.log("Sending createRoom message:", groupAvatar, groupName, selectedUsers)
-    socket.emit("createRoom", {
+    socketRef.current.emit("createRoom", {
       name: groupName,
       userIds: selectedUsers,
       avatar: groupAvatar,
-      ownerId: ownerId
+      ownerId: ownerId,
     })
+
+    const roomId = await new Promise((resolve) => { 
+      socketRef.current.on("roomCreated", resolve)
+    })
+
+    console.log("Received roomCreated message:", roomId)
+    addConversation({ id: roomId, username: groupName, avatar: groupAvatar })
     onClose()
   }
 
   return (
     <Modal
       isOpen={true}
+      onRequestClose ={onClose}
+      overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
       style={{
         content: {
           width: "550px",
@@ -96,12 +95,7 @@ const UserListModal = ({ onClose }) => {
         <label htmlFor="avatar-upload">
           <FaCamera size={35} />
         </label>
-        <input
-          id="avatar-upload"
-          type="file"
-          style={{ display: "none" }}
-          onChange={handleFileChange}
-        />
+        <input id="avatar-upload" type="file" style={{ display: "none" }} onChange={handleFileChange} />
         <input
           type="text"
           placeholder="Nhap ten nhom"

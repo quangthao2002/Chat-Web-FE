@@ -18,7 +18,9 @@ const ChatInput = () => {
     if (!selectedConversation) {
       return
     }
-
+    if (message.trim() === "") {
+      return
+    }
     // gửi tin nhắn đến server
     const newMessage = {
       text: message,

@@ -2,6 +2,7 @@ import ChatInput from "./ChatInput"
 import Sticker from "./actions/Sticker"
 import Image from "./actions/Image"
 import File from "./actions/File"
+
 const Chat = () => {
   return (
     <div className="bg-white">

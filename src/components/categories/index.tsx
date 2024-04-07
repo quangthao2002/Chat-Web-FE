@@ -1,20 +1,33 @@
 import { Tab, useTabContext } from "@/context/TabContext"
 import useGetListRequestPending from "@/hooks/friend/useGetListRequestPending"
 import useLogOut from "@/hooks/useLogOut"
+import { useAuthContext } from "@/context/AuthContext"
 import { useFriendStore } from "@/zustand/useFriendStore"
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { BiLogOut, BiMessageRoundedDetail } from "react-icons/bi"
 import { CiCloudOn } from "react-icons/ci"
 import { PiToolboxLight } from "react-icons/pi"
 import { RiCalendarTodoLine } from "react-icons/ri"
 import { TiContacts } from "react-icons/ti"
 import ButtonCategories from "./ButtonCategories"
+import PersonalInformation from "../profile/PersonalInformation"
 
 const Categories: React.FC = () => {
   const { loading, logout } = useLogOut()
   const { activeTab, setActiveTab } = useTabContext()
   const { getListFriendRequestPending, userId } = useGetListRequestPending()
   const { listPendingRequest } = useFriendStore()
+
+  const { authUser } = useAuthContext()
+  const [showUserInfo, setShowUserInfo] = useState(false)
+  const avatar = authUser?.user.avatar
+
+  const handleAvatarClick = () => {
+    setShowUserInfo(!showUserInfo)
+  }
+  const handleModalClose = () => {
+    setShowUserInfo(false)
+  }
 
   const handleOpenChat = () => setActiveTab(Tab.Chat)
   const handleOpenPhoneBook = () => setActiveTab(Tab.PhoneBook)
@@ -31,6 +44,10 @@ const Categories: React.FC = () => {
             <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" alt="avatar" />
           </div>
         </div>
+
+        {showUserInfo && (
+          <PersonalInformation user={authUser?.user} onRequestClose={handleModalClose} isOpen={showUserInfo} />
+        )}
 
         <div className="flex flex-col items-center gap-1">
           <ButtonCategories

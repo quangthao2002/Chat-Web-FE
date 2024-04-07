@@ -67,8 +67,14 @@ const useGetConversations = () => {
     }
     getConversations()
   }, [])
+
   const addConversation = (newConversation) => {
-    setConversation((prevConversations) => [...prevConversations, newConversation])
+    console.log(newConversation)
+    setConversation((prevConversations) => {
+      const updatedConversations = [...prevConversations, newConversation]
+      console.log(updatedConversations)
+      return updatedConversations
+    })
   }
   return { loading, conversation, addConversation }
 }

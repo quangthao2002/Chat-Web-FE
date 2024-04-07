@@ -51,6 +51,8 @@ function AddFriend({ onClose }) {
   return (
     <Modal
       isOpen={true}
+      overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+      onRequestClose ={onClose}
       style={{
         content: {
           width: "550px",

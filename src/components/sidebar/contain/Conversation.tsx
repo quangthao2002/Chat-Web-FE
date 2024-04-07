@@ -31,11 +31,9 @@ const Conversation = ({ conversation, lastIndex }: ConversationProps) => {
         className={`flex gap-2 items-center hover:bg-sky-500 rounded p-2 py-1 cursor-pointer ${isSelected ? "bg-sky-500" : ""}`}
         onClick={() => setSelectedConversation(conversation)}
       >
-        <div className="avatar online">
-          <div className="w-16 rounded-full">
-            {/* <img src={conversation.avatar} alt="user avatar" /> */}
-
-            <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+        <div className="avatar online ">
+          <div className="w-12 rounded-full">
+            <img src={conversation.avatar} alt="user avatar" />
           </div>
         </div>
         <div className="flex flex-1 flex-col">
