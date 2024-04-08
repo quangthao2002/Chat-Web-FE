@@ -13,13 +13,8 @@ const SidebarMessage = () => {
 
   return (
     <div className="py-2 flex flex-col max-h-screen overflow-auto ">
-      {conversation?.map((user, index) => (
-        <Conversation
-          isOnline={usersOnline ? !!usersOnline.get(user.id) : false}
-          key={user.id}
-          conversation={user}
-          lastIndex={index === conversation.length - 1}
-        />
+      {conversation?.map((user: any, index: number) => (
+        <Conversation key={user?.id} conversation={user} lastIndex={index === conversation.length - 1} />
       ))}
       {loading ? <span className="loading loading-spinner"></span> : null}
     </div>

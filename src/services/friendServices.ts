@@ -6,19 +6,19 @@ interface User {
 
 const friendServices = {
   getFriends: ({ user }: { user: User }) => {
-    return axiosClient.get("/get-friends", { params: { user } })
+    return axiosClient.get("/user/get-friends", { params: { user } })
   },
   searchUser: ({ phone }: { phone: User }) => {
     return axiosClient.get("/search-user/:searchValue", { params: { searchValue: phone } })
   },
   sendFriendRequest: ({ receiverId, user }: { receiverId: string; user: User }) => {
-    return axiosClient.post("/send-friend-request", { receiverId, user })
+    return axiosClient.post("/user/send-friend-request", { receiverId, user })
   },
   acceptFriendRequest: ({ senderId, receiverId }: { senderId: string; receiverId: string }) => {
-    return axiosClient.post("/send-friend-request", { senderId, receiverId })
+    return axiosClient.post("/user/send-friend-request", { senderId, receiverId })
   },
-  getListFriendRequestPending: ({ senderId, receiverId }: { senderId: string; receiverId: string }) => {
-    return axiosClient.post("/get-list-friend-request-pending", { senderId, receiverId })
+  getListFriendRequestPending: (userId: string) => {
+    return axiosClient.get(`/user/get-list-friend-request-pending?userId=${userId}`)
   },
 }
 

@@ -2,7 +2,16 @@ import useConversation from "@/zustand/useConversation"
 import axios from "axios"
 import { useEffect, useState } from "react"
 
-const Conversation = ({ conversation, lastIndex, isOnline }) => {
+interface ConversationProps {
+  conversation: {
+    id: string
+    username: string
+    avatar: string
+  }
+  lastIndex?: boolean
+}
+
+const Conversation = ({ conversation, lastIndex }: ConversationProps) => {
   const [time, setTime] = useState(new Date())
   const { selectedConversation, setSelectedConversation, lastMessage, setLastMessage } = useConversation()
 
@@ -14,15 +23,8 @@ const Conversation = ({ conversation, lastIndex, isOnline }) => {
       clearInterval(timer)
     }
   }, [])
-  useEffect(() => {
-    const getLatestMessage = async () => {
-      const response = await axios.get(`http://localhost:3000/messages/latestMessage/${conversation.id}`)
-      if (response.data) {
-        setLastMessage(response.data.text)
-      }
-    }
-    getLatestMessage()
-  }, [])
+
+  const { selectedConversation, setSelectedConversation } = useConversation()
 
   const isSelected = selectedConversation?.id === conversation.id
   return (
@@ -31,7 +33,7 @@ const Conversation = ({ conversation, lastIndex, isOnline }) => {
         className={`flex gap-2 items-center hover:bg-sky-500 rounded p-2 py-1 cursor-pointer ${isSelected ? "bg-sky-500" : ""}`}
         onClick={() => setSelectedConversation(conversation)}
       >
-        <div className={`avatar ${isOnline ? "online" : "offline"}`}>
+        <div className="avatar online ">
           <div className="w-12 rounded-full">
             <img src={conversation.avatar} alt="user avatar" />
           </div>

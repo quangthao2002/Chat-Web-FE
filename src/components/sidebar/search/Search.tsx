@@ -1,11 +1,11 @@
+import AddFriend from "@/components/modals/AddFriend"
+import UserListModal from "@/components/modals/UserListModal"
 import useGetConversations from "@/hooks/useGetConversations"
 import useConversation from "@/zustand/useConversation"
 import { useState } from "react"
 import toast from "react-hot-toast"
 import { AiOutlineUsergroupAdd } from "react-icons/ai"
-import UserListModal from "@/components/modal/UserListModal"
 import { IoPersonAddOutline } from "react-icons/io5"
-import AddFriend from "@/components/modal/AddFriend"
 
 const Search = () => {
   const [search, setSearch] = useState("")
@@ -14,11 +14,11 @@ const Search = () => {
   const { setSelectedConversation } = useConversation()
   const { conversation } = useGetConversations()
 
-  const handleSearch = (e) => {
+  const handleSearch = (e: any) => {
     e.preventDefault()
     if (search === "") return
     if (search.length < 3) return toast.error("Search must be at least 3 characters")
-    const searchResult = conversation.find((conv) => conv.username.toLowerCase().includes(search.toLowerCase()))
+    const searchResult = conversation.find((conv: any) => conv?.username?.toLowerCase().includes(search.toLowerCase()))
     if (searchResult) {
       setSelectedConversation(searchResult)
       setSearch("")

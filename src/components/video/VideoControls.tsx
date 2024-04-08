@@ -1,4 +1,4 @@
-import useModalVideoCall from "@/zustand/useVideoCall"
+import useModalVideoCall from "@/hooks/video/useVideoCall"
 import { ImPhoneHangUp } from "react-icons/im"
 import { IoMdMic } from "react-icons/io"
 

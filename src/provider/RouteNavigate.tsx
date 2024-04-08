@@ -8,7 +8,7 @@ const RouteNavigate = () => {
 
   return (
     <Routes>
-      <Route path="/verify-email" element={authUser ? <HomePage /> : <VerifyEmailPage />} />
+      <Route path="/verify-email" element={<VerifyEmailPage />} />
       <Route path="*" element={authUser ? <HomePage /> : <LoginPage />} />
     </Routes>
   )
