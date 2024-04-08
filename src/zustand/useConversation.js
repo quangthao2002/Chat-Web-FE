@@ -11,11 +11,14 @@ const useConversation = create((set) => ({
   isTyping: false,
   setIsTyping: (isTyping) => set({ isTyping }),
 
-  lastMessage: "hihi",
+  lastMessage: "",
   setLastMessage: (lastMessage) => set({ lastMessage }),
 
   lastMessageSeen: null,
   setLastMessageSeen: (lastMessageSeen) => set({ lastMessageSeen }),
+
+  usersOnline: new Map(),
+  setUserOnline: (usersOnline) => set({ usersOnline }),
 }))
 
 export default useConversation

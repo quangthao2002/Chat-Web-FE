@@ -9,7 +9,6 @@ import axios from "axios"
 const Messages = () => {
   const { loading, messages } = useGetMessages()
   const lastMessage = useRef()
-
   const { isTyping, selectedConversation, setLastMessageSeen } = useConversation()
 
   useEffect(() => {

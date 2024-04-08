@@ -10,22 +10,28 @@ import useConversation from "@/zustand/useConversation"
 const Message = ({ message }) => {
   const { authUser } = useAuthContext()
   const [isDeleted, setIsDeleted] = useState(false)
-  const { selectedConversation, lastMessageSeen } = useConversation()
+  const { selectedConversation, lastMessageSeen, messages } = useConversation()
   const [isSeen, setIsSeen] = useState(false)
 
   useEffect(() => {
-    if (message?.id && lastMessageSeen?.id) {
-      setIsSeen(lastMessageSeen?.id === message?.id)
-      // console.log("message", message.id)
-      // console.log("isSeen", isSeen)
-      // console.log("lastMessageSeen", lastMessageSeen)
+    const latestMessage = messages[messages.length - 1]
+    if (
+      message?.id === lastMessageSeen?.id &&
+      lastMessageSeen?.recipientId !== authUser.user.id &&
+      message?.id === latestMessage?.id
+    ) {
+      setIsSeen(true)
+    } else {
+      setIsSeen(false)
     }
   }, [lastMessageSeen, message.id])
+
   useEffect(() => {
     if (isSeen) {
       // Do something when the message is seen
     }
   }, [isSeen])
+
   const isImage = (url) => {
     const imageExtensions = [".jpg", ".jpeg", ".png", ".gif", ".bmp"]
     const extension = url.substring(url.lastIndexOf(".")).toLowerCase()

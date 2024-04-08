@@ -2,9 +2,10 @@ import useConversation from "@/zustand/useConversation"
 import axios from "axios"
 import { useEffect, useState } from "react"
 
-const Conversation = ({ conversation, lastIndex }) => {
+const Conversation = ({ conversation, lastIndex, isOnline }) => {
   const [time, setTime] = useState(new Date())
   const { selectedConversation, setSelectedConversation, lastMessage, setLastMessage } = useConversation()
+
   useEffect(() => {
     const timer = setInterval(() => {
       setTime(new Date())
@@ -30,7 +31,7 @@ const Conversation = ({ conversation, lastIndex }) => {
         className={`flex gap-2 items-center hover:bg-sky-500 rounded p-2 py-1 cursor-pointer ${isSelected ? "bg-sky-500" : ""}`}
         onClick={() => setSelectedConversation(conversation)}
       >
-        <div className="avatar online ">
+        <div className={`avatar ${isOnline ? "online" : "offline"}`}>
           <div className="w-12 rounded-full">
             <img src={conversation.avatar} alt="user avatar" />
           </div>
