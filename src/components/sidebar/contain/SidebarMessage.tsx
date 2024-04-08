@@ -5,10 +5,10 @@ const SidebarMessage = () => {
   const { loading, conversation } = useGetConversations()
   return (
     <div className="py-2 flex flex-col max-h-screen overflow-auto ">
-      {conversation?.map((user, index) => (
-        <Conversation key={user.id} conversation={user} lastIndex={index === conversation.length - 1} />
-        ))}
-        {loading ? <span className="loading loading-spinner"></span> : null}
+      {conversation?.map((user: any, index: number) => (
+        <Conversation key={user?.id} conversation={user} lastIndex={index === conversation.length - 1} />
+      ))}
+      {loading ? <span className="loading loading-spinner"></span> : null}
     </div>
   )
 }
