@@ -7,6 +7,15 @@ const useConversation = create((set) => ({
   setSelectedConversation: (selectedConversation) => set({ selectedConversation }),
   messages: [],
   setMessages: (messages) => set({ messages }),
+
+  isTyping: false,
+  setIsTyping: (isTyping) => set({ isTyping }),
+
+  lastMessage: "",
+  setLastMessage: (lastMessage) => set({ lastMessage }),
+
+  usersOnline: new Map(),
+  setUserOnline: (usersOnline) => set({ usersOnline }),
 }))
 
 export default useConversation

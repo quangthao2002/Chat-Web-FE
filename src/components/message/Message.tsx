@@ -1,16 +1,19 @@
 import { useAuthContext } from "@/context/AuthContext"
 import { extractTime } from "@/utils/extractTime"
-import useConversation from "@/zustand/useConversation"
+
 import axios from "axios"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { IoIosMore } from "react-icons/io"
 import FileMessage from "./FileMessage"
+import useConversation from "@/zustand/useConversation"
 
-const Message = ({ message }) => {
+const Message = ({ message, isLastMessage }) => {
   const { authUser } = useAuthContext()
   const [isDeleted, setIsDeleted] = useState(false)
+  const { selectedConversation } = useConversation()
+
   const isImage = (url) => {
-    const imageExtensions = [".jpg", ".jpeg", ".png", ".gif", ".bmp"] // Add more extensions if needed
+    const imageExtensions = [".jpg", ".jpeg", ".png", ".gif", ".bmp"]
     const extension = url.substring(url.lastIndexOf(".")).toLowerCase()
     if (imageExtensions.includes(extension)) {
       return true
@@ -18,6 +21,7 @@ const Message = ({ message }) => {
       return false
     }
   }
+
   const isVideo = (url) => {
     const videoExtensions = [".mp4", ".avi", ".mov", ".wmv", ".flv"] // Add more extensions if needed
     const extension = url.substring(url.lastIndexOf(".")).toLowerCase()
@@ -54,15 +58,13 @@ const Message = ({ message }) => {
     }
   }
 
-  const { selectedConversation } = useConversation()
-
   const fromMe = message.user?.id === authUser.user.id
 
   const formatTime = extractTime(message.created_at)
   const chatClassName = fromMe ? "chat chat-end" : "chat chat-start"
   const avatarClassName = fromMe ? authUser.user.avatar : selectedConversation.avatar
   const bubbleBgColor = fromMe ? "bg-blue-500" : ""
-
+  const seenAvatarClassName = fromMe ? selectedConversation.avatar : authUser.user.avatar
   const [showOptions, setShowOptions] = useState(false)
 
   const handleMouseEnter = () => {
@@ -120,13 +122,11 @@ const Message = ({ message }) => {
                     <IoIosMore size={15} />
                   </div>
                   {showOptions && (
-                    <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-gray-200 rounded-box w-52">
-                      <li>
-                        <a onClick={handleDeleteMessage} className="text-red-500">
-                          {fromMe ? "Thu hồi tin nhắn" : "Xóa tin nhắn ở phía tôi"}
-                        </a>
-                      </li>
-                    </ul>
+                    <div tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-gray-200 rounded-box w-52">
+                      <button onClick={handleDeleteMessage} className="text-red-500">
+                        {fromMe ? "Thu hồi tin nhắn" : "Xóa tin nhắn ở phía tôi"}
+                      </button>
+                    </div>
                   )}
                 </div>
               </div>
@@ -134,14 +134,9 @@ const Message = ({ message }) => {
             </div>
           </>
         )}
+
         <div className="flex ">
           <div className="chat-footer opacity-50 text-xs gap-1 items-center">{formatTime}</div>
-          <img
-            style={{ width: "20px", height: "20px", borderRadius: "50%" }}
-            alt="Tailwind CSS chat bubble component"
-            src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
-            // src={avatarClassName}
-          />
         </div>
       </div>
     </>
