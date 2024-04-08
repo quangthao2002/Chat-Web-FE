@@ -40,7 +40,6 @@ const Conversation = ({ conversation, lastIndex, isOnline }) => {
           <div className="flex gap-3 justify-between">
             <div className="flex flex-col">
               <p className="text-lg font-semibold">{conversation.username}</p>
-              <p className="text-sm">{lastMessage}</p>
             </div>
             <span className="text-xs  text-gray-400">
               {time.toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" })}
