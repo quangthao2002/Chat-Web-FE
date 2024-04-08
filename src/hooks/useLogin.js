@@ -1,6 +1,7 @@
 import { useAuthContext } from "@/context/AuthContext"
+import { LocalStorage } from "@/utils/LocalStorage"
 import { useState } from "react"
-import toast from "react-hot-toast"
+import { toast } from "react-toastify"
 
 const useLogin = () => {
   const [loadingLogin, setLoading] = useState(false)
@@ -26,6 +27,8 @@ const useLogin = () => {
       }
       toast.success("Login successfully")
       localStorage.setItem("tokens-user", JSON.stringify(data))
+      LocalStorage.setToken(data.tokens.accessToken)
+      LocalStorage.setRefreshToken(data.tokens.refreshToken)
 
       setAuthUser(data)
     } catch (error) {

@@ -1,8 +1,16 @@
 import useConversation from "@/zustand/useConversation"
 import { useEffect, useState } from "react"
 
+interface ConversationProps {
+  conversation: {
+    id: string
+    username: string
+    avatar: string
+  }
+  lastIndex?: boolean
+}
 
-const Conversation = ({ conversation, lastIndex }) => {
+const Conversation = ({ conversation, lastIndex }: ConversationProps) => {
   const [time, setTime] = useState(new Date())
 
   useEffect(() => {
@@ -16,12 +24,13 @@ const Conversation = ({ conversation, lastIndex }) => {
 
   const { selectedConversation, setSelectedConversation } = useConversation()
 
- 
-
   const isSelected = selectedConversation?.id === conversation.id
   return (
     <>
-      <div className={`flex gap-2 items-center hover:bg-sky-500 rounded p-2 py-1 cursor-pointer ${isSelected ? "bg-sky-500" :""}`} onClick={()=> setSelectedConversation(conversation)}>
+      <div
+        className={`flex gap-2 items-center hover:bg-sky-500 rounded p-2 py-1 cursor-pointer ${isSelected ? "bg-sky-500" : ""}`}
+        onClick={() => setSelectedConversation(conversation)}
+      >
         <div className="avatar online ">
           <div className="w-12 rounded-full">
             <img src={conversation.avatar} alt="user avatar" />
