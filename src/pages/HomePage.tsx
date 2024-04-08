@@ -1,35 +1,12 @@
-import Chat from "@/components/chat"
-import Header from "@/components/header/HeaderMessage"
-import MessageContainer from "@/components/message/MessageContainer"
+import { Tab, useTabContext } from "@/context/TabContext"
 import MainLayout from "@/layouts/MainLayout"
-import { NoChatSelected } from "./NoChatSelected"
-import useConversation from "@/zustand/useConversation"
-import { useEffect } from "react"
+import ChatPage from "./ChatPage"
+import PhoneBookPage from "./PhoneBookPage"
 
 const HomePage = () => {
-  const { selectedConversation, setSelectedConversation } = useConversation()
+  const { activeTab } = useTabContext()
 
-  useEffect(() => {
-    return () => {
-      setSelectedConversation(null)
-    }
-  }, [setSelectedConversation])
-
-  return (
-    <MainLayout>
-      {!selectedConversation ? (
-        <NoChatSelected />
-      ) : (
-        <>
-          <div className="md:min-w-[450px] flex flex-col flex-1">
-            <Header />
-            <MessageContainer />
-            <Chat />
-          </div>
-        </>
-      )}
-    </MainLayout>
-  )
+  return <MainLayout>{activeTab === Tab.Chat ? <ChatPage /> : <PhoneBookPage />}</MainLayout>
 }
 
 export default HomePage

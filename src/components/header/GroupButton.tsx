@@ -1,4 +1,4 @@
-import useModalVideoCall from "@/zustand/useVideoCall"
+import useModalVideoCall from "@/hooks/video/useVideoCall"
 import { CiSearch } from "react-icons/ci"
 import { GoDeviceCameraVideo } from "react-icons/go"
 import { IoIosInformationCircle } from "react-icons/io"

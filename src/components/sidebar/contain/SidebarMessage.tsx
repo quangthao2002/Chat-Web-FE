@@ -20,6 +20,7 @@ const SidebarMessage = () => {
           conversation={user}
           lastIndex={index === conversation.length - 1}
         />
+
       ))}
       {loading ? <span className="loading loading-spinner"></span> : null}
     </div>
