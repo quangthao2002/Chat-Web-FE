@@ -24,8 +24,6 @@ const Conversation = ({ conversation, lastIndex }: ConversationProps) => {
     }
   }, [])
 
-  const { selectedConversation, setSelectedConversation } = useConversation()
-
   const isSelected = selectedConversation?.id === conversation.id
   return (
     <>

@@ -1,6 +1,6 @@
-import { useFriendStore } from "@/zustand/useFriendStore"
 import { useEffect } from "react"
 import useSocketClient from "../useSocketClient"
+import { useFriendStore } from "@/zustand/useFriendstore"
 
 const useGetListRequestPending = () => {
   const { getSocket, userId } = useSocketClient()
