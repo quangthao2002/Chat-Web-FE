@@ -7,6 +7,7 @@ const Messages = () => {
   const { loading, messages } = useGetMessages()
   const lastMessage = useRef()
 
+
   useEffect(() => {
     setTimeout(() => {
       lastMessage.current?.scrollIntoView({ behavior: "smooth" })
@@ -14,7 +15,7 @@ const Messages = () => {
   }, [messages])
 
   return (
-    <div className="px-4 flex-1 overflow-auto">
+    <div className="px-4 flex-1 ">
       {!loading &&
         Array.isArray(messages) &&
         messages?.map((message, index) => (

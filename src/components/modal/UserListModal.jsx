@@ -34,7 +34,7 @@ const UserListModal = ({ onClose }) => {
 
     if (file) {
       const formData = new FormData()
-      formData.append("image", file)
+      formData.append("avatar", file)
 
       const response = await fetch("http://localhost:3000/messages/uploadImageAndGetUrl", {
         method: "POST",
@@ -49,8 +49,9 @@ const UserListModal = ({ onClose }) => {
       }
     }
   }
+
   useEffect(() => {
-    console.log(conversation);
+    console.log("Danh Sach conversion luc dau",conversation);
   }, [conversation]);
   const handleCreateGroup = async () => {
     console.log("Sending createRoom message:", groupAvatar, groupName, selectedUsers)
@@ -121,7 +122,7 @@ const UserListModal = ({ onClose }) => {
             />
             <div className="avatar">
               <div className="w-10 rounded-full">
-                <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+                <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"  onChange={handleFileChange}/>
               </div>
             </div>
             <label className="mt-2">{user.username}</label>

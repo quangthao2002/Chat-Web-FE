@@ -2,13 +2,43 @@ import { useAuthContext } from "@/context/AuthContext"
 import { extractTime } from "@/utils/extractTime"
 import useConversation from "@/zustand/useConversation"
 import axios from "axios"
-import { useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { IoIosMore } from "react-icons/io"
 import FileMessage from "./FileMessage"
 
 const Message = ({ message }) => {
   const { authUser } = useAuthContext()
   const [isDeleted, setIsDeleted] = useState(false)
+
+  // const [isNearBottom, setIsNearBottom] = useState(false);
+  const [isNearTop, setIsNearTop] = useState(false);
+  const messageRef = useRef(null);
+  
+  
+  const checkIsNearTop = useCallback(() => {
+    if (messageRef.current) {
+      const messageRect = messageRef.current.getBoundingClientRect();
+      const topThreshold = 390;
+  
+      if (messageRect.top < topThreshold) {
+        setIsNearTop(true);
+      } else {
+        setIsNearTop(false);
+      }
+    }
+  }, []);
+  
+  useEffect(() => {
+    window.addEventListener('scroll', checkIsNearTop);
+    return () => {
+      window.removeEventListener('scroll', checkIsNearTop);
+    };
+  }, [checkIsNearTop]);
+  
+  useEffect(() => {
+    checkIsNearTop();
+  }, [message, checkIsNearTop]);
+
   const isImage = (url) => {
     const imageExtensions = [".jpg", ".jpeg", ".png", ".gif", ".bmp"] // Add more extensions if needed
     const extension = url.substring(url.lastIndexOf(".")).toLowerCase()
@@ -99,7 +129,7 @@ const Message = ({ message }) => {
 
   return (
     <>
-      <div className={`chat ${chatClassName}`}>
+      <div ref={messageRef} className={`chat ${chatClassName}`}>
         <div className="chat-image avatar">
           <div className="w-10 rounded-full">
             <img
@@ -118,14 +148,35 @@ const Message = ({ message }) => {
               onMouseLeave={handleMouseLeave}
             >
               <div className={`chat-options ${showOptions ? "opacity-100" : "opacity-0"} ${fromMe ? "mr-2" : "ml-2"}`}>
-                <div className={`dropdown dropdown-${fromMe ? "left" : "right"}`}>
+              <div className={`dropdown dropdown-${fromMe ? "left" : "right"} ${isNearTop ? "" : "dropdown-end"}`}>
                   <div tabIndex={0} role="button">
                     <IoIosMore size={15} />
                   </div>
                   {showOptions && (
-                    <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-gray-200 rounded-box w-52">
+                    <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-gray-200 rounded-box w-52  ">
                       <li>
-                        <a onClick={handleDeleteMessage} className="text-red-500">
+                        <a className="text-gray-500">Copy tin nhắn</a>
+                      </li>
+                      <div className="divider my-0 py-0 mx-1 h-1 mb-2" />
+                      <li>
+                        <a className="text-gray-500">Ghim tin nhắn</a>
+                      </li>
+                      <li>
+                        <a className="text-gray-500">Dánh dấu tin nhắn</a>
+                      </li>
+                      <li>
+                        <a className="text-gray-500">Chọn nhiều tin nhắn</a>
+                      </li>
+                      <li>
+                        <a className="text-gray-500">Xem Chi tiết</a>
+                      </li>
+                      <div className="divider my-0 py-0 mx-1 h-1 mb-2" />
+                      <li>
+                        <a className="text-red-600">Thu hồi</a>
+                      </li>
+
+                      <li>
+                        <a onClick={handleDeleteMessage} className="text-red-600">
                           {fromMe ? "Thu hồi tin nhắn" : "Xóa tin nhắn ở phía tôi"}
                         </a>
                       </li>
