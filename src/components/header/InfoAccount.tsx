@@ -1,11 +1,11 @@
 import useConversation from "@/zustand/useConversation"
 
 const InfoAccount = () => {
-  const { selectedConversation } = useConversation()
+  const { selectedConversation, usersOnline } = useConversation()
 
   return (
     <div className="flex gap-2">
-      <div className="avatar mt-1 ml-2">
+      <div className={`avatar mt-1 ml-2 ${usersOnline.get(selectedConversation.id) ? "online" : "offline"}`}>
         <div className="w-12 rounded-full">
           <img src={selectedConversation.avatar} />
         </div>
