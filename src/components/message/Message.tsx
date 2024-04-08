@@ -7,30 +7,10 @@ import { IoIosMore } from "react-icons/io"
 import FileMessage from "./FileMessage"
 import useConversation from "@/zustand/useConversation"
 
-const Message = ({ message }) => {
+const Message = ({ message, isLastMessage }) => {
   const { authUser } = useAuthContext()
   const [isDeleted, setIsDeleted] = useState(false)
-  const { selectedConversation, lastMessageSeen, messages } = useConversation()
-  const [isSeen, setIsSeen] = useState(false)
-
-  useEffect(() => {
-    const latestMessage = messages[messages.length - 1]
-    if (
-      message?.id === lastMessageSeen?.id &&
-      lastMessageSeen?.recipientId !== authUser.user.id &&
-      message?.id === latestMessage?.id
-    ) {
-      setIsSeen(true)
-    } else {
-      setIsSeen(false)
-    }
-  }, [lastMessageSeen, message.id])
-
-  useEffect(() => {
-    if (isSeen) {
-      // Do something when the message is seen
-    }
-  }, [isSeen])
+  const { selectedConversation } = useConversation()
 
   const isImage = (url) => {
     const imageExtensions = [".jpg", ".jpeg", ".png", ".gif", ".bmp"]
@@ -142,13 +122,11 @@ const Message = ({ message }) => {
                     <IoIosMore size={15} />
                   </div>
                   {showOptions && (
-                    <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-gray-200 rounded-box w-52">
-                      <li>
-                        <a onClick={handleDeleteMessage} className="text-red-500">
-                          {fromMe ? "Thu hồi tin nhắn" : "Xóa tin nhắn ở phía tôi"}
-                        </a>
-                      </li>
-                    </ul>
+                    <div tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-gray-200 rounded-box w-52">
+                      <button onClick={handleDeleteMessage} className="text-red-500">
+                        {fromMe ? "Thu hồi tin nhắn" : "Xóa tin nhắn ở phía tôi"}
+                      </button>
+                    </div>
                   )}
                 </div>
               </div>
@@ -159,15 +137,6 @@ const Message = ({ message }) => {
 
         <div className="flex ">
           <div className="chat-footer opacity-50 text-xs gap-1 items-center">{formatTime}</div>
-          {isSeen ? (
-            <img
-              style={{ width: "20px", height: "20px", borderRadius: "50%" }}
-              alt="Tailwind CSS chat bubble component"
-              src={seenAvatarClassName}
-            />
-          ) : (
-            <></>
-          )}
         </div>
       </div>
     </>

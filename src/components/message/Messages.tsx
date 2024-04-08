@@ -5,21 +5,11 @@ import { useEffect, useRef } from "react"
 import Lottie from "react-lottie"
 import animationData from "../../animations/typing.json"
 import useConversation from "@/zustand/useConversation.js"
-import axios from "axios"
+
 const Messages = () => {
   const { loading, messages } = useGetMessages()
   const lastMessage = useRef()
-  const { isTyping, selectedConversation, setLastMessageSeen } = useConversation()
-
-  useEffect(() => {
-    const getLatestSeenMessage = async () => {
-      const response = await axios.get(`http://localhost:3000/messages/latestSeen/${selectedConversation.id}`)
-      if (response.data) {
-        setLastMessageSeen(response.data)
-      }
-    }
-    getLatestSeenMessage()
-  }, [selectedConversation.id])
+  const { isTyping, selectedConversation } = useConversation()
 
   useEffect(() => {
     setTimeout(() => {
@@ -35,6 +25,7 @@ const Messages = () => {
       preserveAspectRatio: "xMidYMid slice",
     },
   }
+
   return (
     <div className="px-4 flex-1 overflow-auto">
       {!loading &&
@@ -42,7 +33,7 @@ const Messages = () => {
         messages.map((message, index) => {
           return (
             <div key={index} ref={index === messages.length - 1 ? lastMessage : null}>
-              <Message message={message} />
+              <Message message={message} isLastMessage={index === messages.length - 1 ? true : false} />
             </div>
           )
         })}

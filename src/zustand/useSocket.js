@@ -36,23 +36,6 @@ const useSocket = (userId) => {
     }
   }, [messages, setIsTyping, setMessages, token])
 
-  useEffect(() => {
-    const lastMessage = messages[messages.length - 1]
-    const lastMessageIsFromOtherUser = lastMessage?.user?.id !== userId && !lastMessage?.seen // Check if the last message is from the other user and has not been seen
-
-    if (lastMessageIsFromOtherUser) {
-      socketRef.current.emit("markAsSeen", lastMessage)
-    }
-    setLastMessageSeen(lastMessage)
-    socketRef.current.on("messagesSeen", (message) => {
-      const updatedMessages = messages.map((msg) => (msg.id === message.id ? { ...msg, seen: true } : msg))
-      setMessages(updatedMessages)
-    })
-    return () => {
-      socketRef.current.off("messagesSeen")
-    }
-  }, [messages, userId, lastMessageSeen, setLastMessageSeen, setMessages]) // Dependency array without lastMessageSeen
-
   const sendMessage = (newMessage) => {
     socketRef.current.emit("message", newMessage)
   }

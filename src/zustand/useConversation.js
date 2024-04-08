@@ -14,9 +14,6 @@ const useConversation = create((set) => ({
   lastMessage: "",
   setLastMessage: (lastMessage) => set({ lastMessage }),
 
-  lastMessageSeen: null,
-  setLastMessageSeen: (lastMessageSeen) => set({ lastMessageSeen }),
-
   usersOnline: new Map(),
   setUserOnline: (usersOnline) => set({ usersOnline }),
 }))
