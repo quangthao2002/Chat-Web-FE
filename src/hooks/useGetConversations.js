@@ -33,7 +33,7 @@ const useGetConversations = () => {
             const refreshData = await refreshRes.json()
 
             if (!refreshRes.ok) {
-              throw new Error(refreshData.message)
+              throw new Error(refreshData?.message)
             }
             // Lưu access token mới vào localStorage
             localStorage.setItem(
@@ -55,8 +55,8 @@ const useGetConversations = () => {
           }
         }
         const result = data?.map((item) => {
-          const isMe = item.sender.id === userId
-          return isMe ? item.receiver : item.sender
+          const isMe = item?.sender?.id === userId
+          return isMe ? item?.receiver : item?.sender
         })
         setConversation(result)
       } catch (error) {

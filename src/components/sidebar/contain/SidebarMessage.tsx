@@ -8,19 +8,18 @@ const SidebarMessage = () => {
   const { loading, conversation } = useGetConversations()
   const { usersOnline } = useConversation()
   const { authUser } = useAuthContext()
-  const currentUserId = authUser.user.id
+  const currentUserId = authUser?.user?.id
   useSocket(currentUserId)
 
   return (
     <div className="py-2 flex flex-col max-h-screen overflow-auto ">
       {conversation?.map((user, index) => (
         <Conversation
-          isOnline={usersOnline ? !!usersOnline.get(user.id) : false}
-          key={user.id}
+          isOnline={usersOnline ? !!usersOnline.get(user?.id) : false}
+          key={user?.id}
           conversation={user}
           lastIndex={index === conversation.length - 1}
         />
-
       ))}
       {loading ? <span className="loading loading-spinner"></span> : null}
     </div>
