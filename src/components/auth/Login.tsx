@@ -55,7 +55,7 @@ const Login = () => {
 
     if (file) {
       const formData = new FormData()
-      formData.append("image", file)
+      formData.append("avatar", file)
 
       const response = await fetch("http://localhost:3000/messages/uploadImageAndGetUrl", {
         method: "POST",

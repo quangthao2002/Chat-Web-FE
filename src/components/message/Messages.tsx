@@ -11,6 +11,7 @@ const Messages = () => {
   const lastMessage = useRef()
   const { isTyping, selectedConversation } = useConversation()
 
+
   useEffect(() => {
     setTimeout(() => {
       lastMessage.current?.scrollIntoView({ behavior: "smooth" })
@@ -27,7 +28,7 @@ const Messages = () => {
   }
 
   return (
-    <div className="px-4 flex-1 overflow-auto">
+    <div className="px-4 flex-1 ">
       {!loading &&
         Array.isArray(messages) &&
         messages.map((message, index) => {
