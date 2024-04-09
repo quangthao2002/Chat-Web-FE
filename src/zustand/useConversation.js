@@ -11,9 +11,6 @@ const useConversation = create((set) => ({
   isTyping: false,
   setIsTyping: (isTyping) => set({ isTyping }),
 
-  lastMessage: "",
-  setLastMessage: (lastMessage) => set({ lastMessage }),
-
   usersOnline: new Map(),
   setUserOnline: (usersOnline) => set({ usersOnline }),
 }))

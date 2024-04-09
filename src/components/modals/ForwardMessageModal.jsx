@@ -27,16 +27,17 @@ const ForwardMessageModal = ({ onClose, messageForward }) => {
     setSelectedUsers((prevSelectedUsers) => prevSelectedUsers.filter((id) => id !== userId))
   }
   const handleForwardMessage = () => {
-    selectedUsers.map(newRecipientId=>{
+    selectedUsers.map((newRecipientId) => {
       const forwardMsg = {}
       forwardMsg.text = messageForward.text
-      forwardMsg.userId = messageForward.userId
+      forwardMsg.userId = messageForward?.user?.id
       forwardMsg.recipientId = newRecipientId
       forwardMsg.created_at = new Date()
-  
+      console.log(forwardMsg)
+      console.log("forwardMsg", messageForward)
       sendMessage(forwardMsg)
     })
-   
+
     onClose()
     toast.success("Chuyển tiếp tin nhắn thành công")
   }
@@ -66,9 +67,7 @@ const ForwardMessageModal = ({ onClose, messageForward }) => {
       <h2 className="text-black font-semibold mt-2">Add member</h2>
       <div className="max-h-56 overflow-y-auto">
         {conversation.map((user) => {
-
-          if (user.id !== ownerId&&user?.id!==messageForward.recipientId) {
-
+          if (user.id !== ownerId && user?.id !== messageForward.recipientId && user?.id !== messageForward?.user?.id) {
             return (
               <div key={user.id} className="flex gap-3 p-2">
                 <input
@@ -97,7 +96,7 @@ const ForwardMessageModal = ({ onClose, messageForward }) => {
         <button className="btn btn-md" onClick={onClose}>
           Close
         </button>
-        <button className="btn btn-neutral btn-md" onClick={handleForwardMessage} >
+        <button className="btn btn-neutral btn-md" onClick={handleForwardMessage}>
           Chuyển tiếp
         </button>
       </div>

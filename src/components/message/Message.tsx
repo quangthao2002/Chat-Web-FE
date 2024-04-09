@@ -11,13 +11,12 @@ import ForwardMessageModal from "../modals/ForwardMessageModal"
 const Message = ({ message, isLastMessage }: any) => {
   const { authUser } = useAuthContext()
   const [isDeleted, setIsDeleted] = useState(false)
-  const [isModalOpen,setIsModalOpen]=useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const { selectedConversation } = useConversation()
   const [isUnsend, setIsUnsend] = useState(false)
-  // const [isNearBottom, setIsNearBottom] = useState(false);
   const [isNearTop, setIsNearTop] = useState(false)
   const messageRef = useRef(null)
-  const [messageForward,setMessageForward]=useState("")
+  const [messageForward, setMessageForward] = useState("")
   const checkIsNearTop = useCallback(() => {
     if (messageRef.current) {
       const messageRect = messageRef.current.getBoundingClientRect()
@@ -117,7 +116,7 @@ const Message = ({ message, isLastMessage }: any) => {
       setIsUnsend(true)
     }
   }
-  const handleOpenModal=()=>{
+  const handleOpenModal = () => {
     setIsModalOpen(true)
     setMessageForward(message)
   }
@@ -141,7 +140,7 @@ const Message = ({ message, isLastMessage }: any) => {
 
   return (
     <>
-      {(message && (message.isDeleted || isDeleted)) ? (
+      {message && (message.isDeleted || isDeleted) ? (
         <></> // Render nothing if the message is deleted or IsDelete is true
       ) : (
         <div ref={messageRef} className={`chat ${chatClassName}`}>
@@ -150,44 +149,44 @@ const Message = ({ message, isLastMessage }: any) => {
               <img alt="Tailwind CSS chat bubble component" src={avatarClassName} />
             </div>
           </div>
-  
+
           <div
             className={`flex ${!fromMe ? "flex-row-reverse" : ""}`}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
           >
-            {(message && (message.isUnsend || isUnsend)) ? (
+            {message && (message.isUnsend || isUnsend) ? (
               <div className="chat-bubble text-white mt-1 bg-red-500">Tin nhắn đã được thu hồi</div>
             ) : (
               <>
-                <div className={`chat-options ${showOptions ? "opacity-100" : "opacity-0"} ${fromMe ? "mr-2" : "ml-2"}`}>
+                <div
+                  className={`chat-options ${showOptions ? "opacity-100" : "opacity-0"} ${fromMe ? "mr-2" : "ml-2"}`}
+                >
                   <div className={`dropdown dropdown-${fromMe ? "left" : "right"} ${isNearTop ? "" : "dropdown-end"}`}>
                     <div tabIndex={0} role="button">
                       <IoIosMore size={15} />
                     </div>
                     {showOptions && (
-                      <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-gray-200 rounded-box w-52  ">
+                      <ul
+                        tabIndex={0}
+                        className="dropdown-content z-[1] menu p-2 shadow bg-gray-200 rounded-box w-52  "
+                      >
                         <li>
                           <a className="text-gray-500">Copy tin nhắn</a>
                         </li>
                         <div className="divider my-0 py-0 mx-1 h-1 mb-2" />
                         <li>
-                          <a className="text-gray-500">Ghim tin nhắn</a>
-                        </li>
-                        <li>
-                          <a className="text-gray-500">Dánh dấu tin nhắn</a>
-                        </li>
-                        <li>
-                          <a className="text-gray-500">Chọn nhiều tin nhắn</a>
-                        </li>
-                        <li>
-                          <a onClick={handleOpenModal} className="text-gray-500">Chuyển tiếp tin nhắn</a>
+                          <a onClick={handleOpenModal} className="text-gray-500">
+                            Chuyển tiếp tin nhắn
+                          </a>
                         </li>
                         <div className="divider my-0 py-0 mx-1 h-1 mb-2" />
                         <li>
-                          <a onClick={handleDeleteMessage} className="text-red-600">Xóa tin nhắn</a>
+                          <a onClick={handleDeleteMessage} className="text-red-600">
+                            Xóa tin nhắn
+                          </a>
                         </li>
-  
+
                         <li>
                           <a onClick={handleUnsendMessage} className="text-red-600">
                             {fromMe ? "Thu hồi tin nhắn" : "Xóa tin nhắn ở phía tôi"}
@@ -206,10 +205,9 @@ const Message = ({ message, isLastMessage }: any) => {
           </div>
         </div>
       )}
-      {isModalOpen&&<ForwardMessageModal messageForward={messageForward} onClose={()=>setIsModalOpen(false)}/>}
+      {isModalOpen && <ForwardMessageModal messageForward={messageForward} onClose={() => setIsModalOpen(false)} />}
     </>
-  );
-  
+  )
 }
 
 export default Message
