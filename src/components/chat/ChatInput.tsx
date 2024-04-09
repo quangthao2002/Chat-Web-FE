@@ -5,7 +5,7 @@ import { useState } from "react"
 import { BsSend } from "react-icons/bs"
 import { MdEmojiEmotions } from "react-icons/md"
 const ChatInput = () => {
-  const { selectedConversation, messages, setMessages } = useConversation()
+  const { selectedConversation,setMessages,messages } = useConversation()
   const { authUser } = useAuthContext()
   const currentUserId = authUser.user.id
   const [typing, setTyping] = useState(false)
@@ -32,8 +32,8 @@ const ChatInput = () => {
     }
 
     // thêm tin mới vào danh sách tin nhắn
+    setMessages([...messages, newMessage]);
     sendMessage(newMessage)
-    setMessages([...messages, newMessage])
     setMessage("")
     sendStopTyping(selectedConversation.id)
   }

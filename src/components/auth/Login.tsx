@@ -127,7 +127,7 @@ const Login = () => {
               id="avatar"
               onChange={handleFileChange}
               placeholder="Avatar"
-              required
+              
             />
             {/* <div className="flex relative right-72 ">
               <label htmlFor="is_admin" className="label gap-1 cursor-pointer font-bold">

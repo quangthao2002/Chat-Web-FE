@@ -5,7 +5,7 @@ import { io } from "socket.io-client"
 const useSocket = (userId) => {
   const socketRef = useRef()
   const { setMessages, messages, setIsTyping, setLastMessageSeen, lastMessageSeen, setUserOnline, usersOnline } =
-    useConversation()
+  useConversation()
   const user = JSON.parse(localStorage.getItem("tokens-user"))
   const token = user.tokens.accessToken
 
@@ -17,7 +17,43 @@ const useSocket = (userId) => {
     })
 
     socketRef.current.on("message", (newMessage) => {
+      console.log(newMessage);
       setMessages([...messages, newMessage])
+    })
+    socketRef.current.on("message", (newMessage) => {
+      console.log(newMessage);
+      setMessages([...messages, newMessage])
+    })
+
+
+    socketRef.current.on("deleteMessage", (deletedMessage) => {
+      // Find the index of the item in the array based on its ID
+      const index = messages.findIndex(item => item?.id === deletedMessage?.id);
+       console.log("dleete",index)
+      // If item is found
+      if (index !== -1) {
+        // Update the item with the new data
+        messages[index] = { ...messages[index], ...deletedMessage };
+        console.log(messages[index]);
+        setMessages(messages)
+      } else {
+        console.error(`Item with ID ${deletedMessage?.id} not found`);
+      }
+    })
+  
+    socketRef.current.on("unsendmessage", (unsendMessage) => {
+      // Find the index of the item in the array based on its ID
+      const index = messages.findIndex(item => item?.id === unsendMessage?.id);
+
+      // If item is found
+      if (index !== -1) {
+        // Update the item with the new data
+        messages[index] = { ...messages[index], ...unsendMessage };
+        console.log(messages[index]);
+        setMessages(messages)
+      } else {
+        console.error(`Item with ID ${unsendMessage?.id} not found`);
+      }
     })
 
     socketRef.current.on("typing", () => setIsTyping(true))
@@ -30,14 +66,18 @@ const useSocket = (userId) => {
       setUserOnline(usersOnlineMap)
     })
     return () => {
-      socketRef.current.disconnect()
       socketRef.current.off("message")
       socketRef.current.off("getUsersOnline")
+      socketRef.current.off("unsendmessage")
+      socketRef.current.off("deleteMessage")
+      socketRef.current.disconnect()
+
     }
   }, [messages, setIsTyping, setMessages, token])
 
   const sendMessage = (newMessage) => {
     socketRef.current.emit("message", newMessage)
+    
   }
   const sendTyping = (userId) => {
     socketRef.current.emit("typing", { recipientId: userId })
