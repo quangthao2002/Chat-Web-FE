@@ -7,7 +7,7 @@ import { IoIosMore } from "react-icons/io"
 import FileMessage from "./FileMessage"
 import useConversation from "@/zustand/useConversation"
 
-const Message = ({ message, isLastMessage }) => {
+const Message = ({ message, isLastMessage }: any) => {
   const { authUser } = useAuthContext()
   const [isDeleted, setIsDeleted] = useState(false)
   const { selectedConversation } = useConversation()
@@ -40,7 +40,7 @@ const Message = ({ message, isLastMessage }) => {
     checkIsNearTop()
   }, [message, checkIsNearTop])
 
-  const isImage = (url) => {
+  const isImage = (url: any) => {
     const imageExtensions = [".jpg", ".jpeg", ".png", ".gif", ".bmp"]
     const extension = url.substring(url.lastIndexOf(".")).toLowerCase()
     if (imageExtensions.includes(extension)) {
@@ -50,7 +50,7 @@ const Message = ({ message, isLastMessage }) => {
     }
   }
 
-  const isVideo = (url) => {
+  const isVideo = (url: any) => {
     const videoExtensions = [".mp4", ".avi", ".mov", ".wmv", ".flv"] // Add more extensions if needed
     const extension = url.substring(url.lastIndexOf(".")).toLowerCase()
     if (videoExtensions.includes(extension)) {
@@ -59,7 +59,7 @@ const Message = ({ message, isLastMessage }) => {
       return false
     }
   }
-  const isFile = (url) => {
+  const isFile = (url: any) => {
     const fileExtensions = [
       ".doc",
       ".docx",
