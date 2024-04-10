@@ -9,6 +9,7 @@ const ChatInput = () => {
   const { authUser } = useAuthContext()
   const currentUserId = authUser.user.id
 
+
   const { sendMessage } = useSocket(currentUserId)
 
   const [message, setMessage] = useState("")

@@ -30,7 +30,7 @@ const Categories = () => {
         {showUserInfo && (
           <PersonalInformation user={authUser?.user} onRequestClose={handleModalClose} isOpen={showUserInfo} />
         )}
-          <div className="flex flex-col items-center gap-2.5 mb-6">
+          <div className="flex flex-col items-center gap-2.5 mb-36">
             <button className="btn btn-circle text-white bg-primary border-none">
               <BiMessageRoundedDetail size={35} />
             </button>
@@ -41,7 +41,7 @@ const Categories = () => {
               <RiCalendarTodoLine size={35} />
             </button>
           </div>
-          <div className="sticky bottom-0 flex flex-col gap-2 mb-4">
+          <div className="sticky bottom-0 flex flex-col gap-2 mt-28">
             <button className="btn btn-circle text-white bg-primary border-none">
               <CiCloudOn size={35} />
             </button>

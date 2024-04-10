@@ -1,3 +1,4 @@
+import { useSidebarContext } from "@/context/SideBarContext"
 import useModalVideoCall from "@/zustand/useVideoCall"
 import { CiSearch } from "react-icons/ci"
 import { GoDeviceCameraVideo } from "react-icons/go"
@@ -6,6 +7,8 @@ import { MdGroupAdd } from "react-icons/md"
 
 const GroupButton = () => {
   const { setOpenModal } = useModalVideoCall()
+
+  const { toggleSidebar } = useSidebarContext();
 
   return (
     <div className="flex gap-6 pr-4">
@@ -18,7 +21,7 @@ const GroupButton = () => {
       <button onClick={setOpenModal} className="hover:bg-gray-100 rounded-2xl" title="Cuộc gọi video">
         <GoDeviceCameraVideo size={35} />
       </button>
-      <button className="hover:bg-gray-100 rounded-2xl" title="thông tin hội thoại">
+      <button className="hover:bg-gray-100 rounded-2xl" title="thông tin hội thoại"  onClick={toggleSidebar}>
         <IoIosInformationCircle size={35} />
       </button>
     </div>

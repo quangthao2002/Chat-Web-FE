@@ -11,7 +11,7 @@ const InfoAccount = () => {
         </div>
       </div>
       <div className="flex flex-col  justify-center">
-        <p className="text-custom-color font-semibold text-lg">{selectedConversation.username}</p>
+        <p className="text-gray-500 font-medium text-lg">{selectedConversation.username || selectedConversation.name}</p>
         <p className="text-xs opacity-50">Active 12m ago</p>
       </div>
     </div>

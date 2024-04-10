@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, {  useRef, useState } from "react"
 import useGetConversations from "@/hooks/useGetConversations"
 import Modal from "react-modal"
 import { IoMdClose } from "react-icons/io"
@@ -8,12 +8,13 @@ import { useAuthContext } from "@/context/AuthContext"
 
 const UserListModal = ({ onClose }) => {
   const socketRef = useRef()
-  const {  conversation, addConversation} = useGetConversations()
+  const {  conversation,setConversation,setRefresh} = useGetConversations()
   const [selectedUsers, setSelectedUsers] = useState([])
   const [groupAvatar, setGroupAvatar] = useState("")
   const [groupName, setGroupName] = useState("")
   const { authUser } = useAuthContext()
   const ownerId = authUser.user.id
+  const accessToken = authUser.tokens.accessToken
   socketRef.current = io("http://localhost:3000")
 
 
@@ -50,14 +51,12 @@ const UserListModal = ({ onClose }) => {
     }
   }
 
-  useEffect(() => {
-    console.log("Danh Sach conversion luc dau",conversation);
-  }, [conversation]);
+
+
   const handleCreateGroup = async () => {
-    console.log("Sending createRoom message:", groupAvatar, groupName, selectedUsers)
     socketRef.current.emit("createRoom", {
       name: groupName,
-      userIds: selectedUsers,
+      userIds: [...selectedUsers, ownerId],
       avatar: groupAvatar,
       ownerId: ownerId,
     })
@@ -65,9 +64,19 @@ const UserListModal = ({ onClose }) => {
     const roomId = await new Promise((resolve) => { 
       socketRef.current.on("roomCreated", resolve)
     })
+    const response = await fetch("http://localhost:3000/room/rooms/user/"+ ownerId )
+    // const response = await fetch("http://localhost:3000/room/rooms/user/"+ ownerId, {
+    //   headers: {
+    //     'Authorization': 'Bearer ' + accessToken // Gửi accessToken trong header Authorization
+    //   }
+    // });
+    const updateConversation = await response.json();
+    console.log(updateConversation, "updateConversation")
+    setConversation(updateConversation)
+
+    setRefresh(prev => !prev)
 
     console.log("Received roomCreated message:", roomId)
-    addConversation({ id: roomId, username: groupName, avatar: groupAvatar })
     onClose()
   }
 
@@ -108,7 +117,7 @@ const UserListModal = ({ onClose }) => {
       <div className="divider my-0 py-0 mx-1 h-1 " />
       <h2 className="text-black font-semibold mt-2">Add member</h2>
       <div className="max-h-56 overflow-y-auto">
-        {conversation.map((user) => (
+        {conversation.filter(item => item.username).map((user) => (
           <div key={user.id} className="flex gap-3 p-2">
             <input
               type="checkbox"
@@ -122,7 +131,7 @@ const UserListModal = ({ onClose }) => {
             />
             <div className="avatar">
               <div className="w-10 rounded-full">
-                <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"  onChange={handleFileChange}/>
+                <img src={user.avatar} onChange={handleFileChange}/>
               </div>
             </div>
             <label className="mt-2">{user.username}</label>

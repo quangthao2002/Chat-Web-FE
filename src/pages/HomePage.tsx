@@ -5,18 +5,21 @@ import MainLayout from "@/layouts/MainLayout"
 import { NoChatSelected } from "./NoChatSelected"
 import useConversation from "@/zustand/useConversation"
 import { useEffect } from "react"
+import { useSidebarContext } from "@/context/SideBarContext"
+import ConversationInfo from "@/components/header/ConversationInfo"
 
 const HomePage = () => {
   const { selectedConversation, setSelectedConversation } = useConversation()
-
+  // const { isSidebarOpen } = useSidebarContext();
   useEffect(() => {
     return () => {
       setSelectedConversation(null)
     }
   }, [setSelectedConversation])
-
+  const { isSidebarOpen } = useSidebarContext();
   return (
     <MainLayout>
+    <div className="flex flex-1">
       {!selectedConversation ? (
         <NoChatSelected />
       ) : (
@@ -26,9 +29,11 @@ const HomePage = () => {
             <MessageContainer />
             <Chat />
           </div>
+          {isSidebarOpen && <ConversationInfo />}
         </>
       )}
-    </MainLayout>
+    </div>
+  </MainLayout>
   )
 }
 
