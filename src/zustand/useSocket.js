@@ -1,11 +1,15 @@
 import useConversation from "@/zustand/useConversation.js"
 import { useEffect, useRef } from "react"
 import { io } from "socket.io-client"
+import { useFriendStore } from "./useFriendStore"
+import useGetConversations from "@/hooks/useGetConversations"
 
 const useSocket = (userId) => {
   const socketRef = useRef()
   const { setMessages, messages, setIsTyping, setLastMessageSeen, lastMessageSeen, setUserOnline, usersOnline } =
     useConversation()
+  const { setSenderId, setReceiverId, setIsAccept } = useFriendStore()
+  const { getConversations } = useGetConversations()
   const user = JSON.parse(localStorage.getItem("tokens-user"))
   const token = user.tokens.accessToken
 
@@ -22,6 +26,13 @@ const useSocket = (userId) => {
 
     socketRef.current.on("typing", () => setIsTyping(true))
     socketRef.current.on("stopTyping", () => setIsTyping(false))
+    socketRef.current.on("friend-request-sent", (payload) => {
+      setSenderId(payload.senderId)
+      setReceiverId(payload.receiverId)
+    })
+    socketRef.current.on("accept-friend-request", (payload) => {
+      setIsAccept(true)
+    })
 
     socketRef.current.on("getUsersOnline", (data) => {
       // Extract the user IDs from the received data and create a Map

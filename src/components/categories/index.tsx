@@ -1,21 +1,21 @@
-import { Tab, useTabContext } from "@/context/TabContext"
-import useGetListRequestPending from "@/hooks/friend/useGetListRequestPending"
-import useLogOut from "@/hooks/useLogOut"
 import { useAuthContext } from "@/context/AuthContext"
-import { useFriendStore } from "@/zustand/useFriendStore"
+import { Tab, useTabContext } from "@/context/TabContext"
+import useLogOut from "@/hooks/useLogOut"
 import React, { useEffect, useState } from "react"
 import { BiLogOut, BiMessageRoundedDetail } from "react-icons/bi"
 import { CiCloudOn } from "react-icons/ci"
 import { PiToolboxLight } from "react-icons/pi"
 import { RiCalendarTodoLine } from "react-icons/ri"
 import { TiContacts } from "react-icons/ti"
-import ButtonCategories from "./ButtonCategories"
 import PersonalInformation from "../profile/PersonalInformation"
+import ButtonCategories from "./ButtonCategories"
+import useGetListRequestPending from "@/hooks/friend/useGetListRequestPending"
+import { useFriendStore } from "@/zustand/useFriendStore"
 
 const Categories: React.FC = () => {
   const { loading, logout } = useLogOut()
   const { activeTab, setActiveTab } = useTabContext()
-  const { getListFriendRequestPending, userId } = useGetListRequestPending()
+  const { getListRequestPending } = useGetListRequestPending()
   const { listPendingRequest } = useFriendStore()
 
   const { authUser } = useAuthContext()
@@ -33,8 +33,8 @@ const Categories: React.FC = () => {
   const handleOpenPhoneBook = () => setActiveTab(Tab.PhoneBook)
 
   useEffect(() => {
-    getListFriendRequestPending()
-  }, [userId])
+    getListRequestPending(authUser.user.id)
+  }, [])
 
   return (
     <div className="h-screen bg-primary flex flex-col py-2">
