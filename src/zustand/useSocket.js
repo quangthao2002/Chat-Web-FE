@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react"
 import { io } from "socket.io-client"
 import { useFriendStore } from "./useFriendStore"
 import useGetConversations from "@/hooks/useGetConversations"
-
+import { toast } from "react-toastify"
 const useSocket = (userId) => {
   const socketRef = useRef()
   const { setMessages, messages, setIsTyping, setLastMessageSeen, lastMessageSeen, setUserOnline, usersOnline } =
@@ -23,17 +23,38 @@ const useSocket = (userId) => {
       const usersOnlineMap = new Map(data)
       setUserOnline(usersOnlineMap)
     })
+
+   
+
     return () => {
       socketRef.current.off("getUsersOnline")
       socketRef.current.disconnect()
     }
   }, [setIsTyping, setUserOnline, token])
 
+  useEffect(()=>{
+    socketRef.current.on("friend-request-sent", (payload) => {
+      setSenderId(payload.senderId)
+      setReceiverId(payload.receiverId)
+   
+    })
+    socketRef.current.on("accept-friend-request", (payload) => {
+      setIsAccept(true)
+     
+    })
+    return () => {
+      socketRef.current.off("friend-request-sent")
+      socketRef.current.off("accept-friend-request")
+
+    }
+  },[])
+
   useEffect(() => {
     socketRef.current.on("message", (newMessage) => {
       console.log(newMessage)
       setMessages([...messages, newMessage])
     })
+
     socketRef.current.on("deleteMessage", (deletedMessage) => {
       const index = messages.findIndex((item) => item?.id === deletedMessage?.id)
       if (index !== -1) {
