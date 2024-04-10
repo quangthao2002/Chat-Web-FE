@@ -37,9 +37,7 @@ const Conversation = ({ conversation, lastIndex, usersOnline }: ConversationProp
         </div>
         <div className="flex flex-1 flex-col">
           <div className="flex gap-3 justify-between">
-            <div className="flex flex-col">
-              <p className="text-lg font-semibold">{conversation?.username}</p>
-            </div>
+            <p className="text-lg font-semibold">{conversation.username || conversation.name}</p>
             <span className="text-xs  text-gray-400">
               {time.toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" })}
             </span>

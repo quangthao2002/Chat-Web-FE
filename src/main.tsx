@@ -1,23 +1,26 @@
 import React from "react"
-import ReactDOM from "react-dom/client"
+import ReactDOM from "react-dom"
 import App from "./App.tsx"
 import "./index.css"
-import { AuthContextProvider } from "./context/AuthContext.jsx"
-// import { VideoProvider } from "./context/VideoProvider.tsx"
+import { AuthContextProvider } from "./context/AuthContext"
 import { BrowserRouter } from "react-router-dom"
-import TabProvider from "./context/TabContext.tsx"
-import VideoProvider from "./context/VideoContext.tsx"
+import TabProvider from "./context/TabContext"
+import VideoProvider from "./context/VideoContext"
+import { SidebarProvider } from "./context/SideBarContext"
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
+ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthContextProvider>
-        <TabProvider>
-          <VideoProvider>
+        <SidebarProvider>
+          <TabProvider>
+            {/* <VideoProvider> */}
             <App />
-          </VideoProvider>
-        </TabProvider>
+            {/* </VideoProvider> */}
+          </TabProvider>
+        </SidebarProvider>
       </AuthContextProvider>
     </BrowserRouter>
   </React.StrictMode>,
+  document.getElementById("root"),
 )
