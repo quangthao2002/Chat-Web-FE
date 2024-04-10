@@ -1,10 +1,15 @@
 import useConversation from "@/zustand/useConversation.js"
 import { useEffect, useRef } from "react"
 import { io } from "socket.io-client"
+import { useFriendStore } from "./useFriendStore"
+import useGetConversations from "@/hooks/useGetConversations"
 
 const useSocket = (userId) => {
   const socketRef = useRef()
-  const { setMessages, messages, setIsTyping, setUserOnline } = useConversation()
+  const { setMessages, messages, setIsTyping, setLastMessageSeen, lastMessageSeen, setUserOnline, usersOnline } =
+    useConversation()
+  const { setSenderId, setReceiverId, setIsAccept } = useFriendStore()
+  const { getConversations } = useGetConversations()
   const user = JSON.parse(localStorage.getItem("tokens-user"))
   const token = user.tokens.accessToken
 

@@ -1,4 +1,4 @@
-import useSendFriendRequest from "@/hooks/friend/useSendFriendRequest"
+import friendServices from "@/services/friendServices"
 import { useFriendStore } from "@/zustand/useFriendStore"
 import axios from "axios"
 import { useCallback, useState } from "react"
@@ -7,17 +7,16 @@ import { IoMdClose } from "react-icons/io"
 import Modal from "react-modal"
 import AccountItem from "../sidebar/contain/AccountItem"
 
+Modal.setAppElement("#root")
 function AddFriend({ onClose }) {
-  Modal.setAppElement("#root")
   const user = JSON.parse(localStorage.getItem("tokens-user"))
   const token = user?.tokens?.accessToken
 
   const [search, setSearch] = useState(null)
   const [phone, setPhone] = useState("")
   const { listPendingRequest } = useFriendStore()
-  const { sendFriendRequest } = useSendFriendRequest()
 
-  const isFriend = listPendingRequest.find((item) => item.phone === search?.phone)
+  const isFriend = listPendingRequest?.find((item) => item.phone === search?.phone)
   const isMe = search?.phone === user?.user?.phone
 
   const handleSearchUser = async () => {
@@ -33,16 +32,13 @@ function AddFriend({ onClose }) {
   }
 
   const handleAddFriend = useCallback(async (item) => {
-    if (item?.id) {
-      await sendFriendRequest(item.id)
-      await handleSearchUser()
-      toast.success(`Đã gửi lời mời kết bạn đến ${item?.username}`)
-    }
+    const res = await friendServices.sendFriendRequest({ receiverId: item.id })
+    console.log(res)
+    // toast.success(`Đã gửi lời mời kết bạn đến ${item?.username}`)
   }, [])
 
   const handleCancelFriend = useCallback(async (item) => {
     if (item?.id) {
-      await sendFriendRequest(item.id)
       await handleSearchUser()
       toast.error(`Đã gửi lời mời kết bạn đến ${item?.username}`)
     }
@@ -52,7 +48,7 @@ function AddFriend({ onClose }) {
     <Modal
       isOpen={true}
       overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
-      onRequestClose ={onClose}
+      onRequestClose={onClose}
       style={{
         content: {
           width: "550px",
@@ -89,10 +85,10 @@ function AddFriend({ onClose }) {
         )}
       </div>
       <div className="flex justify-end  gap-2">
-        <button className="btn btn-md" onClick={onClose}>
+        <button type="button" className="btn btn-md" onClick={onClose}>
           Close
         </button>
-        <button className="btn btn-neutral btn-md" onClick={handleSearchUser}>
+        <button type="button" className="btn btn-neutral btn-md" onClick={handleSearchUser}>
           Search
         </button>
       </div>
