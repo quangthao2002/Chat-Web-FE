@@ -1,4 +1,4 @@
-import React, {  useRef, useState } from "react"
+import React, { useRef, useState } from "react"
 import useGetConversations from "@/hooks/useGetConversations"
 import Modal from "react-modal"
 import { IoMdClose } from "react-icons/io"
@@ -8,7 +8,7 @@ import { useAuthContext } from "@/context/AuthContext"
 
 const UserListModal = ({ onClose }) => {
   const socketRef = useRef()
-  const {  conversation,setConversation,setRefresh} = useGetConversations()
+  const { conversation, setConversation, setRefresh } = useGetConversations()
   const [selectedUsers, setSelectedUsers] = useState([])
   const [groupAvatar, setGroupAvatar] = useState("")
   const [groupName, setGroupName] = useState("")
@@ -16,7 +16,6 @@ const UserListModal = ({ onClose }) => {
   const ownerId = authUser.user.id
   const accessToken = authUser.tokens.accessToken
   socketRef.current = io("http://localhost:3000")
-
 
   Modal.setAppElement("#root")
 
@@ -51,8 +50,6 @@ const UserListModal = ({ onClose }) => {
     }
   }
 
-
-
   const handleCreateGroup = async () => {
     socketRef.current.emit("createRoom", {
       name: groupName,
@@ -61,20 +58,20 @@ const UserListModal = ({ onClose }) => {
       ownerId: ownerId,
     })
 
-    const roomId = await new Promise((resolve) => { 
+    const roomId = await new Promise((resolve) => {
       socketRef.current.on("roomCreated", resolve)
     })
-    const response = await fetch("http://localhost:3000/room/rooms/user/"+ ownerId )
+    const response = await fetch("http://localhost:3000/room/rooms/user/" + ownerId)
     // const response = await fetch("http://localhost:3000/room/rooms/user/"+ ownerId, {
     //   headers: {
     //     'Authorization': 'Bearer ' + accessToken // Gửi accessToken trong header Authorization
     //   }
     // });
-    const updateConversation = await response.json();
+    const updateConversation = await response.json()
     console.log(updateConversation, "updateConversation")
     setConversation(updateConversation)
 
-    setRefresh(prev => !prev)
+    setRefresh((prev) => !prev)
 
     console.log("Received roomCreated message:", roomId)
     onClose()
@@ -83,7 +80,7 @@ const UserListModal = ({ onClose }) => {
   return (
     <Modal
       isOpen={true}
-      onRequestClose ={onClose}
+      onRequestClose={onClose}
       overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
       style={{
         content: {
@@ -117,26 +114,28 @@ const UserListModal = ({ onClose }) => {
       <div className="divider my-0 py-0 mx-1 h-1 " />
       <h2 className="text-black font-semibold mt-2">Add member</h2>
       <div className="max-h-56 overflow-y-auto">
-        {conversation.filter(item => item.username).map((user) => (
-          <div key={user.id} className="flex gap-3 p-2">
-            <input
-              type="checkbox"
-              onChange={(e) => {
-                if (e.target.checked) {
-                  handleUserSelect(user.id)
-                } else {
-                  handleUserDeselect(user.id)
-                }
-              }}
-            />
-            <div className="avatar">
-              <div className="w-10 rounded-full">
-                <img src={user.avatar} onChange={handleFileChange}/>
+        {conversation
+          ?.filter((item) => item.username)
+          .map((user) => (
+            <div key={user.id} className="flex gap-3 p-2">
+              <input
+                type="checkbox"
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    handleUserSelect(user.id)
+                  } else {
+                    handleUserDeselect(user.id)
+                  }
+                }}
+              />
+              <div className="avatar">
+                <div className="w-10 rounded-full">
+                  <img src={user.avatar} onChange={handleFileChange} />
+                </div>
               </div>
+              <label className="mt-2">{user.username}</label>
             </div>
-            <label className="mt-2">{user.username}</label>
-          </div>
-        ))}
+          ))}
       </div>
       <div className="divider my-0 py-0 mx-1 h-1 mb-2" />
       <div className="flex justify-end  gap-2">

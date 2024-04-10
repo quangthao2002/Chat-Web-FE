@@ -13,15 +13,6 @@ interface ConversationProps {
 const Conversation = ({ conversation, lastIndex, usersOnline }: ConversationProps) => {
   const [time, setTime] = useState(new Date())
   const { selectedConversation, setSelectedConversation } = useConversation()
-  // useEffect(() => {
-  //   const timer = setInterval(() => {
-  //     setTime(new Date())
-  //   }, 1000)
-  //   return () => {
-  //     clearInterval(timer)
-  //   }
-  // }, [])
-  console.log("online", usersOnline)
 
   const isSelected = selectedConversation?.id === conversation?.id
   return (

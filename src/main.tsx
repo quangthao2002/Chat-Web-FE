@@ -12,13 +12,13 @@ ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthContextProvider>
-        <SidebarProvider>
-          <TabProvider>
-            {/* <VideoProvider> */}
-            <App />
-            {/* </VideoProvider> */}
-          </TabProvider>
-        </SidebarProvider>
+        <TabProvider>
+          <SidebarProvider>
+            <VideoProvider>
+              <App />
+            </VideoProvider>
+          </SidebarProvider>
+        </TabProvider>
       </AuthContextProvider>
     </BrowserRouter>
   </React.StrictMode>,

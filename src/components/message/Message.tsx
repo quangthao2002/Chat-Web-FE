@@ -2,46 +2,17 @@ import { useAuthContext } from "@/context/AuthContext"
 import { extractTime } from "@/utils/extractTime"
 
 import axios from "axios"
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { IoIosMore } from "react-icons/io"
 import FileMessage from "./FileMessage"
 import useConversation from "@/zustand/useConversation"
-import ForwardMessageModal from "../modals/ForwardMessageModal"
 
-const Message = ({ message, isLastMessage }: any) => {
+const Message = ({ message, isLastMessage }) => {
   const { authUser } = useAuthContext()
   const [isDeleted, setIsDeleted] = useState(false)
-  const [isModalOpen, setIsModalOpen] = useState(false)
   const { selectedConversation } = useConversation()
-  const [isUnsend, setIsUnsend] = useState(false)
-  const [isNearTop, setIsNearTop] = useState(false)
-  const messageRef = useRef(null)
-  const [messageForward, setMessageForward] = useState("")
-  const checkIsNearTop = useCallback(() => {
-    if (messageRef.current) {
-      const messageRect = messageRef.current.getBoundingClientRect()
-      const topThreshold = 390
 
-      if (messageRect.top < topThreshold) {
-        setIsNearTop(true)
-      } else {
-        setIsNearTop(false)
-      }
-    }
-  }, [])
-
-  useEffect(() => {
-    window.addEventListener("scroll", checkIsNearTop)
-    return () => {
-      window.removeEventListener("scroll", checkIsNearTop)
-    }
-  }, [checkIsNearTop])
-
-  useEffect(() => {
-    checkIsNearTop()
-  }, [message, checkIsNearTop])
-
-  const isImage = (url: any) => {
+  const isImage = (url) => {
     const imageExtensions = [".jpg", ".jpeg", ".png", ".gif", ".bmp"]
     const extension = url.substring(url.lastIndexOf(".")).toLowerCase()
     if (imageExtensions.includes(extension)) {
@@ -51,7 +22,7 @@ const Message = ({ message, isLastMessage }: any) => {
     }
   }
 
-  const isVideo = (url: any) => {
+  const isVideo = (url) => {
     const videoExtensions = [".mp4", ".avi", ".mov", ".wmv", ".flv"] // Add more extensions if needed
     const extension = url.substring(url.lastIndexOf(".")).toLowerCase()
     if (videoExtensions.includes(extension)) {
@@ -60,7 +31,7 @@ const Message = ({ message, isLastMessage }: any) => {
       return false
     }
   }
-  const isFile = (url: any) => {
+  const isFile = (url) => {
     const fileExtensions = [
       ".doc",
       ".docx",
@@ -110,16 +81,6 @@ const Message = ({ message, isLastMessage }: any) => {
       setIsDeleted(true)
     }
   }
-  const handleUnsendMessage = async () => {
-    const response = await axios.post(`http://localhost:3000/messages/unsendMessage/`, { message })
-    if (response) {
-      setIsUnsend(true)
-    }
-  }
-  const handleOpenModal = () => {
-    setIsModalOpen(true)
-    setMessageForward(message)
-  }
   const renderMessage = () => {
     if (isImage(message.text)) {
       return <img style={{ maxWidth: "400px", maxHeight: "400px" }} src={message.text} alt="Uploaded" />
@@ -140,72 +101,44 @@ const Message = ({ message, isLastMessage }: any) => {
 
   return (
     <>
-      {message && (message.isDeleted || isDeleted) ? (
-        <></> // Render nothing if the message is deleted or IsDelete is true
-      ) : (
-        <div ref={messageRef} className={`chat ${chatClassName}`}>
-          <div className="chat-image avatar">
-            <div className="w-10 rounded-full">
-              <img alt="Tailwind CSS chat bubble component" src={avatarClassName} />
-            </div>
-          </div>
-
-          <div
-            className={`flex ${!fromMe ? "flex-row-reverse" : ""}`}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-          >
-            {message && (message.isUnsend || isUnsend) ? (
-              <div className="chat-bubble text-white mt-1 bg-red-500">Tin nhắn đã được thu hồi</div>
-            ) : (
-              <>
-                <div
-                  className={`chat-options ${showOptions ? "opacity-100" : "opacity-0"} ${fromMe ? "mr-2" : "ml-2"}`}
-                >
-                  <div className={`dropdown dropdown-${fromMe ? "left" : "right"} ${isNearTop ? "" : "dropdown-end"}`}>
-                    <div tabIndex={0} role="button">
-                      <IoIosMore size={15} />
-                    </div>
-                    {showOptions && (
-                      <ul
-                        tabIndex={0}
-                        className="dropdown-content z-[1] menu p-2 shadow bg-gray-200 rounded-box w-52  "
-                      >
-                        <li>
-                          <a className="text-gray-500">Copy tin nhắn</a>
-                        </li>
-                        <div className="divider my-0 py-0 mx-1 h-1 mb-2" />
-                        <li>
-                          <a onClick={handleOpenModal} className="text-gray-500">
-                            Chuyển tiếp tin nhắn
-                          </a>
-                        </li>
-                        <div className="divider my-0 py-0 mx-1 h-1 mb-2" />
-                        <li>
-                          <a onClick={handleDeleteMessage} className="text-red-600">
-                            Xóa tin nhắn
-                          </a>
-                        </li>
-
-                        <li>
-                          <a onClick={handleUnsendMessage} className="text-red-600">
-                            {fromMe ? "Thu hồi tin nhắn" : "Xóa tin nhắn ở phía tôi"}
-                          </a>
-                        </li>
-                      </ul>
-                    )}
-                  </div>
-                </div>
-                {renderMessage()}
-              </>
-            )}
-          </div>
-          <div className="flex">
-            <div className="chat-footer opacity-50 text-xs gap-1 items-center">{formatTime}</div>
+      <div className={`chat ${chatClassName}`}>
+        <div className="chat-image avatar">
+          <div className="w-10 rounded-full">
+            <img alt="Tailwind CSS chat bubble component" src={avatarClassName} />
           </div>
         </div>
-      )}
-      {isModalOpen && <ForwardMessageModal messageForward={messageForward} onClose={() => setIsModalOpen(false)} />}
+        {(message && message.isDeleted) || isDeleted ? (
+          <div className="chat-bubble text-white mt-1 bg-red-500">Tin nhắn đã được thu hồi</div>
+        ) : (
+          <>
+            <div
+              className={`flex ${!fromMe ? "flex-row-reverse" : ""}`}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+            >
+              <div className={`chat-options ${showOptions ? "opacity-100" : "opacity-0"} ${fromMe ? "mr-2" : "ml-2"}`}>
+                <div className={`dropdown dropdown-${fromMe ? "left" : "right"}`}>
+                  <div tabIndex={0} role="button">
+                    <IoIosMore size={15} />
+                  </div>
+                  {showOptions && (
+                    <div tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-gray-200 rounded-box w-52">
+                      <button onClick={handleDeleteMessage} className="text-red-500">
+                        {fromMe ? "Thu hồi tin nhắn" : "Xóa tin nhắn ở phía tôi"}
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+              {renderMessage()}
+            </div>
+          </>
+        )}
+
+        <div className="flex ">
+          <div className="chat-footer opacity-50 text-xs gap-1 items-center">{formatTime}</div>
+        </div>
+      </div>
     </>
   )
 }
