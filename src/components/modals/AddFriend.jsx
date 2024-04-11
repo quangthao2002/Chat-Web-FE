@@ -32,9 +32,13 @@ function AddFriend({ onClose }) {
   }
 
   const handleAddFriend = useCallback(async (item) => {
-    const res = await friendServices.sendFriendRequest({ receiverId: item.id })
-    console.log(res)
-    // toast.success(`Đã gửi lời mời kết bạn đến ${item?.username}`)
+    try {
+      const res = await friendServices.sendFriendRequest({ receiverId: item.id })
+      console.log(res)
+    } catch (error) {
+      console.log("Error occurred while adding friend:", error)
+      toast.error("Đã xảy ra lỗi khi thêm bạn bè")
+    }
   }, [])
 
   const handleCancelFriend = useCallback(async (item) => {

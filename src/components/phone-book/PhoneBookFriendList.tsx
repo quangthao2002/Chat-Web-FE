@@ -17,6 +17,7 @@ const PhoneBookFriendList = () => {
   const getListFriendRequestPending = async () => {
     try {
       const res = await friendServices.getListFriendRequestPending(authUser.user.id)
+      console.log(">>>res:", res)
       setData(res.data)
     } catch (error) {
       console.log("error: ", error)
