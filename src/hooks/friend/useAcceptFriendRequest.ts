@@ -8,10 +8,14 @@ const useAcceptFriendRequest = () => {
   const { getListRequestPending } = useGetListRequestPending()
 
   const acceptFriendRequest = async (senderId: string) => {
-    const res = await friendServices.acceptFriendRequest({ senderId: senderId })
-    if (res.data) {
-      toast.success("Accept friend successfully")
-      getListRequestPending(authUser.user.id)
+    try {
+      const res = await friendServices.acceptFriendRequest({ senderId: senderId })
+      if (res.data) {
+        toast.success("Accept friend successfully")
+        getListRequestPending(authUser.user.id)
+      }
+    } catch (error) {
+      console.log("error: ", error)
     }
   }
 
