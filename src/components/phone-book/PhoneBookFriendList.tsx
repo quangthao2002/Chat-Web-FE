@@ -10,23 +10,23 @@ const PhoneBookFriendList = () => {
   const { acceptFriendRequest } = useAcceptFriendRequest()
   const [data, setData] = useState([])
 
-  const handleAcceptFriend = async (item: UserStatusRequest) => {
-    acceptFriendRequest(item.sender.id)
-  }
-
   const getListFriendRequestPending = async () => {
     try {
       const res = await friendServices.getListFriendRequestPending(authUser.user.id)
-      console.log(">>>res:", res)
       setData(res.data)
     } catch (error) {
       console.log("error: ", error)
     }
   }
 
+  const handleAcceptFriend = async (item: UserStatusRequest) => {
+    acceptFriendRequest(item.sender.id)
+    getListFriendRequestPending()
+  }
+
   useEffect(() => {
     getListFriendRequestPending()
-  }, [acceptFriendRequest])
+  }, [])
 
   return (
     <div className="my-5 mx-3 ">
