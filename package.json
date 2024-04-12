@@ -11,10 +11,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emoji-mart/data": "^1.1.2",
+    "@emoji-mart/react": "^1.1.1",
     "aws-amplify": "^6.0.23",
     "aws-sdk": "^2.1587.0",
     "axios": "^1.6.8",
     "bootstrap": "^5.3.3",
+    "emoji-mart": "^5.5.2",
     "emoji-picker-react": "^4.9.2",
     "file-saver": "^2.0.5",
     "moment": "^2.30.1",

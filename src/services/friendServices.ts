@@ -11,11 +11,11 @@ const friendServices = {
   searchUser: ({ phone }: { phone: User }) => {
     return axiosClient.get("/search-user/:searchValue", { params: { searchValue: phone } })
   },
-  sendFriendRequest: ({ receiverId, user }: { receiverId: string; user: User }) => {
-    return axiosClient.post("/user/send-friend-request", { receiverId, user })
+  sendFriendRequest: ({ receiverId }: { receiverId: string }) => {
+    return axiosClient.post("/user/send-friend-request", { receiverId })
   },
-  acceptFriendRequest: ({ senderId, receiverId }: { senderId: string; receiverId: string }) => {
-    return axiosClient.post("/user/send-friend-request", { senderId, receiverId })
+  acceptFriendRequest: ({ senderId }: { senderId: string }) => {
+    return axiosClient.post("/user/accept-friend-request", { senderId })
   },
   getListFriendRequestPending: (userId: string) => {
     return axiosClient.get(`/user/get-list-friend-request-pending?userId=${userId}`)

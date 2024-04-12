@@ -1,11 +1,15 @@
 import useConversation from "@/zustand/useConversation.js"
 import { useEffect, useRef } from "react"
 import { io } from "socket.io-client"
-
+import { useFriendStore } from "./useFriendStore"
+import useGetConversations from "@/hooks/useGetConversations"
+import { toast } from "react-toastify"
 const useSocket = (userId) => {
   const socketRef = useRef()
   const { setMessages, messages, setIsTyping, setLastMessageSeen, lastMessageSeen, setUserOnline, usersOnline } =
     useConversation()
+  const { setSenderId, setReceiverId, setIsAccept } = useFriendStore()
+  const { getConversations } = useGetConversations()
   const user = JSON.parse(localStorage.getItem("tokens-user"))
   const token = user.tokens.accessToken
 
@@ -15,26 +19,80 @@ const useSocket = (userId) => {
         token: token,
       },
     })
+    socketRef.current.on("getUsersOnline", (data) => {
+      const usersOnlineMap = new Map(data)
+      setUserOnline(usersOnlineMap)
+    })
 
+   
+
+    return () => {
+      socketRef.current.off("getUsersOnline")
+      socketRef.current.disconnect()
+    }
+  }, [setIsTyping, setUserOnline, token])
+
+  useEffect(()=>{
+    socketRef.current.on("friend-request-sent", (payload) => {
+      setSenderId(payload.senderId)
+      setReceiverId(payload.receiverId)
+   
+    })
+    socketRef.current.on("accept-friend-request", (payload) => {
+      setIsAccept(true)
+     
+    })
+    return () => {
+      socketRef.current.off("friend-request-sent")
+      socketRef.current.off("accept-friend-request")
+
+    }
+  },[])
+
+  useEffect(() => {
     socketRef.current.on("message", (newMessage) => {
+      console.log(newMessage)
       setMessages([...messages, newMessage])
     })
 
-    socketRef.current.on("typing", () => setIsTyping(true))
-    socketRef.current.on("stopTyping", () => setIsTyping(false))
+    socketRef.current.on("deleteMessage", (deletedMessage) => {
+      const index = messages.findIndex((item) => item?.id === deletedMessage?.id)
+      if (index !== -1) {
+        messages[index] = { ...messages[index], ...deletedMessage }
+        setMessages(messages)
+      } else {
+        console.error(`Item with ID ${deletedMessage?.id} not found`)
+      }
+    })
 
-    socketRef.current.on("getUsersOnline", (data) => {
-      // Extract the user IDs from the received data and create a Map
-      const usersOnlineMap = new Map(data)
-      // Update the userOnline state with the Map
-      setUserOnline(usersOnlineMap)
+    socketRef.current.on("unsendmessage", (unsendMessage) => {
+      // Find the index of the item in the array based on its ID
+      const index = messages.findIndex((item) => item?.id === unsendMessage?.id)
+      // If item is found
+      if (index !== -1) {
+        // Update the item with the new data
+        messages[index] = { ...messages[index], ...unsendMessage }
+        console.log(messages[index])
+        setMessages(messages)
+      } else {
+        console.error(`Item with ID ${unsendMessage?.id} not found`)
+      }
     })
     return () => {
-      socketRef.current.disconnect()
+      socketRef.current.off("unsendmessage")
+      socketRef.current.off("deleteMessage")
       socketRef.current.off("message")
-      socketRef.current.off("getUsersOnline")
     }
-  }, [messages, setIsTyping, setMessages, token])
+  }, [messages, setMessages])
+
+  useEffect(() => {
+    socketRef.current.on("typing", () => setIsTyping(true))
+    socketRef.current.on("stopTyping", () => setIsTyping(false))
+    return () => {
+      socketRef.current.off("stopTyping")
+      socketRef.current.off("typing")
+    }
+  }, [setIsTyping])
 
   const sendMessage = (newMessage) => {
     socketRef.current.emit("message", newMessage)
@@ -45,7 +103,9 @@ const useSocket = (userId) => {
   const sendStopTyping = (userId) => {
     socketRef.current.emit("stopTyping", { recipientId: userId })
   }
-
-  return { sendMessage, sendTyping, sendStopTyping }
+  const getSocket = () => {
+    return socketRef.current
+  }
+  return { sendMessage, sendTyping, sendStopTyping, getSocket }
 }
 export default useSocket

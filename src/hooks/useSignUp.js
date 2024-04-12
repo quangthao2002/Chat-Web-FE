@@ -43,7 +43,7 @@ export default useSignUp
 function handleInputValidation({ username, fullName, password, phone, avatar }) {
     const phoneRegex = /^[0-9]{10,}$/ // bắt đầu từ 0-9, có từ 10 ký tự trở lên
 
-    if (!username || !fullName || !password || !phone || !avatar) {
+    if (!username || !fullName || !password || !phone ) {
         toast.error("All fields are required")
         return false
     }
@@ -63,9 +63,6 @@ function handleInputValidation({ username, fullName, password, phone, avatar }) 
         toast.error("Phone must be a valid number with at least 10 digits")
         return false
     }
-    if (!avatar) {
-        toast.error("Avatar is required")
-        return false
-    }
+ 
     return true
 }

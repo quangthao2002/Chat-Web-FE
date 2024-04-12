@@ -4,12 +4,14 @@ import useSocket from "@/zustand/useSocket"
 import { useState } from "react"
 import { BsSend } from "react-icons/bs"
 import { MdEmojiEmotions } from "react-icons/md"
+import data from "@emoji-mart/data"
+import Picker from "@emoji-mart/react"
 const ChatInput = () => {
-  const { selectedConversation, messages, setMessages } = useConversation()
+  const { selectedConversation, setMessages, messages } = useConversation()
   const { authUser } = useAuthContext()
   const currentUserId = authUser.user.id
   const [typing, setTyping] = useState(false)
-
+  const [isOpen, setIsOpen] = useState(false)
   const { sendMessage, sendTyping, sendStopTyping } = useSocket(currentUserId)
 
   const [message, setMessage] = useState("")
@@ -32,13 +34,15 @@ const ChatInput = () => {
     }
 
     // thêm tin mới vào danh sách tin nhắn
-    sendMessage(newMessage)
     setMessages([...messages, newMessage])
+    sendMessage(newMessage)
     setMessage("")
     sendStopTyping(selectedConversation.id)
+    setIsOpen(false)
   }
   const typingHandler = (e) => {
     setMessage(e.target.value)
+    setIsOpen(false)
     if (e.target.value.trim() === "") {
       sendStopTyping(selectedConversation.id)
     }
@@ -58,6 +62,9 @@ const ChatInput = () => {
       }
     }, timerLength)
   }
+  const handleOpenEmojiList = () => {
+    setIsOpen(!isOpen)
+  }
   return (
     <form className="pt-3 pl-4 pr-[10px] pb-[20px] " onSubmit={handleSendMessage}>
       <div className="h-[27px] w-full relative">
@@ -68,9 +75,16 @@ const ChatInput = () => {
           value={message}
           onChange={typingHandler}
         />
-        <button className="absolute inset-y-0 end-0 items-center mr-10 px mt-3 cursor-pointer">
-          <MdEmojiEmotions size={23} />
-        </button>
+        {isOpen && (
+          <div className="flex" style={{ position: "absolute", right: 0, bottom: "32px" }}>
+            <Picker data={data} onEmojiSelect={(e) => setMessage(message + e.native)} />
+          </div>
+        )}
+        <div className="absolute inset-y-0 end-0 items-center mr-10 px mt-3 cursor-pointer">
+          <button type="button" onClick={handleOpenEmojiList} className="">
+            <MdEmojiEmotions size={23} />
+          </button>
+        </div>
         <button type="submit" className="absolute inset-y-0 end-0 items-center pe-3 mt-3 ">
           <BsSend size={20} className="text-gray-400" />
         </button>

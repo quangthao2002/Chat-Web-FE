@@ -55,7 +55,7 @@ const Login = () => {
 
     if (file) {
       const formData = new FormData()
-      formData.append("image", file)
+      formData.append("avatar", file)
 
       const response = await fetch("http://localhost:3000/messages/uploadImageAndGetUrl", {
         method: "POST",
@@ -127,7 +127,7 @@ const Login = () => {
               id="avatar"
               onChange={handleFileChange}
               placeholder="Avatar"
-              required
+              
             />
             {/* <div className="flex relative right-72 ">
               <label htmlFor="is_admin" className="label gap-1 cursor-pointer font-bold">

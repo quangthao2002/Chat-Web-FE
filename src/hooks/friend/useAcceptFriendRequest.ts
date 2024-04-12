@@ -1,20 +1,23 @@
-import { useEffect } from "react"
-import useSocketClient from "../useSocketClient"
+import { useAuthContext } from "@/context/AuthContext"
+import friendServices from "@/services/friendServices"
+import { toast } from "react-toastify"
 import useGetListRequestPending from "./useGetListRequestPending"
 
 const useAcceptFriendRequest = () => {
-  const { getSocket, userId } = useSocketClient()
-  const { getListFriendRequestPending } = useGetListRequestPending()
+  const { authUser } = useAuthContext()
+  const { getListRequestPending } = useGetListRequestPending()
 
-  const acceptFriendRequest = (receiverId: string) => {
-    getSocket()?.emit("accept-friend-request", { senderId: receiverId, receiverId: userId })
+  const acceptFriendRequest = async (senderId: string) => {
+    try {
+      const res = await friendServices.acceptFriendRequest({ senderId: senderId })
+      if (res.data) {
+        toast.success("Accept friend successfully")
+        getListRequestPending(authUser.user.id)
+      }
+    } catch (error) {
+      console.log("error: ", error)
+    }
   }
-
-  useEffect(() => {
-    getSocket()?.on("friend-request-accepted", (payload) => {
-      getListFriendRequestPending()
-    })
-  }, [getSocket()])
 
   return { acceptFriendRequest }
 }
