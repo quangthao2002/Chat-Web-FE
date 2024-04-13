@@ -1,3 +1,4 @@
+import useGetConversations from "@/hooks/useGetConversations"
 import useConversation from "@/zustand/useConversation"
 import { useEffect, useState } from "react"
 
@@ -9,14 +10,18 @@ interface ConversationProps {
     name?: string
   }
   lastIndex?: boolean
-  usersOnline?: any
+  usersOnline: Map<string, boolean>
 }
 
 const Conversation = ({ conversation, lastIndex, usersOnline }: ConversationProps) => {
   const [time, setTime] = useState(new Date())
   const { selectedConversation, setSelectedConversation } = useConversation()
-
   const isSelected = selectedConversation?.id === conversation?.id
+
+  useEffect(() => {
+    setSelectedConversation(conversation)
+  }, [conversation])
+
   return (
     <>
       <div

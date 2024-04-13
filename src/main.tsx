@@ -7,17 +7,20 @@ import { BrowserRouter } from "react-router-dom"
 import TabProvider from "./context/TabContext"
 import VideoProvider from "./context/VideoContext"
 import { SidebarProvider } from "./context/SideBarContext"
+import { ModalProvider } from "./context/ModalContext.tsx"
 
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthContextProvider>
         <TabProvider>
-          <SidebarProvider>
-            <VideoProvider>
-              <App />
-            </VideoProvider>
-          </SidebarProvider>
+          <ModalProvider>
+            <SidebarProvider>
+              <VideoProvider>
+                <App />
+              </VideoProvider>
+            </SidebarProvider>
+          </ModalProvider>
         </TabProvider>
       </AuthContextProvider>
     </BrowserRouter>

@@ -1,5 +1,6 @@
 import { useAuthContext } from "@/context/AuthContext"
 import { useFriendStore } from "@/zustand/useFriendStore"
+import { useGroupStore } from "@/zustand/useGroupStore"
 import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
 
@@ -7,10 +8,12 @@ const useGetConversations = () => {
   const [loading, setLoading] = useState(false)
   const [conversation, setConversation] = useState([])
   const { authUser } = useAuthContext()
-  const { id: userId } = authUser.user
+  const userId = authUser?.user?.id
   const { isAccept } = useFriendStore()
+  const { listMember } = useGroupStore()
   const [refresh, setRefresh] = useState(false)
-  const ownerId = JSON.parse(localStorage.getItem("tokens-user")).user.id
+  const ownerId = JSON.parse(localStorage.getItem("tokens-user"))?.user?.id
+
   const getConversations = async () => {
     setLoading(true)
     try {
@@ -73,7 +76,7 @@ const useGetConversations = () => {
   }
   useEffect(() => {
     getConversations()
-  }, [isAccept, ownerId, refresh])
+  }, [isAccept, listMember])
 
   const addConversation = (newConversation) => {
     console.log(newConversation)
