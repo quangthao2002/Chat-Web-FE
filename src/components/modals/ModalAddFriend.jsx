@@ -1,12 +1,11 @@
+import { useModalContext } from "@/context/ModalContext"
 import friendServices from "@/services/friendServices"
 import { useFriendStore } from "@/zustand/useFriendStore"
 import axios from "axios"
 import { useCallback, useState } from "react"
 import toast from "react-hot-toast"
 import { IoMdClose } from "react-icons/io"
-import Modal from "react-modal"
 import AccountItem from "../sidebar/contain/AccountItem"
-import { useModalContext } from "@/context/ModalContext"
 
 function ModalAddFriend() {
   const user = JSON.parse(localStorage.getItem("tokens-user"))

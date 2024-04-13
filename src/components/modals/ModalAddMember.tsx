@@ -1,31 +1,32 @@
-import { useAuthContext } from "@/context/AuthContext"
 import { useModalContext } from "@/context/ModalContext"
-import useGroup from "@/hooks/group/useGroup"
 import useGetConversations from "@/hooks/useGetConversations"
 import groupServices from "@/services/groupServices"
 import useConversation from "@/zustand/useConversation"
-import { useRef, useState } from "react"
+import { FC, useState } from "react"
 import { IoMdClose } from "react-icons/io"
 import { toast } from "react-toastify"
-import { io } from "socket.io-client"
 
-const ModalAddMember = () => {
-  const socketRef = useRef()
-  const { conversation, setConversation, setRefresh } = useGetConversations()
-  const [selectedUsers, setSelectedUsers] = useState([])
-  const [groupAvatar, setGroupAvatar] = useState("")
-  const [groupName, setGroupName] = useState("")
-  const { authUser } = useAuthContext()
-  const ownerId = authUser?.user?.id
-  const accessToken = authUser?.tokens?.accessToken
-  const { getGroupByUserId } = useGroup()
+interface User {
+  id: string
+  username: string
+  avatar: string
+}
+
+const ModalAddMember: FC = () => {
+  const { conversation } = useGetConversations()
+  const [selectedUsers, setSelectedUsers] = useState<string[]>([])
   const { isModalOpenAddMember, handleCloseModalAddMember } = useModalContext()
   const { selectedConversation } = useConversation()
 
-  const handleUserSelect = (userId) => {
+  const listMemberPresent = selectedConversation?.users?.map((item: any) => item.id) || []
+  const members = conversation
+    ?.filter((item: User) => item?.username)
+    ?.filter((item: User) => !listMemberPresent?.includes(item.id))
+
+  const handleUserSelect = (userId: string) => {
     setSelectedUsers((prevSelectedUsers) => [...prevSelectedUsers, userId])
   }
-  const handleUserDeselect = (userId) => {
+  const handleUserDeselect = (userId: string) => {
     setSelectedUsers((prevSelectedUsers) => prevSelectedUsers.filter((id) => id !== userId))
   }
 
@@ -59,28 +60,30 @@ const ModalAddMember = () => {
 
         <div className="divider my-0 py-0 mx-1 h-1 " />
         <div className="max-h-56 overflow-y-auto">
-          {conversation
-            ?.filter((item) => item?.username)
-            .map((user) => (
-              <label key={user.id} className="flex gap-3 p-2">
+          {members?.length > 0 ? (
+            members?.map((user: User) => (
+              <label key={user?.id} className="flex gap-3 p-2">
                 <input
                   type="checkbox"
                   onChange={(e) => {
                     if (e.target.checked) {
-                      handleUserSelect(user.id)
+                      handleUserSelect(user?.id)
                     } else {
-                      handleUserDeselect(user.id)
+                      handleUserDeselect(user?.id)
                     }
                   }}
                 />
                 <div className="avatar">
                   <div className="w-10 rounded-full">
-                    <img src={user.avatar} />
+                    <img src={user?.avatar} />
                   </div>
                 </div>
-                <div className="mt-2">{user.username}</div>
+                <div className="mt-2">{user?.username}</div>
               </label>
-            ))}
+            ))
+          ) : (
+            <div className="my-4">No member to add</div>
+          )}
         </div>
         <div className="divider my-0 py-0 mx-1 h-1 mb-2" />
         <div className="flex justify-end  gap-2">
