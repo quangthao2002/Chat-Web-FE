@@ -12,7 +12,7 @@ const ChatInput = () => {
   const currentUserId = authUser.user.id
   const [typing, setTyping] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
-  const { sendMessage, sendTyping, sendStopTyping } = useSocket(currentUserId)
+  const { sendMessage, sendTyping, sendStopTyping, sendGroupMessage } = useSocket(currentUserId)
 
   const [message, setMessage] = useState("")
 
@@ -28,14 +28,18 @@ const ChatInput = () => {
     const newMessage = {
       text: message,
       userId: currentUserId,
-      recipientId: selectedConversation.id,
+      roomId: selectedConversation?.ownerId ? selectedConversation.id : null,
+      recipientId: !selectedConversation?.ownerId ? selectedConversation.id : null,
       created_at: new Date(),
       user: authUser.user,
     }
 
-    // thêm tin mới vào danh sách tin nhắn
-    setMessages([...messages, newMessage])
-    sendMessage(newMessage)
+    if (selectedConversation.ownerId) {
+      sendGroupMessage(newMessage)
+    } else {
+      sendMessage(newMessage)
+    }
+    !selectedConversation.ownerId ? setMessages([...messages, newMessage]) : null
     setMessage("")
     sendStopTyping(selectedConversation.id)
     setIsOpen(false)

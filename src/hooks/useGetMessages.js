@@ -11,9 +11,14 @@ const useGetMessages = () => {
     const getMessages = async () => {
       setLoading(true)
       try {
-        const response = await axios.get(`http://localhost:3000/messages/${userId}/${selectedConversation.id}`)
+        let response
+        if (selectedConversation?.ownerId) {
+          console.log("room", selectedConversation?.id)
+          response = await axios.get(`http://localhost:3000/messages/room/${selectedConversation?.id}`)
+        } else {
+          response = await axios.get(`http://localhost:3000/messages/${userId}/${selectedConversation?.id}`)
+        }
         if (Array.isArray(response.data)) {
-          console.log("Received messages from API:", response.data)
           setMessages(response.data)
         } else {
           console.error("Invalid data from API:", response.data)
@@ -21,6 +26,8 @@ const useGetMessages = () => {
       } catch (error) {
         console.error("Error fetching messages:", error)
         toast.error(error.message)
+      } finally {
+        setLoading(false) // Set loading state to false after API request completes
       }
     }
 
@@ -28,9 +35,7 @@ const useGetMessages = () => {
       getMessages()
     }
   }, [userId, selectedConversation.id, setMessages]) // Include 'recipientId' in the dependency array
-  setTimeout(() => {
-    setLoading(false)
-  }, 500)
+
   return { loading, messages }
 }
 

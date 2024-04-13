@@ -7,10 +7,12 @@ import { io } from "socket.io-client"
 import { useAuthContext } from "@/context/AuthContext"
 import toast from "react-hot-toast"
 import useSocket from "@/zustand/useSocket"
+import useConversation from "@/zustand/useConversation"
 
 const ForwardMessageModal = ({ onClose, messageForward }) => {
-  const { sendMessage } = useSocket()
+  const { sendMessage, sendGroupMessage } = useSocket()
   const socketRef = useRef()
+  const { selectedConversation } = useConversation()
   const { conversation, addConversation } = useGetConversations()
   const [selectedUsers, setSelectedUsers] = useState([])
   const [groupAvatar, setGroupAvatar] = useState("")
@@ -31,11 +33,14 @@ const ForwardMessageModal = ({ onClose, messageForward }) => {
       const forwardMsg = {}
       forwardMsg.text = messageForward.text
       forwardMsg.userId = messageForward?.user?.id
-      forwardMsg.recipientId = newRecipientId
+      forwardMsg.recipientId = !selectedConversation?.ownerId ? newRecipientId : null
+      forwardMsg.roomId = selectedConversation?.ownerId ? newRecipientId : null
       forwardMsg.created_at = new Date()
-      console.log(forwardMsg)
-      console.log("forwardMsg", messageForward)
-      sendMessage(forwardMsg)
+      if (selectedConversation.ownerId) {
+        sendGroupMessage(forwardMsg)
+      } else {
+        sendMessage(forwardMsg)
+      }
     })
 
     onClose()
@@ -67,6 +72,7 @@ const ForwardMessageModal = ({ onClose, messageForward }) => {
       <h2 className="text-black font-semibold mt-2">Add member</h2>
       <div className="max-h-56 overflow-y-auto">
         {conversation.map((user) => {
+          console.log(user)
           if (user.id !== ownerId && user?.id !== messageForward.recipientId && user?.id !== messageForward?.user?.id) {
             return (
               <div key={user.id} className="flex gap-3 p-2">
@@ -85,7 +91,7 @@ const ForwardMessageModal = ({ onClose, messageForward }) => {
                     <img src={user?.avatar} />
                   </div>
                 </div>
-                <label className="mt-2">{user.username}</label>
+                <label className="mt-2">{user.username || user.name}</label>
               </div>
             )
           }

@@ -36,25 +36,23 @@ const PersonalUpdate = ({ user, onRequestClose, isOpen }) => {
       }),
     })
     if (!response.ok) {
-      console.log("Error checking email and phone:", response.statusText)
       return false
     }
 
     const data = await response.json()
 
-
-      if (data.emailExists && data.phoneExists) {
-        toast.error("Email và số điện thoại của bạn đã tồn tại")
-        return false
-      }
-      if (data.emailExists) {
-        toast.error("Email đã tồn tại")
-        return false
-      }
-      if (data.phoneExists) {
-        toast.error("Số điện thoại đã tồn tại")
-        return false
-      }
+    if (data.emailExists && data.phoneExists) {
+      toast.error("Email và số điện thoại của bạn đã tồn tại")
+      return false
+    }
+    if (data.emailExists) {
+      toast.error("Email đã tồn tại")
+      return false
+    }
+    if (data.phoneExists) {
+      toast.error("Số điện thoại đã tồn tại")
+      return false
+    }
 
     return true
   }

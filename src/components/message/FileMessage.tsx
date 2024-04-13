@@ -35,7 +35,6 @@ const FileMessage = ({ url }) => {
     e.preventDefault()
     // Stop the event from propagating to the parent element (openFile)
     e.stopPropagation()
-    console.log(url)
 
     const filenameToSave = url.split("/").pop().split("_").slice(1).join("_")
     // Fetch the file

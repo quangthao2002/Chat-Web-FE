@@ -15,10 +15,8 @@ const SidebarMessage = () => {
     const socket = getSocket()
     socket?.on("getUsersOnline", (usersOnline) => {
       setUserOnline(new Map(usersOnline))
-      console.log("Users Online:", usersOnline)
     })
   }, [getSocket])
-  console.log("con:P", conversation)
 
   return (
     <div className="py-2 flex flex-col max-h-screen overflow-auto ">

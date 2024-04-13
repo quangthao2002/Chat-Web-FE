@@ -18,12 +18,13 @@ const Action1 = () => {
     const newMessage = {
       text: emojiData.imageUrl,
       userId: currentUserId,
-      recipientId: selectedConversation.id,
+      roomId: selectedConversation?.ownerId ? selectedConversation.id : null,
+      recipientId: !selectedConversation?.ownerId ? selectedConversation.id : null,
       created_at: new Date(),
       user: authUser.user,
     }
     sendMessage(newMessage)
-    setMessages([...messages, newMessage])
+    !selectedConversation.ownerId ? setMessages([...messages, newMessage]) : null
     setIsOpen(false)
   }
   return (

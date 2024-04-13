@@ -30,24 +30,24 @@ const File = () => {
       formData.append("image", typedFile)
     })
     formData.append("userId", currentUserId)
-    formData.append("recipientId", selectedConversation.id)
+    formData.append("roomId", selectedConversation?.ownerId ? selectedConversation.id : null)
+    formData.append("recipientId", !selectedConversation?.ownerId ? selectedConversation.id : null)
     formData.append("created_at", new Date())
 
     const fileUrl = await sendFileToServer(formData)
     const newMessages = []
     for (const file of fileUrl) {
-      console.log(file)
-
       const newMessage = {
         text: file,
         userId: currentUserId,
-        recipientId: selectedConversation.id,
+        roomId: selectedConversation?.ownerId ? selectedConversation.id : null,
+        recipientId: !selectedConversation?.ownerId ? selectedConversation.id : null,
         created_at: new Date(),
         user: authUser.user,
       }
       newMessages.push(newMessage)
     }
-    setMessages([...messages, ...newMessages])
+    !selectedConversation.ownerId ? setMessages([...messages, ...newMessages]) : null
   }
 
   return (

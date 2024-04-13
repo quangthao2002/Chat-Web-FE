@@ -14,14 +14,12 @@ const VerifyEmailPage = () => {
     try {
       setIsLoading(true)
       const res = await authServices.verifyEmail({ token: accessToken })
-      console.log(res)
       if (res.data) {
         setIsSuccess(true)
       } else {
         setIsSuccess(false)
       }
     } catch (error) {
-      console.log(error)
       toast.error("error")
       setIsSuccess(false)
     } finally {

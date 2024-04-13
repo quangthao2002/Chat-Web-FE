@@ -7,7 +7,6 @@ import PersonalUpdate from "./PersonalUpdate"
 import { toast } from "react-hot-toast"
 import ChangeAvatar from "./ChangeAvatar"
 
-
 const PersonalInformation = ({ user, isOpen, onRequestClose }) => {
   const [showChangeAvatar, setShowChangeAvatar] = useState(false)
   const [showPersonalUpdate, setShowPersonalUpdate] = useState(false)
@@ -25,22 +24,21 @@ const PersonalInformation = ({ user, isOpen, onRequestClose }) => {
     setShowPersonalUpdate(true)
   }
 
-  const handleImageUpload = async(selectFile) => {
-    if(selectFile){
+  const handleImageUpload = async (selectFile) => {
+    if (selectFile) {
       const formData = new FormData()
-      formData.append("avatar", selectFile) 
+      formData.append("avatar", selectFile)
       formData.append("userId", user.id)
       const rs = await fetch("http://localhost:3000/user/updateAvatar", {
         method: "POST",
-        body: formData
+        body: formData,
       })
-      if(rs.ok){
+      if (rs.ok) {
         const imgUpdate = await rs.json()
-        console.log(imgUpdate)
-        const updatedAuthUser = {...authUser, user: {...authUser.user, avatar: imgUpdate.avatarUrl}};
+        const updatedAuthUser = { ...authUser, user: { ...authUser.user, avatar: imgUpdate.avatarUrl } }
         setAuthUser(updatedAuthUser)
-        localStorage.setItem('tokens-user', JSON.stringify(updatedAuthUser));
-      }else{
+        localStorage.setItem("tokens-user", JSON.stringify(updatedAuthUser))
+      } else {
         toast.error("Cập nhật ảnh đại diện thất bại")
       }
     }
@@ -72,7 +70,7 @@ const PersonalInformation = ({ user, isOpen, onRequestClose }) => {
             className="mt-12  px-2  bg-gray-300 h-8 text-white rounded-md hover:bg-blue-600"
             onClick={handleOpenChangeAvatar}
           >
-            <FaCamera size={20}  />
+            <FaCamera size={20} />
           </button>
           {showChangeAvatar && (
             <ChangeAvatar user={user} onSave={handleImageUpload} onClose={handleCloseChangeAvatar} />
