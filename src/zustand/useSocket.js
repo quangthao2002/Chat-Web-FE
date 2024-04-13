@@ -4,12 +4,13 @@ import { io } from "socket.io-client"
 import { useFriendStore } from "./useFriendStore"
 import useGetConversations from "@/hooks/useGetConversations"
 import { toast } from "react-toastify"
+import { useGroupStore } from "./useGroupStore"
 const useSocket = (userId) => {
   const socketRef = useRef()
   const { setMessages, messages, setIsTyping, setLastMessageSeen, lastMessageSeen, setUserOnline, usersOnline } =
     useConversation()
   const { setSenderId, setReceiverId, setIsAccept } = useFriendStore()
-  const { getConversations } = useGetConversations()
+  const { setListMember } = useGroupStore()
   const user = JSON.parse(localStorage.getItem("tokens-user"))
   const token = user.tokens.accessToken
 
@@ -24,30 +25,39 @@ const useSocket = (userId) => {
       setUserOnline(usersOnlineMap)
     })
 
-   
-
     return () => {
       socketRef.current.off("getUsersOnline")
       socketRef.current.disconnect()
     }
   }, [setIsTyping, setUserOnline, token])
 
-  useEffect(()=>{
+  useEffect(() => {
+    socketRef.current.on("create-group", (payload) => {
+      setListMember(payload.list)
+    })
+    socketRef.current.on("add-user-to-group", (payload) => {
+      setListMember(payload.list)
+    })
+
+    return () => {
+      socketRef.current.off("create-group")
+      socketRef.current.off("add-user-to-group")
+    }
+  }, [])
+
+  useEffect(() => {
     socketRef.current.on("friend-request-sent", (payload) => {
       setSenderId(payload.senderId)
       setReceiverId(payload.receiverId)
-   
     })
     socketRef.current.on("accept-friend-request", (payload) => {
       setIsAccept(true)
-     
     })
     return () => {
       socketRef.current.off("friend-request-sent")
       socketRef.current.off("accept-friend-request")
-
     }
-  },[])
+  }, [])
 
   useEffect(() => {
     socketRef.current.on("message", (newMessage) => {
