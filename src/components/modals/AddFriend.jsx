@@ -24,7 +24,7 @@ function AddFriend({ onClose }) {
       const response = await axios.get(`http://localhost:3000/user/search-user/${phone}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
-      console.log(response)
+
       setSearch(response.data)
     } catch (error) {
       console.error("Error occurred while fetching user data:", error)
@@ -33,7 +33,6 @@ function AddFriend({ onClose }) {
 
   const handleAddFriend = useCallback(async (item) => {
     const res = await friendServices.sendFriendRequest({ receiverId: item.id })
-    console.log(res)
     // toast.success(`Đã gửi lời mời kết bạn đến ${item?.username}`)
   }, [])
 

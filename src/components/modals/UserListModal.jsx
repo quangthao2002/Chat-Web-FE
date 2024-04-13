@@ -68,12 +68,8 @@ const UserListModal = ({ onClose }) => {
     //   }
     // });
     const updateConversation = await response.json()
-    console.log(updateConversation, "updateConversation")
     setConversation(updateConversation)
-
     setRefresh((prev) => !prev)
-
-    console.log("Received roomCreated message:", roomId)
     onClose()
   }
 

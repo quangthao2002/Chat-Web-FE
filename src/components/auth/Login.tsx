@@ -22,11 +22,10 @@ const Login = () => {
   })
   const { loading, signUp } = useSign()
   const { loadingLogin, login } = useLogin()
-  
+
   const handleSubmitSignUp = async (e: any) => {
     e.preventDefault()
     try {
-      console.log(inputsSignUp)
       await signUp(inputsSignUp)
       // setInputsSignUp({
       //   username: "",
@@ -121,14 +120,7 @@ const Login = () => {
               onChange={(e) => setInputsSignUp({ ...inputsSignUp, phone: e.target.value })}
             />
 
-            <input
-              type="file"
-              name="avatar"
-              id="avatar"
-              onChange={handleFileChange}
-              placeholder="Avatar"
-              
-            />
+            <input type="file" name="avatar" id="avatar" onChange={handleFileChange} placeholder="Avatar" />
             {/* <div className="flex relative right-72 ">
               <label htmlFor="is_admin" className="label gap-1 cursor-pointer font-bold">
                 Is Admin

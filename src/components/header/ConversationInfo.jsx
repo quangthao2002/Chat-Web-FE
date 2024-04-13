@@ -3,7 +3,6 @@ import React, { useState } from "react"
 
 const ConversationInfo = () => {
   const { selectedConversation } = useConversation()
-  console.log(selectedConversation, "selectedConversation")
 
   const [showMembers, setShowMembers] = useState(false)
 
@@ -45,8 +44,8 @@ const ConversationInfo = () => {
                     </div>
                   </div>
                   <div className="flex flex-col">
-                  <p className="font-medium text-gray-600 mt-2">{user.username}</p>
-                  {selectedConversation.ownerId === user.id && <p className="text-gray-500 ">Trưởng nhóm</p>}
+                    <p className="font-medium text-gray-600 mt-2">{user.username}</p>
+                    {selectedConversation.ownerId === user.id && <p className="text-gray-500 ">Trưởng nhóm</p>}
                   </div>
                 </div>
               ))}

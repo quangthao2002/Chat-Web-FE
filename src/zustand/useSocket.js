@@ -6,8 +6,7 @@ import useGetConversations from "@/hooks/useGetConversations"
 import { toast } from "react-toastify"
 const useSocket = (userId) => {
   const socketRef = useRef()
-  const { setMessages, messages, setIsTyping, setLastMessageSeen, lastMessageSeen, setUserOnline, usersOnline } =
-    useConversation()
+  const { setMessages, messages, setIsTyping, setUserOnline, selectedConversation } = useConversation()
   const { setSenderId, setReceiverId, setIsAccept } = useFriendStore()
   const { getConversations } = useGetConversations()
   const user = JSON.parse(localStorage.getItem("tokens-user"))
@@ -24,35 +23,41 @@ const useSocket = (userId) => {
       setUserOnline(usersOnlineMap)
     })
 
-   
-
     return () => {
       socketRef.current.off("getUsersOnline")
       socketRef.current.disconnect()
     }
   }, [setIsTyping, setUserOnline, token])
 
-  useEffect(()=>{
+  useEffect(() => {
     socketRef.current.on("friend-request-sent", (payload) => {
       setSenderId(payload.senderId)
       setReceiverId(payload.receiverId)
-   
     })
     socketRef.current.on("accept-friend-request", (payload) => {
       setIsAccept(true)
-     
     })
     return () => {
       socketRef.current.off("friend-request-sent")
       socketRef.current.off("accept-friend-request")
-
     }
-  },[])
+  }, [])
+
+  useEffect(() => {
+    if (selectedConversation?.ownerId) {
+      socketRef.current.emit("join", { roomId: selectedConversation?.id })
+    }
+    return () => {
+      socketRef.current.off("join")
+      socketRef.current.emit("leave", { roomId: selectedConversation?.id })
+    }
+  }, [selectedConversation])
 
   useEffect(() => {
     socketRef.current.on("message", (newMessage) => {
-      console.log(newMessage)
-      setMessages([...messages, newMessage])
+      if (!selectedConversation?.ownerId) {
+        setMessages([...messages, newMessage])
+      }
     })
 
     socketRef.current.on("deleteMessage", (deletedMessage) => {
@@ -72,7 +77,7 @@ const useSocket = (userId) => {
       if (index !== -1) {
         // Update the item with the new data
         messages[index] = { ...messages[index], ...unsendMessage }
-        console.log(messages[index])
+
         setMessages(messages)
       } else {
         console.error(`Item with ID ${unsendMessage?.id} not found`)
@@ -82,6 +87,18 @@ const useSocket = (userId) => {
       socketRef.current.off("unsendmessage")
       socketRef.current.off("deleteMessage")
       socketRef.current.off("message")
+    }
+  }, [messages, setMessages])
+
+  useEffect(() => {
+    socketRef.current.on("group-message", (newMessage) => {
+      if (!messages.find((message) => message.id === newMessage.id)) {
+        setMessages([...messages, newMessage])
+      }
+    })
+
+    return () => {
+      socketRef.current.off("group-message")
     }
   }, [messages, setMessages])
 
@@ -106,6 +123,9 @@ const useSocket = (userId) => {
   const getSocket = () => {
     return socketRef.current
   }
-  return { sendMessage, sendTyping, sendStopTyping, getSocket }
+  const sendGroupMessage = (newMessage) => {
+    socketRef.current.emit("group-message", newMessage)
+  }
+  return { sendMessage, sendTyping, sendStopTyping, getSocket, sendGroupMessage }
 }
 export default useSocket
