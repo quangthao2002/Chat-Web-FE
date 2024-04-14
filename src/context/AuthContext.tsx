@@ -1,4 +1,3 @@
-import { UserStatusRequest } from "@/types/user"
 import { createContext, useContext, useState } from "react"
 
 interface AuthContextType {

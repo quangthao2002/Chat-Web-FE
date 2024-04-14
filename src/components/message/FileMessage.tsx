@@ -23,7 +23,7 @@ const FileMessage = ({ url }) => {
   }
 
   const getFileName = (url) => {
-    const filenameFromUrl = url.split("/").pop().split("_").slice(1).join("_")
+    const filenameFromUrl = decodeURIComponent(url.split("/").pop().split("_").slice(1).join("_"));
     return filenameFromUrl
   }
 
@@ -37,7 +37,7 @@ const FileMessage = ({ url }) => {
     e.stopPropagation()
     console.log(url)
 
-    const filenameToSave = url.split("/").pop().split("_").slice(1).join("_")
+    const filenameToSave = decodeURIComponent(url.split("/").pop().split("_").slice(1).join("_"));
     // Fetch the file
 
     saveAs(url, filenameToSave)

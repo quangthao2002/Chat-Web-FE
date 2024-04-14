@@ -8,10 +8,11 @@ const useGetConversations = () => {
   const [loading, setLoading] = useState(false)
   const [conversation, setConversation] = useState([])
   const { authUser } = useAuthContext()
-  const { id: userId } = authUser.user
+  const userId = authUser?.user?.id ?? null;
   const { isAccept } = useFriendStore()
   const [refresh, setRefresh] = useState(false)
-  const ownerId = JSON.parse(localStorage.getItem("tokens-user")).user.id
+  const tokensUser = JSON.parse(localStorage.getItem("tokens-user"))
+  const ownerId = tokensUser?.user?.id ?? null;
   const getConversations = async () => {
     setLoading(true)
     try {
