@@ -27,3 +27,11 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #242424;
 }
+/* .lightbox {
+  position: fixed;
+  top: 10;
+  right: 10;
+  bottom: 10;
+  left: 10;
+  z-index: 9999;
+} */

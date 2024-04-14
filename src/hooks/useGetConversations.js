@@ -8,12 +8,11 @@ const useGetConversations = () => {
   const [loading, setLoading] = useState(false)
   const [conversation, setConversation] = useState([])
   const { authUser } = useAuthContext()
-  const userId = authUser?.user?.id
+  const userId = authUser?.user?.id ?? null
   const { isAccept } = useFriendStore()
-  const { listMember } = useGroupStore()
   const [refresh, setRefresh] = useState(false)
-  const ownerId = JSON.parse(localStorage.getItem("tokens-user"))?.user?.id
-
+  const tokensUser = JSON.parse(localStorage.getItem("tokens-user"))
+  const ownerId = tokensUser?.user?.id ?? null
   const getConversations = async () => {
     setLoading(true)
     try {
@@ -76,11 +75,15 @@ const useGetConversations = () => {
   }
   useEffect(() => {
     getConversations()
-  }, [isAccept, listMember])
+  }, [isAccept, ownerId, refresh])
 
   const addConversation = (newConversation) => {
+    console.log(newConversation)
     setConversation((prevConversations) => {
+      console.log("prevConversation", prevConversations)
+
       const updatedConversations = [...prevConversations, newConversation]
+      console.log("updateConversation", updatedConversations)
       return updatedConversations
     })
   }

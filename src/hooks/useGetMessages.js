@@ -2,11 +2,13 @@ import { useEffect, useState } from "react"
 import axios from "axios"
 import useConversation from "@/zustand/useConversation"
 import toast from "react-hot-toast"
+import { AuthContext, useAuthContext } from "@/context/AuthContext"
 
 const useGetMessages = () => {
   const [loading, setLoading] = useState(false)
   const { messages, setMessages, selectedConversation } = useConversation()
-  const userId = JSON.parse(localStorage.getItem("tokens-user")).user.id
+  const { authUser } = useAuthContext()
+  const userId = authUser?.user?.id ?? null
   useEffect(() => {
     const getMessages = async () => {
       setLoading(true)
@@ -31,11 +33,13 @@ const useGetMessages = () => {
       }
     }
 
-    if (selectedConversation.id) {
+    if (selectedConversation && selectedConversation.id) {
       getMessages()
     }
-  }, [userId, selectedConversation.id, setMessages]) // Include 'recipientId' in the dependency array
-
+  }, [userId, selectedConversation, setMessages]) // Include 'recipientId' in the dependency array
+  setTimeout(() => {
+    setLoading(false)
+  }, 500)
   return { loading, messages }
 }
 
