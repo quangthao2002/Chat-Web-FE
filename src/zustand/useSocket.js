@@ -4,11 +4,12 @@ import { io } from "socket.io-client"
 import { useFriendStore } from "./useFriendStore"
 import useGetConversations from "@/hooks/useGetConversations"
 import { toast } from "react-toastify"
+import { useGroupStore } from "./useGroupStore"
 const useSocket = (userId) => {
   const socketRef = useRef()
   const { setMessages, messages, setIsTyping, setUserOnline, selectedConversation } = useConversation()
   const { setSenderId, setReceiverId, setIsAccept } = useFriendStore()
-  const { getConversations } = useGetConversations()
+  const { setListMember } = useGroupStore()
   const user = JSON.parse(localStorage.getItem("tokens-user"))
   const token = user.tokens.accessToken
 

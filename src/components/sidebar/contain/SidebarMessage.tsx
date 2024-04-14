@@ -13,7 +13,7 @@ const SidebarMessage = () => {
 
   useEffect(() => {
     const socket = getSocket()
-    socket?.on("getUsersOnline", (usersOnline) => {
+    socket?.on("getUsersOnline", (usersOnline: any) => {
       setUserOnline(new Map(usersOnline))
     })
   }, [getSocket])

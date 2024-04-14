@@ -1,5 +1,4 @@
-import AddFriend from "@/components/modals/AddFriend"
-import UserListModal from "@/components/modals/UserListModal"
+import { useModalContext } from "@/context/ModalContext"
 import useGetConversations from "@/hooks/useGetConversations"
 import useConversation from "@/zustand/useConversation"
 import { useState } from "react"
@@ -9,8 +8,7 @@ import { IoPersonAddOutline } from "react-icons/io5"
 
 const Search = () => {
   const [search, setSearch] = useState("")
-  const [isModalOpenCreateGroup, setIsModalOpenCreateGroup] = useState(false)
-  const [isModalOpenAddFriend, setIsModalOpenAddFriend] = useState(false)
+  const { handleOpenModalAddFriend, handleOpenModalCreateGroup } = useModalContext()
   const { setSelectedConversation } = useConversation()
   const { conversation } = useGetConversations()
 
@@ -27,19 +25,6 @@ const Search = () => {
     }
   }
 
-  const handleOpenModalCreateGroup = () => {
-    setIsModalOpenCreateGroup(true)
-  }
-  const handleCloseModalCreateGroup = () => {
-    setIsModalOpenCreateGroup(false)
-  }
-  const handleOpenModalAddFriend = () => {
-    setIsModalOpenAddFriend(true)
-    console.log("open modal")
-  }
-  const handleCloseModalAddFriend = () => {
-    setIsModalOpenAddFriend(false)
-  }
   return (
     <>
       <form className="flex items-center gap-1 m-2" onSubmit={handleSearch}>
@@ -59,7 +44,6 @@ const Search = () => {
         >
           <IoPersonAddOutline />
         </button>
-        {isModalOpenAddFriend && <AddFriend onClose={handleCloseModalAddFriend} />}
         <button
           type="submit"
           className="btn btn-circle border-none bg-gray-200  text-white"
@@ -68,7 +52,6 @@ const Search = () => {
         >
           <AiOutlineUsergroupAdd />
         </button>
-        {isModalOpenCreateGroup && <UserListModal onClose={handleCloseModalCreateGroup} />}
       </form>
       <div className="divider my-0 py-0 mx-0 h-1 " />
     </>
