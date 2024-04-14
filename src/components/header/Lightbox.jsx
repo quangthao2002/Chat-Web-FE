@@ -23,20 +23,20 @@ const Lightbox = ({ images, imageIndex, onClose }) => {
         <IoMdClose size={30} />
       </button>
       <div className="relative">
-        <img src={images[currentIndex].text} className="max-w-full max-h-full" />
+        <img src={images[currentIndex].text} className="h-[36rem] w-[44rem] object-cover" />
         <button
           onClick={handlePrev}
           disabled={currentIndex === 0}
           className="absolute left-0 top-1/2 transform -translate-y-1/2"
         >
-          <GrCaretPrevious />
+          <GrCaretPrevious  color="black" size={20}/>
         </button>
         <button
           onClick={handleNext}
           disabled={currentIndex === images.length - 1}
           className="absolute right-0 top-1/2 transform -translate-y-1/2"
         >
-          <GrCaretNext />
+          <GrCaretNext color="black" size={20} />
         </button>
       </div>
     </div>
