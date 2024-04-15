@@ -78,12 +78,8 @@ const useGetConversations = () => {
   }, [isAccept, ownerId, refresh])
 
   const addConversation = (newConversation) => {
-    console.log(newConversation)
     setConversation((prevConversations) => {
-      console.log("prevConversation", prevConversations)
-
       const updatedConversations = [...prevConversations, newConversation]
-      console.log("updateConversation", updatedConversations)
       return updatedConversations
     })
   }

@@ -72,7 +72,6 @@ const ForwardMessageModal = ({ onClose, messageForward }) => {
       <h2 className="text-black font-semibold mt-2">Add member</h2>
       <div className="max-h-56 overflow-y-auto">
         {conversation.map((user) => {
-          console.log(user)
           if (user.id !== ownerId && user?.id !== messageForward.recipientId && user?.id !== messageForward?.user?.id) {
             return (
               <div key={user.id} className="flex gap-3 p-2">

@@ -70,7 +70,6 @@ const ModalUserList = () => {
       }
       handleCloseModalCreateGroup()
     } catch (error) {
-      console.log("error: ", error)
       toast.error("Error")
     }
   }

@@ -33,7 +33,6 @@ const Image = () => {
     formData.append("roomId", selectedConversation?.ownerId ? selectedConversation?.id : null)
     formData.append("recipientId", !selectedConversation?.ownerId ? selectedConversation?.id : null)
     formData.append("created_at", new Date())
-
     const fileUrl = await sendFileToServer(formData)
     const newMessages = []
     for (const file of fileUrl) {
@@ -47,6 +46,7 @@ const Image = () => {
       }
       newMessages.push(newMessage)
     }
+
     !selectedConversation.ownerId ? setMessages([...messages, ...newMessages]) : null
   }
 

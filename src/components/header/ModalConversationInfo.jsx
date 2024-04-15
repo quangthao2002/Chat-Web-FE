@@ -19,7 +19,6 @@ const ModalConversationInfo = () => {
   const [showAllImages, setShowAllImages] = useState(false)
   const [showAllFiles, setShowAllFiles] = useState(false)
   const { messages } = useGetMessages()
-  console.log(messages)
 
   const handleMembersClick = () => {
     setShowMembers(!showMembers)
@@ -83,7 +82,6 @@ const ModalConversationInfo = () => {
   const handleDownload = (e, url) => {
     e.preventDefault()
     e.stopPropagation()
-    console.log(url)
 
     const filenameToSave = decodeURIComponent(url.split("/").pop().split("_").slice(1).join("_"))
 
