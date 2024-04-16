@@ -1,17 +1,32 @@
-import useConversation from "@/zustand/useConversation.js"
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useCallback } from "react"
 import { io } from "socket.io-client"
+import useConversation from "@/zustand/useConversation.js"
 import { useFriendStore } from "./useFriendStore"
 import useGetConversations from "@/hooks/useGetConversations"
 import { toast } from "react-toastify"
 import { useGroupStore } from "./useGroupStore"
+
 const useSocket = (userId) => {
   const socketRef = useRef()
   const { setMessages, messages, setIsTyping, setUserOnline, selectedConversation } = useConversation()
   const { setSenderId, setReceiverId, setIsAccept } = useFriendStore()
   const { setListMember } = useGroupStore()
   const user = JSON.parse(localStorage.getItem("tokens-user"))
-  const token = user.tokens.accessToken
+  const token = user?.tokens?.accessToken
+
+  const updateMessage = useCallback((updatedMessage) => {
+    setMessages((prevMessages) => {
+      const index = prevMessages.findIndex((item) => item?.id === updatedMessage?.id)
+      if (index !== -1) {
+        const updatedMessages = [...prevMessages]
+        updatedMessages[index] = { ...updatedMessages[index], ...updatedMessage }
+        return updatedMessages
+      } else {
+        console.error(`Item with ID ${updatedMessage?.id} not found`)
+        return prevMessages
+      }
+    })
+  }, [])
 
   useEffect(() => {
     socketRef.current = io("http://localhost:3000", {
@@ -31,12 +46,41 @@ const useSocket = (userId) => {
   }, [setIsTyping, setUserOnline, token])
 
   useEffect(() => {
+    socketRef.current.on("create-group", (payload) => {
+      console.log("create-group", payload.list, userId)
+      if (payload.list.includes(userId)) {
+        setListMember(payload.list)
+      }
+    })
+    socketRef.current.on("add-members", (payload) => {
+      console.log("add-members", payload.list, userId)
+      if (payload.list.find((user) => user.id === userId)) {
+        setListMember(payload.list)
+      }
+    })
+    socketRef.current.on("delete-members", (payload) => {
+      console.log("delete-members", payload.list, userId)
+      if (payload.list.find((user) => user.id === userId)) {
+        setListMember(payload.list)
+      }
+    })
+
+    return () => {
+      socketRef.current.off("create-group")
+      socketRef.current.off("add-members")
+      socketRef.current.off("delete-members")
+    }
+  }, [])
+
+  useEffect(() => {
     socketRef.current.on("friend-request-sent", (payload) => {
       setSenderId(payload.senderId)
       setReceiverId(payload.receiverId)
     })
     socketRef.current.on("accept-friend-request", (payload) => {
-      setIsAccept(true)
+      if (payload.senderId === userId || payload.receiverId === userId) {
+        setIsAccept(true)
+      }
     })
     return () => {
       socketRef.current.off("friend-request-sent")
@@ -61,35 +105,15 @@ const useSocket = (userId) => {
       }
     })
 
-    socketRef.current.on("deleteMessage", (deletedMessage) => {
-      const index = messages.findIndex((item) => item?.id === deletedMessage?.id)
-      if (index !== -1) {
-        messages[index] = { ...messages[index], ...deletedMessage }
-        setMessages(messages)
-      } else {
-        console.error(`Item with ID ${deletedMessage?.id} not found`)
-      }
-    })
+    socketRef.current.on("deleteMessage", updateMessage)
+    socketRef.current.on("unsendmessage", updateMessage)
 
-    socketRef.current.on("unsendmessage", (unsendMessage) => {
-      // Find the index of the item in the array based on its ID
-      const index = messages.findIndex((item) => item?.id === unsendMessage?.id)
-      // If item is found
-      if (index !== -1) {
-        // Update the item with the new data
-        messages[index] = { ...messages[index], ...unsendMessage }
-
-        setMessages(messages)
-      } else {
-        console.error(`Item with ID ${unsendMessage?.id} not found`)
-      }
-    })
     return () => {
       socketRef.current.off("unsendmessage")
       socketRef.current.off("deleteMessage")
       socketRef.current.off("message")
     }
-  }, [messages, setMessages])
+  }, [updateMessage])
 
   useEffect(() => {
     socketRef.current.on("group-message", (newMessage) => {

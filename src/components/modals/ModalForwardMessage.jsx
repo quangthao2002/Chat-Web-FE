@@ -9,7 +9,7 @@ import toast from "react-hot-toast"
 import useSocket from "@/zustand/useSocket"
 import useConversation from "@/zustand/useConversation"
 
-const ForwardMessageModal = ({ onClose, messageForward }) => {
+const ModalForwardMessage = ({ onClose, messageForward }) => {
   const { sendMessage, sendGroupMessage } = useSocket()
   const socketRef = useRef()
   const { selectedConversation } = useConversation()
@@ -109,4 +109,4 @@ const ForwardMessageModal = ({ onClose, messageForward }) => {
   )
 }
 
-export default ForwardMessageModal
+export default ModalForwardMessage

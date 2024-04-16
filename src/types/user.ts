@@ -9,7 +9,7 @@ export interface User {
 export interface UserStatusRequest {
   id: string
   sender: User
-  status: "pending" | "accept" | "reject"
+  status: "pending" | "accepted" | "reject"
 }
 
 export interface UserWithFriend extends User {

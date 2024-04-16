@@ -9,7 +9,10 @@ const groupServices = {
     return axiosClient.post("/room/create-group", data)
   },
   addUserToGroup: ({ roomId, userIds }: { roomId: string; userIds: string[] }) => {
-    return axiosClient.put(`/room/add-users/${roomId}`, userIds)
+    return axiosClient.put(`/room/add-members/${roomId}`, userIds)
+  },
+  deleteUserToGroup: ({ roomId, userIds }: { roomId: string; userIds: string[] }) => {
+    return axiosClient.delete(`/room/delete-members/${roomId}`, { data: userIds })
   },
 }
 

@@ -1,7 +1,7 @@
 import { useAuthContext } from "@/context/AuthContext"
 import { useFriendStore } from "@/zustand/useFriendStore"
 import { useGroupStore } from "@/zustand/useGroupStore"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import toast from "react-hot-toast"
 
 const useGetConversations = () => {
@@ -11,56 +11,62 @@ const useGetConversations = () => {
   const userId = authUser?.user?.id ?? null
   const { isAccept } = useFriendStore()
   const [refresh, setRefresh] = useState(false)
-  const tokensUser = JSON.parse(localStorage.getItem("tokens-user"))
-  const ownerId = tokensUser?.user?.id ?? null
-  const getConversations = async () => {
-    setLoading(true)
-    try {
-      const tokensUser = JSON.parse(localStorage.getItem("tokens-user")) // Lấy tokens-user từ localStorage
-      const { accessToken, refreshToken } = tokensUser.tokens // lấy accessToken và refreshToken từ tokensUser
-      let res = await fetch(`http://localhost:3000/user/get-friends?userId=${userId}`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`, // Gửi accessToken trong header Authorization
-        },
-      })
-      let data = await res.json()
-      res = await fetch("http://localhost:3000/room/rooms/user/" + ownerId)
-      let rooms = await res.json()
+  const ownerId = JSON.parse(localStorage.getItem("tokens-user"))?.user?.id
 
-      if (!res.ok) {
-        if (data.message === "Unauthorized") {
-          // Token hết hạn, làm mới token
-          const refreshRes = await fetch("http://localhost:3000/user/refresh-token", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ refreshToken }), // Gửi refreshToken trong body
-          })
-          const refreshData = await refreshRes.json()
+  const fetchData = useCallback(async (url, accessToken, refreshToken) => {
+    let res = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+    let data = await res.json()
 
-          if (!refreshRes.ok) {
-            throw new Error(refreshData.message)
-          }
-          // Lưu access token mới vào localStorage
-          localStorage.setItem(
-            "tokens-user",
-            JSON.stringify({ ...tokensUser, tokens: { ...tokensUser.tokens, accessToken: refreshData.accessToken } }),
-          )
-          // Thử lại yêu cầu ban đầu với access token mới
-          res = await fetch("http://localhost:3000/user/get-friends", {
-            headers: {
-              Authorization: `Bearer ${refreshData.accessToken}`, // Gửi accessToken mới trong header Authorization
-            },
-          })
-          data = await res.json()
-          if (!res.ok) {
-            throw new Error(data.message)
-          }
-        } else {
+    if (!res.ok) {
+      if (data.message === "Unauthorized") {
+        const refreshRes = await fetch("http://localhost:3000/user/refresh-token", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ refreshToken }),
+        })
+        const refreshData = await refreshRes.json()
+
+        if (!refreshRes.ok) {
+          throw new Error(refreshData.message)
+        }
+
+        localStorage.setItem(
+          "tokens-user",
+          JSON.stringify({ ...tokensUser, tokens: { ...tokensUser.tokens, accessToken: refreshData.accessToken } }),
+        )
+
+        res = await fetch(url, {
+          headers: {
+            Authorization: `Bearer ${refreshData.accessToken}`,
+          },
+        })
+        data = await res.json()
+        if (!res.ok) {
           throw new Error(data.message)
         }
+      } else {
+        throw new Error(data.message)
       }
+    }
+
+    return data
+  }, [])
+
+  const getConversations = useCallback(async () => {
+    setLoading(true)
+    try {
+      const tokensUser = JSON.parse(localStorage.getItem("tokens-user"))
+      const { accessToken, refreshToken } = tokensUser.tokens
+
+      const data = await fetchData(`http://localhost:3000/user/get-friends?userId=${userId}`, accessToken, refreshToken)
+      const rooms = await fetchData("http://localhost:3000/room/rooms/user/" + ownerId, accessToken, refreshToken)
+
       const result = data?.map((item) => {
         const isMe = item.sender.id === userId
         return isMe ? item.receiver : item.sender
@@ -72,17 +78,16 @@ const useGetConversations = () => {
     } finally {
       setLoading(false)
     }
-  }
+  }, [fetchData, userId, ownerId])
+
   useEffect(() => {
     getConversations()
-  }, [isAccept, ownerId, refresh])
+  }, [isAccept, listMember, getConversations])
 
   const addConversation = (newConversation) => {
-    setConversation((prevConversations) => {
-      const updatedConversations = [...prevConversations, newConversation]
-      return updatedConversations
-    })
+    setConversation((prevConversations) => [...prevConversations, newConversation])
   }
+
   return { loading, conversation, addConversation, getConversations, setRefresh, setConversation }
 }
 

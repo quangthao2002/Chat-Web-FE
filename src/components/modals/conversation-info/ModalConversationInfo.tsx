@@ -1,15 +1,19 @@
+import Lightbox from "@/components/header/Lightbox"
 import { useModalContext } from "@/context/ModalContext"
 import { useSidebarContext } from "@/context/SideBarContext"
 import useGetMessages from "@/hooks/useGetMessages"
+import { User } from "@/types/user"
 import useConversation from "@/zustand/useConversation"
-import React, { useState } from "react"
-import { BsThreeDots } from "react-icons/bs"
-import { IoIosArrowDown, IoMdClose } from "react-icons/io"
 import { saveAs } from "file-saver"
-import { FaFile, FaFileDownload, FaFileExcel, FaFilePdf, FaFilePowerpoint, FaFileWord } from "react-icons/fa"
+import { useCallback, useMemo, useState } from "react"
+import { FaFile, FaFileExcel, FaFilePdf, FaFilePowerpoint, FaFileWord } from "react-icons/fa"
+import { IoIosArrowDown, IoMdClose } from "react-icons/io"
 import { MdFileDownload } from "react-icons/md"
-import { Portal } from "react-portal"
-import Lightbox from "./Lightbox"
+import Member from "./Member"
+
+const IMAGE_EXTENSIONS = ["jpg", "jpeg", "png", "gif"]
+const FILE_EXTENSIONS = ["pdf", "doc", "docx", "xls", "xlsx"]
+const EMOJI_DATASOURCE_APPLE = "emoji-datasource-apple"
 
 const ModalConversationInfo = () => {
   const { selectedConversation } = useConversation()
@@ -20,29 +24,41 @@ const ModalConversationInfo = () => {
   const [showAllFiles, setShowAllFiles] = useState(false)
   const { messages } = useGetMessages()
 
-  const handleMembersClick = () => {
+  const toggleShowMember = useCallback(() => {
     setShowMembers(!showMembers)
-  }
-  const images = messages.filter((message) => {
-    const url = message.text
-    const extension = url.split(".").pop()
-    return ["jpg", "jpeg", "png", "gif"].includes(extension) && !url.includes("emoji-datasource-apple")
-  })
-  const files = messages.filter((message) => {
-    const url = message.text
-    const extension = url.split(".").pop()
-    return ["pdf", "doc", "docx", "xls", "xlsx"].includes(extension)
-  })
+  }, [showMembers])
+
+  const images = useMemo(
+    () =>
+      messages.filter((message: any) => {
+        const url = message.text
+        const extension = url.split(".").pop()
+        return IMAGE_EXTENSIONS.includes(extension) && !url.includes(EMOJI_DATASOURCE_APPLE)
+      }),
+    [messages],
+  )
+
+  const files = useMemo(
+    () =>
+      messages.filter((message: any) => {
+        const url = message.text
+        const extension = url.split(".").pop()
+        return FILE_EXTENSIONS.includes(extension)
+      }),
+    [messages],
+  )
 
   const [lightboxVisible, setLightboxVisible] = useState(false)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
   const displayedImages = showAllImages ? images : images.slice(0, 8)
   const displayedFiles = showAllFiles ? files : files.slice(0, 3)
-  const handleImageClick = (index) => {
+
+  const handleImageClick = (index: number) => {
     setCurrentImageIndex(index)
     setLightboxVisible(true)
   }
+
   const handleShowAllImages = () => {
     setShowAllImages(!showAllImages)
   }
@@ -50,7 +66,7 @@ const ModalConversationInfo = () => {
   const handleShowAllFiles = () => {
     setShowAllFiles(!showAllFiles)
   }
-  const getFileTypeIcon = (url) => {
+  const getFileTypeIcon = (url: string) => {
     const extension = url.substring(url.lastIndexOf(".")).toLowerCase()
     switch (extension) {
       case ".doc":
@@ -69,17 +85,17 @@ const ModalConversationInfo = () => {
     }
   }
 
-  const getFileName = (url) => {
+  const getFileName = (url: any) => {
     const filenameFromUrl = decodeURIComponent(url.split("/").pop().split("_").slice(1).join("_"))
     return filenameFromUrl
   }
 
-  const openFile = () => {
+  const openFile = (url: string) => {
     window.open(url, "_blank")
     return false
   }
 
-  const handleDownload = (e, url) => {
+  const handleDownload = (e: any, url: any) => {
     e.preventDefault()
     e.stopPropagation()
 
@@ -87,8 +103,7 @@ const ModalConversationInfo = () => {
 
     saveAs(url, filenameToSave)
   }
-
-  const getBoxColor = (url) => {
+  const getBoxColor = (url: string) => {
     const extension = url.substring(url.lastIndexOf(".")).toLowerCase()
     switch (extension) {
       case ".doc":
@@ -106,6 +121,22 @@ const ModalConversationInfo = () => {
         return "bg-gray-100"
     }
   }
+
+  const handleViewAllImages = useCallback(() => {
+    console.log("View all images")
+  }, [])
+
+  const handleViewAllFiles = useCallback(() => {
+    console.log("View all files")
+  }, [])
+
+  const handleDeleteHistory = useCallback(() => {
+    console.log("Delete history")
+  }, [])
+
+  const handleLeaveGroup = useCallback(() => {
+    console.log("Leave group")
+  }, [])
 
   return (
     <>
@@ -133,7 +164,7 @@ const ModalConversationInfo = () => {
 
           <div className="ml-4 mr-4 flex-1">
             <div className="mb-4 mt-2">
-              <button type="button" onClick={handleMembersClick} className="w-full pr-2 ">
+              <button type="button" onClick={toggleShowMember} className="w-full pr-2 ">
                 <div className="flex items-center justify-between w-full">
                   <p className="text-black font-bold">
                     {selectedConversation?.name ? "Thành viên nhóm" : "Nhóm chung"}
@@ -148,28 +179,14 @@ const ModalConversationInfo = () => {
                 )}
               </button>
 
-              {showMembers && selectedConversation.users && (
+              {showMembers && selectedConversation?.users && (
                 <div className="flex flex-col gap-1 flex-1">
                   <button onClick={handleOpenModalAddMember} className="btn btn-md bg-gray-400 w-80 h-4 text-black">
                     Thêm thành viên
                   </button>
 
-                  {selectedConversation.users.map((user, index) => (
-                    <div
-                      key={index}
-                      className="relative flex flex-row items-center py-2 px-3 gap-2 group hover:bg-blue-200 cursor-pointer transition-all"
-                    >
-                      <div className="avatar ">
-                        <div className="w-12 rounded-full">
-                          <img src={user.avatar} />
-                        </div>
-                      </div>
-                      <div className="flex flex-col">
-                        <p className="font-medium text-gray-600 mt-2">{user.username}</p>
-                        {selectedConversation.ownerId === user.id && <p className="text-gray-500 ">Trưởng nhóm</p>}
-                      </div>
-                      <BsThreeDots size={25} className="ml-auto " />
-                    </div>
+                  {selectedConversation.users.map((user: User, index: number) => (
+                    <Member key={index} user={user} selectedConversation={selectedConversation} />
                   ))}
                 </div>
               )}
@@ -183,7 +200,7 @@ const ModalConversationInfo = () => {
               {/*  chứa ảnh của hộp thoại */}
               <div className="flex flex-wrap gap-2 mt-4 mb-4">
                 <div className="flex flex-wrap gap-2 mt-4 mb-4">
-                  {displayedImages.map((image, index) => (
+                  {displayedImages.map((image: any, index: number) => (
                     <div key={index} className="relative">
                       <img
                         src={image.text}
@@ -209,7 +226,7 @@ const ModalConversationInfo = () => {
               </div>
               {/*  chứa file của hộp thoại */}
               <div className="flex flex-col gap-2 mt-4 mb-4">
-                {displayedFiles.map((file, index) => (
+                {displayedFiles.map((file: any, index: number) => (
                   <div
                     key={index}
                     className={`flex items-center gap-2 py-2 px-3  bg-gray-200 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-300`}
@@ -217,7 +234,10 @@ const ModalConversationInfo = () => {
                   >
                     {getFileTypeIcon(file.text)}
                     <p className="text-black font-medium">{getFileName(file.text)}</p>
-                    <MdFileDownload className="size-5 text-slate-600" onClick={(e) => handleDownload(e, file.text)} />
+                    <MdFileDownload
+                      className="size-5 text-slate-600"
+                      onClick={(e: any) => handleDownload(e, file.text)}
+                    />
                   </div>
                 ))}
                 {files.length > 3 && !showAllFiles && (
