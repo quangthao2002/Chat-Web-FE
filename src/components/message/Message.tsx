@@ -6,7 +6,7 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import { IoIosMore } from "react-icons/io"
 import FileMessage from "./FileMessage"
 import useConversation from "@/zustand/useConversation"
-import ForwardMessageModal from "../modals/ForwardMessageModal"
+import ModalForwardMessage from "../modals/ModalForwardMessage"
 
 const Message = ({ message, isLastMessage }: any) => {
   const { authUser } = useAuthContext()
@@ -205,7 +205,7 @@ const Message = ({ message, isLastMessage }: any) => {
           </div>
         </div>
       )}
-      {isModalOpen && <ForwardMessageModal messageForward={messageForward} onClose={() => setIsModalOpen(false)} />}
+      {isModalOpen && <ModalForwardMessage messageForward={messageForward} onClose={() => setIsModalOpen(false)} />}
     </>
   )
 }

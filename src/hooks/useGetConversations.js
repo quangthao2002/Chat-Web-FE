@@ -10,6 +10,7 @@ const useGetConversations = () => {
   const { authUser } = useAuthContext()
   const userId = authUser?.user?.id ?? null
   const { isAccept } = useFriendStore()
+  const { listMember } = useGroupStore()
   const [refresh, setRefresh] = useState(false)
   const ownerId = JSON.parse(localStorage.getItem("tokens-user"))?.user?.id
 
