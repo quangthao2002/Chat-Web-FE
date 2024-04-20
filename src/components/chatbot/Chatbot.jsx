@@ -8,7 +8,7 @@ const Chatbot = () => {
     const [message, setMessage] = useState("");
     const [messages, setMessages] = useState([{ text: 'Hi there 👋', type: 'bot' }]);
     const [isBotThinking, setIsBotThinking] = useState(false);
-    const API_KEY = import.meta.env.API_KEY_CHATGPT 
+    const API_KEY = "" // Điền API key chatgpt
 
     const handleChangeMessage = (e) => {
         setMessage(e.target.value);
