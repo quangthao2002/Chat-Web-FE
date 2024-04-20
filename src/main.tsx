@@ -8,6 +8,7 @@ import TabProvider from "./context/TabContext"
 import VideoProvider from "./context/VideoContext"
 import { SidebarProvider } from "./context/SideBarContext"
 import { ModalProvider } from "./context/ModalContext.tsx"
+import Chatbot from "./components/chatbot/Chatbot.jsx"
 
 ReactDOM.render(
   <React.StrictMode>
@@ -18,6 +19,7 @@ ReactDOM.render(
             <SidebarProvider>
               <VideoProvider>
                 <App />
+                <Chatbot />
               </VideoProvider>
             </SidebarProvider>
           </ModalProvider>

@@ -1,0 +1,23 @@
+# pack-refs with: peeled fully-peeled sorted 
+57994d02f340a2ab19c46a07f6df763aef2a19cd refs/heads/backup
+5de91d0d9787cfe8ba7fe5f989cba047f7f55669 refs/heads/chat-group
+8c6b115b32a43aa6c947a08b5df53efcd6867938 refs/heads/chat-group2
+61e30a2d3f7683a331263a775f96659a75b41a5c refs/heads/conversation-infor
+e637054e8dba4e43bfc01322104e792bc600cde4 refs/heads/dev-group
+1b250e9990839f983b1e0b7b41c756b0147e65cc refs/heads/handle-group
+1a72025e16ce774becb57bee47ddcb3e1f99504e refs/heads/main
+b5cdd53655f9a61f534b9261c90077ad78fe0936 refs/heads/master
+ad68ab26384da7710ffe48b6dda910af2e478aff refs/heads/profile-user
+03cd62f4953572acca3803fbc8716a30dac0eef9 refs/pull/1/head
+b43dcf3ea849b2c38d0bf09457790f243e6639ba refs/pull/10/head
+cde8221fbfc50ca7ee9f280a05fe6246cb5d5d25 refs/pull/11/head
+61e30a2d3f7683a331263a775f96659a75b41a5c refs/pull/12/head
+61cbb70f66be5175dc8557a1c6aa7443af994c7c refs/pull/12/merge
+b4a8514742414bebea31362d7354cb9c8d6c0f49 refs/pull/2/head
+c61410a91635acf0093fb2b292cdf9e599bf0319 refs/pull/3/head
+ac9841a08d44c23285bb795994d1f7220c9ecb7f refs/pull/4/head
+a98dcdd23a270cebea2ba7c5c5e197b11e291211 refs/pull/5/head
+5de91d0d9787cfe8ba7fe5f989cba047f7f55669 refs/pull/6/head
+d90f2d3e3c4dc7d1fc52317df5681039c3a83e80 refs/pull/7/head
+ad68ab26384da7710ffe48b6dda910af2e478aff refs/pull/8/head
+ac66d7266c9a532a69a907e2a61cd6a756fd5f9f refs/pull/9/head

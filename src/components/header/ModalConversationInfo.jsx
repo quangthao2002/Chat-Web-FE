@@ -6,9 +6,8 @@ import React, { useState } from "react"
 import { BsThreeDots } from "react-icons/bs"
 import { IoIosArrowDown, IoMdClose } from "react-icons/io"
 import { saveAs } from "file-saver"
-import { FaFile, FaFileDownload, FaFileExcel, FaFilePdf, FaFilePowerpoint, FaFileWord } from "react-icons/fa"
+import { FaFile, FaFileExcel, FaFilePdf, FaFilePowerpoint, FaFileWord } from "react-icons/fa"
 import { MdFileDownload } from "react-icons/md"
-import { Portal } from "react-portal"
 import Lightbox from "./Lightbox"
 
 const ModalConversationInfo = () => {
@@ -19,7 +18,6 @@ const ModalConversationInfo = () => {
   const [showAllImages, setShowAllImages] = useState(false)
   const [showAllFiles, setShowAllFiles] = useState(false)
   const { messages } = useGetMessages()
-  console.log(messages)
 
   const handleMembersClick = () => {
     setShowMembers(!showMembers)
