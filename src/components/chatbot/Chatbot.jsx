@@ -3,20 +3,23 @@ import { TfiComment } from "react-icons/tfi"
 import { BsSend, BsRobot } from "react-icons/bs"
 import { IoMdClose } from "react-icons/io"
 import { BiLoaderCircle } from "react-icons/bi"
+import { useAuthContext } from "@/context/AuthContext"
 const Chatbot = () => {
+  const { authUser } = useAuthContext()
+  const username = authUser?.user?.username
   const [showChatbot, setShowChatbot] = useState(false)
   const [message, setMessage] = useState("")
-  const [messages, setMessages] = useState([{ text: "Hi there 👋", type: "bot" }])
+  const [messages, setMessages] = useState([{ text: `Hi ${username}👋`, type: "bot" }])
   const [isBotThinking, setIsBotThinking] = useState(false)
   const API_KEY = "" // Điền API key chatgpt
 
-  const messagesEndRef = useRef(null);
+  const messagesEndRef = useRef(null)
 
-const scrollToBottom = () => {
-  messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-}
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }
 
-useEffect(scrollToBottom, [messages])
+  useEffect(scrollToBottom, [messages])
 
   const handleChangeMessage = (e) => {
     setMessage(e.target.value)
@@ -26,7 +29,7 @@ useEffect(scrollToBottom, [messages])
     try {
       if (!message) return
       setIsBotThinking(true)
-        setMessage("")
+      setMessage("")
       const API_URL = "https://api.openai.com/v1/chat/completions"
 
       const requestOptions = {
@@ -53,7 +56,6 @@ useEffect(scrollToBottom, [messages])
       const data = await response.json()
 
       console.log(data)
-     
 
       const botMessage = data.choices[0].message.content
       const newMessages = [...messages, { text: message, type: "user" }, { text: botMessage, type: "bot" }]
@@ -85,9 +87,9 @@ useEffect(scrollToBottom, [messages])
       )}
       {showChatbot && (
         <div className="fixed right-10 bottom-32 bg-white shadow-2xl w-96 rounded-2xl ">
-          <header className="bg-blue-500 pt-4 pb-4 text-center relative ">
-            <h2 className="font-bold text-white text-xl">Chatbot</h2>
-          </header>
+          <div className="bg-blue-500 pt-4 pb-4 text-center relative ">
+            <p className="font-bold text-white text-xl">Chatbot</p>
+          </div>
 
           <ul className="h-96 p-4 overflow-y-auto pb-28">
             {messages.map((msg, index) => (
@@ -104,7 +106,9 @@ useEffect(scrollToBottom, [messages])
               <li className="flex mt-2 ">
                 {/* <BiLoaderCircle size={30}/>  */}
                 <BsRobot className="w-4 h-4 self-end mr-2" />
-                <p className="text-black font-normal max-w-80 bg-gray-300 p-1 mr-1 rounded-md "><BiLoaderCircle size={20} /></p>
+                <p className="text-black font-normal max-w-80 bg-gray-300 p-1 mr-1 rounded-md ">
+                  <BiLoaderCircle size={20} />
+                </p>
               </li>
             )}
             <div ref={messagesEndRef} />
