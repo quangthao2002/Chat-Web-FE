@@ -1,13 +1,12 @@
 import React, { useEffect, useRef, useState } from "react"
-import { TfiComment } from "react-icons/tfi"
 import { BsSend, BsRobot } from "react-icons/bs"
-import { IoMdClose } from "react-icons/io"
 import { BiLoaderCircle } from "react-icons/bi"
 import { useAuthContext } from "@/context/AuthContext"
-const Chatbot = () => {
+import { useChatbotContext } from "@/context/ChatbotContext"
+const Chatbot2 = () => {
   const { authUser } = useAuthContext()
   const username = authUser?.user?.username
-  const [showChatbot, setShowChatbot] = useState(false)
+  const { showChatbot } = useChatbotContext();
   const [message, setMessage] = useState("")
   const [messages, setMessages] = useState([{ text: `Hi ${username}👋`, type: "bot" }])
   const [isBotThinking, setIsBotThinking] = useState(false)
@@ -71,31 +70,15 @@ const Chatbot = () => {
       setIsBotThinking(false)
     }
   }
-
   return (
     <>
-      {showChatbot ? (
-        <button
-          className="fixed right-10 bottom-14 h-12 w-12 flex justify-center items-center bg-blue-500 text-white rounded-full border-none outline-none shadow-xl cursor-pointer"
-          onClick={() => setShowChatbot(false)}
-        >
-          <IoMdClose className="absolute" />
-        </button>
-      ) : (
-        <button
-          className="fixed right-10 bottom-14 h-12 w-12 flex justify-center items-center bg-blue-500 text-white rounded-full border-none outline-none shadow-xl cursor-pointer"
-          onClick={() => setShowChatbot(true)}
-        >
-          <TfiComment className="absolute" />
-        </button>
-      )}
       {showChatbot && (
-        <div className="fixed right-10 bottom-32 bg-white shadow-2xl w-96 rounded-2xl ">
-          <div className="bg-blue-500 pt-4 pb-4 text-center relative ">
+        <div className="relative bg-white shadow-2xl w-full flex-1 z-50 flex flex-col overflow-y-auto">
+          {/* <div className="bg-blue-500 pt-4 pb-4 text-center relative ">
             <p className="font-bold text-white text-xl">Chatbot</p>
-          </div>
+          </div> */}
 
-          <ul className="h-96 p-4 overflow-y-auto pb-28">
+          <ul className="p-4 overflow-y-auto flex-grow pb-28">
             {messages.map((msg, index) => (
               <li key={index} className={`flex gap-1 ${msg.type === "user" ? "justify-end" : ""}`}>
                 {msg.type === "bot" && <BsRobot className="w-4 h-4 self-end flex-shrink-0" />}
@@ -109,7 +92,7 @@ const Chatbot = () => {
             {isBotThinking && (
               <li className="flex mt-2 ">
                 {/* <BiLoaderCircle size={30}/>  */}
-                <BsRobot className="w-4 h-4 self-end mr-2" />
+                <BsRobot className="w-6 h-6 self-end mr-2" />
                 <p className="text-black font-normal max-w-80 bg-gray-300 p-1 mr-1 rounded-md ">
                   <BiLoaderCircle size={20} />
                 </p>
@@ -133,4 +116,4 @@ const Chatbot = () => {
   )
 }
 
-export default Chatbot
+export default Chatbot2

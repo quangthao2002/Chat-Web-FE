@@ -12,13 +12,12 @@ import { useModalContext } from "@/context/ModalContext"
 
 const ModalUserList = () => {
   const socketRef = useRef()
-  const { conversation, setConversation, setRefresh } = useGetConversations()
+  const { conversation } = useGetConversations()
   const [selectedUsers, setSelectedUsers] = useState([])
-  const [groupAvatar, setGroupAvatar] = useState("")
+  const [groupAvatar, setGroupAvatar] = useState("https://png.pngtree.com/png-vector/20190827/ourmid/pngtree-group-avatar-icon-design-vector-png-image_1702778.jpg")
   const [groupName, setGroupName] = useState("")
   const { authUser } = useAuthContext()
   const ownerId = authUser?.user?.id
-  const accessToken = authUser?.tokens?.accessToken
   socketRef.current = io("http://localhost:3000")
   const { getGroupByUserId } = useGroup()
   const { isModalOpenCreateGroup, handleCloseModalCreateGroup } = useModalContext()
@@ -55,6 +54,14 @@ const ModalUserList = () => {
   }
 
   const handleCreateGroup = async () => {
+    if(!groupName) {
+      toast.error("Please enter group name")
+      return
+    }
+    if(selectedUsers.length <2) {
+      toast.error("Please select at least 2 members")
+      return
+    }
     const newGroup = {
       name: groupName,
       avatar: groupAvatar,
