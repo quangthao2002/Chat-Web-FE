@@ -1,13 +1,14 @@
-import { useEffect, useRef, useCallback } from "react"
-import { io } from "socket.io-client"
 import useConversation from "@/zustand/useConversation.js"
+import { useCallback, useEffect, useRef } from "react"
+import { io } from "socket.io-client"
 import { useFriendStore } from "./useFriendStore"
-import useGetConversations from "@/hooks/useGetConversations"
-import { toast } from "react-toastify"
 import { useGroupStore } from "./useGroupStore"
+import { useAuthContext } from "@/context/AuthContext"
 
 const useSocket = (userId) => {
   const socketRef = useRef()
+  const { authUser } = useAuthContext()
+  const currentUserId = authUser?.user?.id
   const { setMessages, messages, setIsTyping, setUserOnline, selectedConversation } = useConversation()
   const { setSenderId, setReceiverId, setIsAccept } = useFriendStore()
   const { setListMember } = useGroupStore()
@@ -54,13 +55,13 @@ const useSocket = (userId) => {
     })
     socketRef.current.on("add-members", (payload) => {
       console.log("add-members", payload.list, userId)
-      if (payload.list.find((user) => user.id === userId)) {
+      if (payload.list.find((user) => user.id === currentUserId)) {
         setListMember(payload.list)
       }
     })
     socketRef.current.on("delete-members", (payload) => {
       console.log("delete-members", payload.list, userId)
-      if (payload.list.find((user) => user.id === userId)) {
+      if (payload.list.find((user) => user.id === currentUserId)) {
         setListMember(payload.list)
       }
     })

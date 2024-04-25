@@ -7,7 +7,7 @@ const Sidebar = () => {
   const { activeTab } = useTabContext()
 
   return (
-    <div className="w-[339px] h-screen bg-white border-r">
+    <div className="w-[339px] h-screen bg-white border-r flex flex-col">
       <Search />
       {activeTab === Tab.PhoneBook ? <SidebarPhoneBook /> : <SidebarMessage />}
     </div>

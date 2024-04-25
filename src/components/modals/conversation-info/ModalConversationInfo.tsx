@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Lightbox from "@/components/header/Lightbox"
 import { useModalContext } from "@/context/ModalContext"
 import { useSidebarContext } from "@/context/SideBarContext"
@@ -10,15 +11,7 @@ import { FaFile, FaFileExcel, FaFilePdf, FaFilePowerpoint, FaFileWord } from "re
 import { IoIosArrowDown, IoMdClose } from "react-icons/io"
 import { MdFileDownload } from "react-icons/md"
 import Member from "./Member"
-import Button from "./Button"
-import Section from "./Section"
 
-const CONVERSATION_INFO = "Thông tin nhóm"
-const DIALOGUE_INFO = "Thông tin họp thoại"
-const IMAGE_VIDEO = "Ảnh/Video"
-const FILE = "File"
-const DELETE_HISTORY = "Xóa lịch sử cuộc trò chuyện"
-const LEAVE_GROUP = "Rời nhóm"
 const IMAGE_EXTENSIONS = ["jpg", "jpeg", "png", "gif"]
 const FILE_EXTENSIONS = ["pdf", "doc", "docx", "xls", "xlsx"]
 const EMOJI_DATASOURCE_APPLE = "emoji-datasource-apple"

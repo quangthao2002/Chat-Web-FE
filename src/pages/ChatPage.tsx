@@ -4,6 +4,7 @@ import MessageContainer from "@/components/message/MessageContainer"
 import useConversation from "@/zustand/useConversation"
 import { useEffect } from "react"
 import { NoChatSelected } from "./NoChatSelected"
+import Chatbot from "@/components/chatbot/Chatbot"
 
 const ChatPage = () => {
   const { selectedConversation, setSelectedConversation } = useConversation()
@@ -17,7 +18,10 @@ const ChatPage = () => {
   return (
     <div className="flex flex-col flex-1">
       {!selectedConversation ? (
-        <NoChatSelected />
+       <>
+         <NoChatSelected />
+        <Chatbot />
+       </>
       ) : (
         <>
           <div className="md:min-w-[450px] flex flex-col flex-1">
