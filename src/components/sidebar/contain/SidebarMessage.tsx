@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import useGetConversations from "@/hooks/useGetConversations"
 import Conversation from "./Conversation"
 import { useEffect, useState } from "react"
@@ -23,8 +24,8 @@ const SidebarMessage = () => {
 
   return (
     <div className="py-2 flex-1 flex flex-col h-full max-h-screen overflow-auto  ">
-      {showChatbot ? ( 
-         <Chatbot2 />
+      {showChatbot ? (
+        <Chatbot2 />
       ) : (
         <>
           {conversation?.map((user: any, index: number) => (
@@ -37,7 +38,7 @@ const SidebarMessage = () => {
           ))}
           {loading ? <span className="loading loading-spinner"></span> : null}
         </>
-       )}
+      )}
     </div>
   )
 }

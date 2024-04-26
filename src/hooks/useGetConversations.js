@@ -1,7 +1,7 @@
 import { useAuthContext } from "@/context/AuthContext"
 import { useFriendStore } from "@/zustand/useFriendStore"
 import { useGroupStore } from "@/zustand/useGroupStore"
-import { useEffect, useState, useCallback } from "react"
+import { useCallback, useEffect, useState } from "react"
 import toast from "react-hot-toast"
 
 const useGetConversations = () => {
@@ -10,8 +10,8 @@ const useGetConversations = () => {
   const { authUser } = useAuthContext()
   const userId = authUser?.user?.id ?? null
   const { isAccept } = useFriendStore()
-  const { listMember } = useGroupStore()
-  const [refresh, setRefresh] = useState(false)
+  const { listMember, listAdmin } = useGroupStore()
+  const [setRefresh] = useState(false)
   const ownerId = JSON.parse(localStorage.getItem("tokens-user"))?.user?.id
 
   const fetchData = useCallback(async (url, accessToken, refreshToken) => {
@@ -37,10 +37,7 @@ const useGetConversations = () => {
           throw new Error(refreshData.message)
         }
 
-        localStorage.setItem(
-          "tokens-user",
-          JSON.stringify({ ...tokensUser, tokens: { ...tokensUser.tokens, accessToken: refreshData.accessToken } }),
-        )
+        localStorage.setItem("tokens-user", JSON.stringify({ tokens: refreshData }))
 
         res = await fetch(url, {
           headers: {
@@ -83,7 +80,7 @@ const useGetConversations = () => {
 
   useEffect(() => {
     getConversations()
-  }, [isAccept, listMember, getConversations])
+  }, [isAccept, listMember, listAdmin, getConversations])
 
   const addConversation = (newConversation) => {
     setConversation((prevConversations) => [...prevConversations, newConversation])

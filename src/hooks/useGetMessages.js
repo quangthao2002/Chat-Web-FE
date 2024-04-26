@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react"
-import axios from "axios"
+import { useAuthContext } from "@/context/AuthContext"
 import useConversation from "@/zustand/useConversation"
+import axios from "axios"
+import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
-import { AuthContext, useAuthContext } from "@/context/AuthContext"
 
 const useGetMessages = () => {
   const [loading, setLoading] = useState(false)

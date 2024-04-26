@@ -1,33 +1,50 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import Lightbox from "@/components/header/Lightbox"
-import { useModalContext } from "@/context/ModalContext"
-import { useSidebarContext } from "@/context/SideBarContext"
-import useGetMessages from "@/hooks/useGetMessages"
-import { User } from "@/types/user"
-import useConversation from "@/zustand/useConversation"
+import { useState, useCallback, useMemo } from "react"
 import { saveAs } from "file-saver"
-import { useCallback, useMemo, useState } from "react"
 import { FaFile, FaFileExcel, FaFilePdf, FaFilePowerpoint, FaFileWord } from "react-icons/fa"
 import { IoIosArrowDown, IoMdClose } from "react-icons/io"
 import { MdFileDownload } from "react-icons/md"
+import { toast } from "react-toastify"
+import { useAuthContext } from "@/context/AuthContext"
+import { useModalContext } from "@/context/ModalContext"
+import { useSidebarContext } from "@/context/SideBarContext"
+import useConversation from "@/zustand/useConversation"
+import useGetConversations from "@/hooks/useGetConversations"
+import useGetMessages from "@/hooks/useGetMessages"
 import Member from "./Member"
+import Button from "./Button"
+import groupServices from "@/services/groupServices"
+import Lightbox from "@/components/header/Lightbox"
+import { User } from "@/types/user"
 
 const IMAGE_EXTENSIONS = ["jpg", "jpeg", "png", "gif"]
 const FILE_EXTENSIONS = ["pdf", "doc", "docx", "xls", "xlsx"]
 const EMOJI_DATASOURCE_APPLE = "emoji-datasource-apple"
 
 const ModalConversationInfo = () => {
-  const { selectedConversation } = useConversation()
-  const [showMembers, setShowMembers] = useState(false)
+  const { authUser } = useAuthContext()
+  const userId = authUser?.user?.id
+  const { selectedConversation, setSelectedConversation } = useConversation()
   const { isSidebarOpen, toggleSidebar } = useSidebarContext()
   const { handleOpenModalAddMember } = useModalContext()
+  const { messages } = useGetMessages()
+  const { getConversations } = useGetConversations()
+
+  const [showMembers, setShowMembers] = useState(false)
   const [showAllImages, setShowAllImages] = useState(false)
   const [showAllFiles, setShowAllFiles] = useState(false)
-  const { messages } = useGetMessages()
+  const [lightboxVisible, setLightboxVisible] = useState(false)
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
+
+  const handleCheckAdmin = (id: string) => {
+    return selectedConversation?.ownerId === id || !!selectedConversation?.admins?.find((item: any) => item.id === id)
+  }
+
+  const isAdmin = handleCheckAdmin(userId)
 
   const toggleShowMember = useCallback(() => {
-    setShowMembers(!showMembers)
-  }, [showMembers])
+    setShowMembers((prevShowMembers) => !prevShowMembers)
+  }, [])
 
   const images = useMemo(
     () =>
@@ -49,24 +66,25 @@ const ModalConversationInfo = () => {
     [messages],
   )
 
-  const [lightboxVisible, setLightboxVisible] = useState(false)
-  const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const displayedImages = useMemo(() => (showAllImages ? images : images.slice(0, 8)), [images, showAllImages])
+  const displayedFiles = useMemo(() => (showAllFiles ? files : files.slice(0, 3)), [files, showAllFiles])
 
-  const displayedImages = showAllImages ? images : images.slice(0, 8)
-  const displayedFiles = showAllFiles ? files : files.slice(0, 3)
+  const handleImageClick = useCallback(
+    (index: number) => {
+      setCurrentImageIndex(index)
+      setLightboxVisible(true)
+    },
+    [setCurrentImageIndex, setLightboxVisible],
+  )
 
-  const handleImageClick = (index: number) => {
-    setCurrentImageIndex(index)
-    setLightboxVisible(true)
-  }
+  const handleShowAllImages = useCallback(() => {
+    setShowAllImages((prevShowAllImages) => !prevShowAllImages)
+  }, [])
 
-  const handleShowAllImages = () => {
-    setShowAllImages(!showAllImages)
-  }
+  const handleShowAllFiles = useCallback(() => {
+    setShowAllFiles((prevShowAllFiles) => !prevShowAllFiles)
+  }, [])
 
-  const handleShowAllFiles = () => {
-    setShowAllFiles(!showAllFiles)
-  }
   const getFileTypeIcon = (url: string) => {
     const extension = url.substring(url.lastIndexOf(".")).toLowerCase()
     switch (extension) {
@@ -104,40 +122,41 @@ const ModalConversationInfo = () => {
 
     saveAs(url, filenameToSave)
   }
-  const getBoxColor = (url: string) => {
-    const extension = url.substring(url.lastIndexOf(".")).toLowerCase()
-    switch (extension) {
-      case ".doc":
-      case ".docx":
-        return "bg-blue-200"
-      case ".pdf":
-        return "bg-red-100"
-      case ".ppt":
-      case ".pptx":
-        return "bg-green-100"
-      case ".xlsx":
-      case ".xls":
-        return "bg-blue-100"
-      default:
-        return "bg-gray-100"
+
+  const handleLeaveGroup = useCallback(async () => {
+    try {
+      const res = await groupServices.deleteUserFromGroup({
+        roomId: selectedConversation?.id,
+        userIds: [userId],
+      })
+      if (res.data) {
+        getConversations()
+        setSelectedConversation(null)
+        toggleSidebar()
+        toast.success("rời nhóm thành công")
+      }
+    } catch (error) {
+      toast.error("error")
     }
-  }
+  }, [getConversations, selectedConversation, setSelectedConversation, toggleSidebar, userId])
 
-  const handleViewAllImages = useCallback(() => {
-    console.log("View all images")
-  }, [])
-
-  const handleViewAllFiles = useCallback(() => {
-    console.log("View all files")
-  }, [])
-
-  const handleDeleteHistory = useCallback(() => {
-    console.log("Delete history")
-  }, [])
-
-  const handleLeaveGroup = useCallback(() => {
-    console.log("Leave group")
-  }, [])
+  const handleDeleteGroup = useCallback(async () => {
+    const listUserId = selectedConversation?.users?.map((item: any) => item.id)
+    try {
+      const res = await groupServices.deleteUserFromGroup({
+        roomId: selectedConversation?.id,
+        userIds: listUserId,
+      })
+      if (res.data) {
+        getConversations()
+        setSelectedConversation(null)
+        toggleSidebar()
+        toast.success("xóa nhóm thành công")
+      }
+    } catch (error) {
+      toast.error("error")
+    }
+  }, [getConversations, selectedConversation, setSelectedConversation, toggleSidebar])
 
   return (
     <>
@@ -155,7 +174,7 @@ const ModalConversationInfo = () => {
             <div className="divider my-0 py-0 mx-1 h-1 mb-2" />
             <div className="avatar mt-1 ml-2">
               <div className="w-12 rounded-full">
-                <img src={selectedConversation?.avatar} />
+                <img src={selectedConversation?.avatar} alt={selectedConversation?.name} />
               </div>
             </div>
             <p className="font-bold text-black mt-3 mb-2">{selectedConversation?.name}</p>
@@ -182,12 +201,20 @@ const ModalConversationInfo = () => {
 
               {showMembers && selectedConversation?.users && (
                 <div className="flex flex-col gap-1 flex-1">
-                  <button onClick={handleOpenModalAddMember} className="btn btn-md bg-gray-400 w-80 h-4 text-black">
-                    Thêm thành viên
-                  </button>
+                  {isAdmin && (
+                    <button onClick={handleOpenModalAddMember} className="btn btn-md bg-gray-400 w-80 h-4 text-black">
+                      Thêm thành viên
+                    </button>
+                  )}
 
                   {selectedConversation.users.map((user: User, index: number) => (
-                    <Member key={index} user={user} selectedConversation={selectedConversation} />
+                    <Member
+                      key={user.id + index}
+                      user={user}
+                      selectedConversation={selectedConversation}
+                      isAdmin={isAdmin}
+                      handleCheckAdmin={handleCheckAdmin}
+                    />
                   ))}
                 </div>
               )}
@@ -207,6 +234,7 @@ const ModalConversationInfo = () => {
                         src={image.text}
                         className="w-20 h-20 object-cover rounded-md cursor-pointer"
                         onClick={() => handleImageClick(index)}
+                        alt={`Image ${index}`}
                       />
                     </div>
                   ))}
@@ -217,7 +245,6 @@ const ModalConversationInfo = () => {
                   )}
                 </div>
               </div>
-              {/* <button className="btn btn-md bg-gray-300 w-full h-4 text-black">Xem tất cả ảnh</button> */}
             </div>
 
             <div className="mt-4 mb-4">
@@ -247,26 +274,15 @@ const ModalConversationInfo = () => {
                   </button>
                 )}
               </div>
-
-              {/* <button className="btn btn-md bg-gray-300  w-full  h-4 text-black">Xem tất cả file</button> */}
             </div>
 
             <div className="divider my-0 py-0 mx-1 h-1 mb-2" />
             <div className="mt-4">
               <p className="text-black font-bold">Thiết lập bảo mật </p>
               <div className="mt-4 ">
-                <button
-                  type="button"
-                  className="cursor-pointer w-full hover:bg-blue-200 py-2 px-4 font-semibold text-red-600 mb-2"
-                >
-                  Xóa lịch sử cuộc trò chuyện
-                </button>
-                <button
-                  type="button"
-                  className="cursor-pointer w-full hover:bg-blue-200 py-2 px-4 font-semibold text-red-600"
-                >
-                  Rời nhóm
-                </button>
+                <Button text="Xóa lịch sử cuộc trò chuyện" onClick={handleLeaveGroup} />
+                <Button text="Rời nhóm" onClick={handleLeaveGroup} />
+                {isAdmin && <Button text="Giải tán nhóm" onClick={handleDeleteGroup} />}
               </div>
             </div>
           </div>

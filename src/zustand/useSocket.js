@@ -11,7 +11,7 @@ const useSocket = (userId) => {
   const currentUserId = authUser?.user?.id
   const { setMessages, messages, setIsTyping, setUserOnline, selectedConversation } = useConversation()
   const { setSenderId, setReceiverId, setIsAccept } = useFriendStore()
-  const { setListMember } = useGroupStore()
+  const { setListMember, setListAdmin } = useGroupStore()
   const user = JSON.parse(localStorage.getItem("tokens-user"))
   const token = user?.tokens?.accessToken
 
@@ -48,21 +48,28 @@ const useSocket = (userId) => {
 
   useEffect(() => {
     socketRef.current.on("create-group", (payload) => {
-      console.log("create-group", payload.list, userId)
       if (payload.list.includes(userId)) {
         setListMember(payload.list)
       }
     })
     socketRef.current.on("add-members", (payload) => {
-      console.log("add-members", payload.list, userId)
       if (payload.list.find((user) => user.id === currentUserId)) {
         setListMember(payload.list)
       }
     })
     socketRef.current.on("delete-members", (payload) => {
-      console.log("delete-members", payload.list, userId)
       if (payload.list.find((user) => user.id === currentUserId)) {
         setListMember(payload.list)
+      }
+    })
+    socketRef.current.on("add-admins", (payload) => {
+      if (payload.list.find((user) => user.id === currentUserId)) {
+        setListAdmin(payload.list)
+      }
+    })
+    socketRef.current.on("delete-admins", (payload) => {
+      if (payload.list.find((user) => user.id === currentUserId)) {
+        setListAdmin(payload.list)
       }
     })
 

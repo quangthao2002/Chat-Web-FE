@@ -1,25 +1,21 @@
-import React, { useRef, useState } from "react"
-import useGetConversations from "@/hooks/useGetConversations"
-import Modal from "react-modal"
-import { IoMdClose } from "react-icons/io"
-import { FaCamera } from "react-icons/fa"
-import { io } from "socket.io-client"
 import { useAuthContext } from "@/context/AuthContext"
-import groupServices from "@/services/groupServices"
-import useGroup from "@/hooks/group/useGroup"
-import { toast } from "react-toastify"
 import { useModalContext } from "@/context/ModalContext"
+import useGetConversations from "@/hooks/useGetConversations"
+import groupServices from "@/services/groupServices"
+import { useState } from "react"
+import { FaCamera } from "react-icons/fa"
+import { IoMdClose } from "react-icons/io"
+import { toast } from "react-toastify"
 
 const ModalUserList = () => {
-  const socketRef = useRef()
   const { conversation } = useGetConversations()
   const [selectedUsers, setSelectedUsers] = useState([])
-  const [groupAvatar, setGroupAvatar] = useState("https://png.pngtree.com/png-vector/20190827/ourmid/pngtree-group-avatar-icon-design-vector-png-image_1702778.jpg")
+  const [groupAvatar, setGroupAvatar] = useState(
+    "https://png.pngtree.com/png-vector/20190827/ourmid/pngtree-group-avatar-icon-design-vector-png-image_1702778.jpg",
+  )
   const [groupName, setGroupName] = useState("")
   const { authUser } = useAuthContext()
   const ownerId = authUser?.user?.id
-  socketRef.current = io("http://localhost:3000")
-  const { getGroupByUserId } = useGroup()
   const { isModalOpenCreateGroup, handleCloseModalCreateGroup } = useModalContext()
 
   const handleUserSelect = (userId) => {
@@ -54,11 +50,11 @@ const ModalUserList = () => {
   }
 
   const handleCreateGroup = async () => {
-    if(!groupName) {
+    if (!groupName) {
       toast.error("Please enter group name")
       return
     }
-    if(selectedUsers.length <2) {
+    if (selectedUsers.length < 2) {
       toast.error("Please select at least 2 members")
       return
     }
