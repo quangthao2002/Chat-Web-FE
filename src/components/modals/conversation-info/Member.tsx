@@ -63,7 +63,16 @@ const Member = ({ user, selectedConversation, isAdmin, handleCheckAdmin }: Membe
 
       <div className="flex flex-1 flex-col">
         <p className="font-medium text-gray-600 mt-2">{user?.username}</p>
-        {selectedConversation.ownerId === user?.id && <p className="text-gray-500 ">Trưởng nhóm</p>}
+        <div className="flex">
+          {selectedConversation?.ownerId === user?.id ? (
+            <span className="text-gray-500 ">Trưởng nhóm</span>
+          ) : (
+            selectedConversation?.admins?.find((item: any) => item.id === user?.id) && (
+              <span className="text-gray-500 ">Quản trị viên</span>
+            )
+          )}
+          {isMe && <span className="text-gray-500 "> (Bạn)</span>}
+        </div>
       </div>
 
       {isAdmin && !isMe && (

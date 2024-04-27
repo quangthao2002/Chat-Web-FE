@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useModalContext } from "@/context/ModalContext"
 import useGetConversations from "@/hooks/useGetConversations"
 import groupServices from "@/services/groupServices"
@@ -24,19 +25,33 @@ const ModalAddMember: FC = () => {
     ?.filter((item: User) => !listMemberPresent?.includes(item.id))
 
   const handleUserSelect = (userId: string) => {
-    setSelectedUsers((prevSelectedUsers) => [...prevSelectedUsers, userId])
+    setSelectedUsers((prevSelectedUsers) => {
+      if (!prevSelectedUsers.includes(userId)) {
+        return [...prevSelectedUsers, userId]
+      } else {
+        return prevSelectedUsers
+      }
+    })
   }
   const handleUserDeselect = (userId: string) => {
     setSelectedUsers((prevSelectedUsers) => prevSelectedUsers.filter((id) => id !== userId))
+  }
+
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>, userId: string) => {
+    if (e.target.checked) {
+      handleUserSelect(userId)
+    } else {
+      handleUserDeselect(userId)
+    }
   }
 
   const handleAddMember = async () => {
     try {
       const res = await groupServices.addUserToGroup({ roomId: selectedConversation?.id, userIds: selectedUsers })
       if (res?.data) {
-        toast.success(`Add member to ${res?.data?.name} successfully`)
+        toast.success(`Add member to ${selectedConversation?.name} successfully`)
       } else {
-        toast.error("Add member failed")
+        toast.error(`Add member to ${selectedConversation?.name} failed`)
       }
       handleCloseModalAddMember()
     } catch (error) {
@@ -65,13 +80,8 @@ const ModalAddMember: FC = () => {
               <label key={user?.id} className="flex gap-3 p-2">
                 <input
                   type="checkbox"
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      handleUserSelect(user?.id)
-                    } else {
-                      handleUserDeselect(user?.id)
-                    }
-                  }}
+                  checked={selectedUsers.includes(user?.id)}
+                  onChange={(e) => handleCheckboxChange(e, user?.id)}
                 />
                 <div className="avatar">
                   <div className="w-10 rounded-full">
