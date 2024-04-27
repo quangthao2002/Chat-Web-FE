@@ -6,6 +6,7 @@ import { useCallback, useState } from "react"
 import { BsThreeDots } from "react-icons/bs"
 import { toast } from "react-toastify"
 import ActionButton from "./ActionButton"
+import useClickOutSide from "@/hooks/group/useClickOutSide"
 
 interface MemberProps {
   user: User
@@ -21,6 +22,7 @@ const Member = ({ user, selectedConversation, isAdmin, handleCheckAdmin }: Membe
   const userId = authUser?.user?.id
   const isMe = user.id === userId
   const checkItemAdmin = handleCheckAdmin(user.id)
+  const { nodeRef } = useClickOutSide(() => setIsShowModal(false))
 
   const toggleOpenModal = () => {
     setIsShowModal(!isShowModal)
@@ -54,7 +56,10 @@ const Member = ({ user, selectedConversation, isAdmin, handleCheckAdmin }: Membe
     handleAction(groupServices.deleteAdminFromGroup, "Xóa quyền quản trị cho", "Xóa quyền quản trị cho")
 
   return (
-    <div className="relative group flex flex-row items-center py-2 px-3 gap-2 group hover:bg-blue-200 cursor-pointer transition-all">
+    <div
+      ref={nodeRef as React.RefObject<HTMLDivElement>}
+      className="relative group flex flex-row items-center py-2 px-3 gap-2 group hover:bg-blue-200 cursor-pointer transition-all"
+    >
       <div className="avatar ">
         <div className="w-12 rounded-full">
           <img src={user?.avatar} />
@@ -76,24 +81,23 @@ const Member = ({ user, selectedConversation, isAdmin, handleCheckAdmin }: Membe
       </div>
 
       {isAdmin && !isMe && (
-        <div className="relative hidden group-hover:block">
+        <div className=" hidden group-hover:block">
           <button onClick={toggleOpenModal} className="ml-auto p-3">
             <BsThreeDots size={25} />
           </button>
+        </div>
+      )}
 
-          {isShowModal && (
-            <div className="absolute z-10 right-0 top-full">
-              <div className="absolute z-10 right-3 bottom-full border-transparent border-[0.7rem] border-b-white" />
-              <div className="bg-white border-b border-gray-300 rounded-lg shadow-md w-[15rem]">
-                <ActionButton
-                  onClick={checkItemAdmin ? handleDeleteAdmin : handleAddAdmin}
-                  text={checkItemAdmin ? "Xóa quyền quản trị" : "Thêm quyền quản trị"}
-                />
+      {isAdmin && !isMe && isShowModal && (
+        <div className="absolute z-10 right-14 top-0">
+          <div className="bg-white border-b border-gray-300 rounded-lg shadow-md w-[15rem]">
+            <ActionButton
+              onClick={checkItemAdmin ? handleDeleteAdmin : handleAddAdmin}
+              text={checkItemAdmin ? "Xóa quyền quản trị" : "Thêm quyền quản trị"}
+            />
 
-                <ActionButton onClick={handleKickMember} text="Xóa khỏi nhóm" className="text-red-500" />
-              </div>
-            </div>
-          )}
+            <ActionButton onClick={handleKickMember} text="Xóa khỏi nhóm" className="text-red-500" />
+          </div>
         </div>
       )}
     </div>
