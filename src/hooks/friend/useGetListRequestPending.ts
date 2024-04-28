@@ -13,7 +13,7 @@ const useGetListRequestPending = () => {
   }
 
   useEffect(() => {
-    if (authUser.user.id === receiverId) {
+    if (authUser?.user?.id === receiverId) {
       getListRequestPending(receiverId)
     }
   }, [receiverId])

@@ -6,8 +6,8 @@
 // const useSocketClient = (): { getSocket: () => Socket | null; userId: string } => {
 //   const socketRef = useRef<Socket | null>(null)
 //   const { authUser } = useAuthContext()
-//   const { id: userId } = authUser.user
-//   const { accessToken: token } = authUser.tokens
+//   const { id: userId } = authUser?.user
+//   const { accessToken: token } = authUser?.tokens
 
 //   const getSocket = () => socketRef.current
 

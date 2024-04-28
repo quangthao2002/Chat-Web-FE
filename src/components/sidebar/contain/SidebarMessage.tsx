@@ -11,7 +11,7 @@ const SidebarMessage = () => {
   const [userOnline, setUserOnline] = useState(new Map())
   const { loading, conversation } = useGetConversations()
   const { authUser } = useAuthContext()
-  const userId = authUser.user.id
+  const userId = authUser?.user?.id
   const { getSocket } = useSocket(userId)
   const { showChatbot } = useChatbotContext()
 

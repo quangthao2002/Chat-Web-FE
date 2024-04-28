@@ -8,7 +8,7 @@ import { sendFileToServer } from "@/features/uploadFile/uploadFile"
 const Image = () => {
   const { selectedConversation, messages, setMessages } = useConversation()
   const { authUser } = useAuthContext()
-  const currentUserId = authUser.user.id
+  const currentUserId = authUser?.user?.id
 
   const handleImageSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files
@@ -20,7 +20,7 @@ const Image = () => {
 
     const formData = createFormData(files, currentUserId, selectedConversation)
     const fileUrls = await sendFileToServer(formData)
-    const newMessages = createNewMessages(fileUrls, currentUserId, authUser.user, selectedConversation)
+    const newMessages = createNewMessages(fileUrls, currentUserId, authUser?.user, selectedConversation)
 
     setMessages([...messages, ...newMessages])
   }

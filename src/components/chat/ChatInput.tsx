@@ -9,7 +9,7 @@ import Picker from "@emoji-mart/react"
 const ChatInput = () => {
   const { selectedConversation, setMessages, messages } = useConversation()
   const { authUser } = useAuthContext()
-  const currentUserId = authUser.user.id
+  const currentUserId = authUser?.user?.id
   const [typing, setTyping] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const { sendMessage, sendTyping, sendStopTyping, sendGroupMessage } = useSocket(currentUserId)
@@ -31,7 +31,7 @@ const ChatInput = () => {
       roomId: selectedConversation?.ownerId ? selectedConversation.id : null,
       recipientId: !selectedConversation?.ownerId ? selectedConversation.id : null,
       created_at: new Date(),
-      user: authUser.user,
+      user: authUser?.user,
     }
 
     if (selectedConversation.ownerId) {
@@ -55,7 +55,7 @@ const ChatInput = () => {
       sendTyping(selectedConversation.id)
     }
 
-    let lastTypingTime = new Date().getTime()
+    const lastTypingTime = new Date().getTime()
     const timerLength = 3000
     setTimeout(() => {
       const timeNow = new Date().getTime()

@@ -17,7 +17,7 @@ const PhoneBookFriendList = () => {
   }
 
   useEffect(() => {
-    getListRequestPending(authUser.user.id)
+    getListRequestPending(authUser?.user?.id)
   }, [])
 
   return (

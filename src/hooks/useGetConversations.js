@@ -57,6 +57,8 @@ const useGetConversations = () => {
   }, [])
 
   const getConversations = useCallback(async () => {
+    if (!userId || !ownerId) return
+
     setLoading(true)
     try {
       const tokensUser = JSON.parse(localStorage.getItem("tokens-user"))
@@ -80,7 +82,7 @@ const useGetConversations = () => {
 
   useEffect(() => {
     getConversations()
-  }, [isAccept, listMember, listAdmin, getConversations])
+  }, [isAccept, listMember, listAdmin, getConversations, authUser])
 
   const addConversation = (newConversation) => {
     setConversation((prevConversations) => [...prevConversations, newConversation])

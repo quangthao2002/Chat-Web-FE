@@ -18,7 +18,7 @@ const ModalForwardMessage = ({ onClose, messageForward }) => {
   const [groupAvatar, setGroupAvatar] = useState("")
   const [groupName, setGroupName] = useState("")
   const { authUser } = useAuthContext()
-  const ownerId = authUser.user.id
+  const ownerId = authUser?.user?.id
 
   Modal.setAppElement("#root")
 

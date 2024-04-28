@@ -11,7 +11,7 @@ const PersonalInformation = ({ user, isOpen, onRequestClose }) => {
   const [showChangeAvatar, setShowChangeAvatar] = useState(false)
   const [showPersonalUpdate, setShowPersonalUpdate] = useState(false)
   const { authUser, setAuthUser } = useAuthContext()
-  const avatarUser = authUser.user.avatar
+  const avatarUser = authUser?.user.avatar
 
   const handleOpenChangeAvatar = () => {
     setShowChangeAvatar(true)
@@ -35,7 +35,7 @@ const PersonalInformation = ({ user, isOpen, onRequestClose }) => {
       })
       if (rs.ok) {
         const imgUpdate = await rs.json()
-        const updatedAuthUser = { ...authUser, user: { ...authUser.user, avatar: imgUpdate.avatarUrl } }
+        const updatedAuthUser = { ...authUser, user: { ...authUser?.user, avatar: imgUpdate.avatarUrl } }
         setAuthUser(updatedAuthUser)
         localStorage.setItem("tokens-user", JSON.stringify(updatedAuthUser))
       } else {

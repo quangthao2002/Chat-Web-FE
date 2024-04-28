@@ -15,17 +15,15 @@ import { useChatbotContext } from "@/context/ChatbotContext"
 import { IoMdClose } from "react-icons/io"
 import { TfiComment } from "react-icons/tfi"
 
-
-
 const Categories: React.FC = () => {
   const { loading, logout } = useLogOut()
   const { activeTab, setActiveTab } = useTabContext()
   const { getListRequestPending } = useGetListRequestPending()
   const { listPendingRequest } = useFriendStore()
-  const { showChatbot, setShowChatbot } = useChatbotContext();
+  const { showChatbot, setShowChatbot } = useChatbotContext()
   const { authUser } = useAuthContext()
   const [showUserInfo, setShowUserInfo] = useState(false)
-  const avatar = authUser?.user.avatar
+  const avatar = authUser?.user?.avatar
 
   const handleAvatarClick = () => {
     setShowUserInfo(!showUserInfo)
@@ -38,7 +36,7 @@ const Categories: React.FC = () => {
   const handleOpenPhoneBook = () => setActiveTab(Tab.PhoneBook)
 
   useEffect(() => {
-    getListRequestPending(authUser.user.id)
+    getListRequestPending(authUser?.user?.id)
   }, [])
 
   return (
@@ -69,24 +67,24 @@ const Categories: React.FC = () => {
             badgeNumber={listPendingRequest?.length > 0 ? listPendingRequest.length : -1}
           />
           <ButtonCategories Icon={RiCalendarTodoLine} size={35} />
-          
-           <div>
-           {showChatbot ? (
-        <button
-          className="fixed left-1 bottom-96 h-12 w-12 flex justify-center items-center bg-blue-500 text-white rounded-full border-none outline-none shadow-xl cursor-pointer"
-          onClick={() => setShowChatbot(false)}
-        >
-          <IoMdClose className="absolute" />
-        </button>
-      ) : (
-        <button
-          className="fixed left-1 bottom-96 h-12 w-12 flex justify-center items-center bg-blue-500 text-white rounded-full border-none outline-none shadow-xl cursor-pointer"
-          onClick={() => setShowChatbot(true)}
-        >
-          <TfiComment className="absolute" />
-        </button>
-      )}
-           </div>
+
+          <div>
+            {showChatbot ? (
+              <button
+                className="fixed left-1 bottom-96 h-12 w-12 flex justify-center items-center bg-blue-500 text-white rounded-full border-none outline-none shadow-xl cursor-pointer"
+                onClick={() => setShowChatbot(false)}
+              >
+                <IoMdClose className="absolute" />
+              </button>
+            ) : (
+              <button
+                className="fixed left-1 bottom-96 h-12 w-12 flex justify-center items-center bg-blue-500 text-white rounded-full border-none outline-none shadow-xl cursor-pointer"
+                onClick={() => setShowChatbot(true)}
+              >
+                <TfiComment className="absolute" />
+              </button>
+            )}
+          </div>
         </div>
       </div>
 

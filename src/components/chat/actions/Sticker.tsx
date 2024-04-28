@@ -7,7 +7,7 @@ import useSocket from "@/zustand/useSocket"
 const Action1 = () => {
   const { selectedConversation, messages, setMessages } = useConversation()
   const { authUser } = useAuthContext()
-  const currentUserId = authUser.user.id
+  const currentUserId = authUser?.user?.id
   const [isOpen, setIsOpen] = useState(false)
 
   const { sendMessage } = useSocket(currentUserId)
@@ -21,7 +21,7 @@ const Action1 = () => {
       roomId: selectedConversation?.ownerId ? selectedConversation.id : null,
       recipientId: !selectedConversation?.ownerId ? selectedConversation.id : null,
       created_at: new Date(),
-      user: authUser.user,
+      user: authUser?.user,
     }
     sendMessage(newMessage)
     !selectedConversation.ownerId ? setMessages([...messages, newMessage]) : null
