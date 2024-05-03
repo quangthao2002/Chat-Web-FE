@@ -93,7 +93,7 @@ const Message = ({ message, isLastMessage }: any) => {
   const chatClassName = fromMe ? "chat chat-end" : "chat chat-start"
   const avatarClassName = fromMe ? authUser?.user?.avatar : message?.user?.avatar
   const bubbleBgColor = fromMe ? "bg-blue-500" : ""
-  const seenAvatarClassName = fromMe ? selectedConversation.avatar : authUser.user.avatar
+  // const seenAvatarClassName = fromMe ? selectedConversation.avatar : authUser.user.avatar
   const [showOptions, setShowOptions] = useState(false)
 
   const handleMouseEnter = () => {

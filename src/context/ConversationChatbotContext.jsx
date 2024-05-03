@@ -4,10 +4,10 @@ import React, { createContext, useState, useContext } from 'react';
 const ChatbotContext = createContext();
 
 export const ChatbotProvider = ({ children }) => {
-  const [showChatbot, setShowChatbot] = useState(false);
+  const [showConversationChatbot, setShowConversationChatbot] = useState(false);
 
   return (
-    <ChatbotContext.Provider value={{ showChatbot, setShowChatbot }}>
+    <ChatbotContext.Provider value={{ showConversationChatbot, setShowConversationChatbot }}>
       {children}
     </ChatbotContext.Provider>
   );

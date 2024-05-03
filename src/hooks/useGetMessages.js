@@ -15,7 +15,6 @@ const useGetMessages = () => {
       try {
         let response
         if (selectedConversation?.ownerId) {
-          console.log("room", selectedConversation?.id)
           response = await axios.get(`http://localhost:3000/messages/room/${selectedConversation?.id}`)
         } else {
           response = await axios.get(`http://localhost:3000/messages/${userId}/${selectedConversation?.id}`)

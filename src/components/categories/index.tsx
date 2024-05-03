@@ -11,18 +11,17 @@ import PersonalInformation from "../profile/PersonalInformation"
 import ButtonCategories from "./ButtonCategories"
 import useGetListRequestPending from "@/hooks/friend/useGetListRequestPending"
 import { useFriendStore } from "@/zustand/useFriendStore"
-import { useChatbotContext } from "@/context/ChatbotContext"
+import { useChatbotContext } from "@/context/ConversationChatbotContext"
 import { IoMdClose } from "react-icons/io"
 import { TfiComment } from "react-icons/tfi"
-
-
-
+import useConversation from "@/zustand/useConversation"
+import { VscRobot } from "react-icons/vsc";
 const Categories: React.FC = () => {
   const { loading, logout } = useLogOut()
   const { activeTab, setActiveTab } = useTabContext()
   const { getListRequestPending } = useGetListRequestPending()
   const { listPendingRequest } = useFriendStore()
-  const { showChatbot, setShowChatbot } = useChatbotContext();
+  const { showConversationChatbot, setShowConversationChatbot } = useChatbotContext()
   const { authUser } = useAuthContext()
   const [showUserInfo, setShowUserInfo] = useState(false)
   const avatar = authUser?.user.avatar
@@ -33,10 +32,9 @@ const Categories: React.FC = () => {
   const handleModalClose = () => {
     setShowUserInfo(false)
   }
-
+  const {setSelectedConversation, setSelectedConversationChatbot } = useConversation()
   const handleOpenChat = () => setActiveTab(Tab.Chat)
   const handleOpenPhoneBook = () => setActiveTab(Tab.PhoneBook)
-
   useEffect(() => {
     getListRequestPending(authUser.user.id)
   }, [])
@@ -69,24 +67,30 @@ const Categories: React.FC = () => {
             badgeNumber={listPendingRequest?.length > 0 ? listPendingRequest.length : -1}
           />
           <ButtonCategories Icon={RiCalendarTodoLine} size={35} />
-          
-           <div>
-           {showChatbot ? (
-        <button
-          className="fixed left-1 bottom-96 h-12 w-12 flex justify-center items-center bg-blue-500 text-white rounded-full border-none outline-none shadow-xl cursor-pointer"
-          onClick={() => setShowChatbot(false)}
-        >
-          <IoMdClose className="absolute" />
-        </button>
-      ) : (
-        <button
-          className="fixed left-1 bottom-96 h-12 w-12 flex justify-center items-center bg-blue-500 text-white rounded-full border-none outline-none shadow-xl cursor-pointer"
-          onClick={() => setShowChatbot(true)}
-        >
-          <TfiComment className="absolute" />
-        </button>
-      )}
-           </div>
+
+          <div>
+            {showConversationChatbot ? (
+              <button
+                className="fixed left-1 bottom-96 h-12 w-12 flex justify-center items-center  text-white rounded-full border-none outline-none shadow-xl cursor-pointer"
+                onClick={() => {
+                  setShowConversationChatbot(false)
+                  setSelectedConversationChatbot(null)
+                }}
+              >
+                <IoMdClose size={30}  className="absolute" />
+              </button>
+            ) : (
+              <button
+                className="fixed left-1 bottom-96 h-12 w-12 flex justify-center items-center  text-white rounded-full border-none outline-none shadow-xl cursor-pointer"
+                onClick={() => {
+                  setShowConversationChatbot(true)
+                  setSelectedConversation(null)
+                }}
+              >
+                <VscRobot  size={30} className="absolute" />
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
