@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useModalContext } from "@/context/ModalContext"
 import useGetConversations from "@/hooks/useGetConversations"
 import useConversation from "@/zustand/useConversation"

@@ -1,5 +1,8 @@
+import { useAuthContext } from "@/context/AuthContext"
+import { useModalContext } from "@/context/ModalContext"
 import { useSidebarContext } from "@/context/SideBarContext"
-import useModalVideoCall from "@/hooks/video/useVideoCall"
+import useConversation from "@/zustand/useConversation"
+import useSocket from "@/zustand/useSocket"
 
 import { CiSearch } from "react-icons/ci"
 import { GoDeviceCameraVideo } from "react-icons/go"
@@ -7,24 +10,38 @@ import { IoIosInformationCircle } from "react-icons/io"
 import { MdGroupAdd } from "react-icons/md"
 
 const GroupButton = () => {
-  const { setOpenModal } = useModalVideoCall()
-
+  const { handleOpenModalVideoCall: originalOpenModal } = useModalContext()
   const { toggleSidebar } = useSidebarContext()
+  const { selectedConversation } = useConversation()
+  const { authUser } = useAuthContext()
+  const userId = authUser?.user?.id
+  const { callUser } = useSocket(userId)
+
+  const handleOpenModalVideoCall = () => {
+    console.log("selectedConversation: ", selectedConversation)
+    callUser(selectedConversation?.id)
+    originalOpenModal()
+  }
 
   return (
     <div className="flex gap-6 pr-4">
-      <button className="hover:bg-gray-100 rounded-2xl p-1" title="Thêm bạn vào nhóm">
-        <MdGroupAdd size={35} />
-      </button>
-      <button className="hover:bg-gray-100 rounded-2xl" title="Tìm bạn tin nhắn">
-        <CiSearch size={35} />
-      </button>
-      <button onClick={setOpenModal} className="hover:bg-gray-100 rounded-2xl" title="Cuộc gọi video">
-        <GoDeviceCameraVideo size={35} />
-      </button>
-      <button className="hover:bg-gray-100 rounded-2xl" title="thông tin hội thoại" onClick={toggleSidebar}>
-        <IoIosInformationCircle size={35} />
-      </button>
+      <MdGroupAdd size={35} className="hover:bg-gray-100 rounded-2xl p-1" title="Thêm bạn vào nhóm" />
+
+      <CiSearch size={35} className="hover:bg-gray-100 rounded-2xl" title="Tìm bạn tin nhắn" />
+
+      <GoDeviceCameraVideo
+        size={35}
+        className="hover:bg-gray-100 rounded-2xl"
+        title="Cuộc gọi video"
+        onClick={handleOpenModalVideoCall}
+      />
+
+      <IoIosInformationCircle
+        size={35}
+        className="hover:bg-gray-100 rounded-2xl"
+        title="Thông tin hội thoại"
+        onClick={toggleSidebar}
+      />
     </div>
   )
 }

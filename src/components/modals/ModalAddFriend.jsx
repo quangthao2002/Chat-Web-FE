@@ -47,10 +47,10 @@ function ModalAddFriend() {
     }
   }, [])
 
+  if (!isModalOpenAddFriend) return null
+
   return (
-    <div
-      className={`${isModalOpenAddFriend ? "fixed" : "hidden"} z-[1] inset-0 bg-black/40 flex items-center justify-center `}
-    >
+    <div className={`fixed z-[1] inset-0 bg-black/40 flex items-center justify-center `}>
       <div className="bg-white w-1/2 p-5">
         <div className=" flex flex-1 justify-between">
           <h2 className="font-bold text-black mb-2">Thêm bạn</h2>

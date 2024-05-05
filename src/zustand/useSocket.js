@@ -1,9 +1,10 @@
+import { useAuthContext } from "@/context/AuthContext"
 import useConversation from "@/zustand/useConversation.js"
 import { useCallback, useEffect, useRef } from "react"
 import { io } from "socket.io-client"
 import { useFriendStore } from "./useFriendStore"
 import { useGroupStore } from "./useGroupStore"
-import { useAuthContext } from "@/context/AuthContext"
+import { useVideoCallStore } from "./useVideoCallStore"
 
 const useSocket = (userId) => {
   const socketRef = useRef()
@@ -11,6 +12,7 @@ const useSocket = (userId) => {
   const currentUserId = authUser?.user?.id
   const { setMessages, messages, setIsTyping, setUserOnline, selectedConversation } = useConversation()
   const { setSenderId, setReceiverId, setIsAccept } = useFriendStore()
+  const { setCallingUserId, setCalling, setCallInProgress, setCallEnded } = useVideoCallStore()
   const { setListMember, setListAdmin } = useGroupStore()
   const user = JSON.parse(localStorage.getItem("tokens-user"))
   const token = user?.tokens?.accessToken
@@ -144,6 +146,19 @@ const useSocket = (userId) => {
     }
   }, [setIsTyping])
 
+  useEffect(() => {
+    const handleCallMade = (data) => {
+      setCalling(true)
+      setCallingUserId(data.from)
+    }
+
+    socketRef.current.on("call-made", handleCallMade)
+
+    return () => {
+      socketRef.current.off("call-made", handleCallMade)
+    }
+  }, [setCalling, setCallingUserId])
+
   const sendMessage = (newMessage) => {
     socketRef.current.emit("message", newMessage)
   }
@@ -159,6 +174,35 @@ const useSocket = (userId) => {
   const sendGroupMessage = (newMessage) => {
     socketRef.current.emit("group-message", newMessage)
   }
-  return { sendMessage, sendTyping, sendStopTyping, getSocket, sendGroupMessage }
+
+  const answerCall = async (id) => {
+    socketRef.current.emit("answer-call", { from: id, to: userId })
+  }
+
+  const callUser = async (id) => {
+    socketRef.current.emit("call-user", { from: userId, to: id })
+  }
+
+  const leaveCall = () => {
+    setCallEnded(true)
+    setCallInProgress(false)
+    setCalling(false)
+  }
+
+  const joinRoom = (data) => {
+    socketRef.current.emit("join-room", data)
+  }
+
+  return {
+    sendMessage,
+    sendTyping,
+    sendStopTyping,
+    getSocket,
+    sendGroupMessage,
+    callUser,
+    joinRoom,
+    answerCall,
+    leaveCall,
+  }
 }
 export default useSocket

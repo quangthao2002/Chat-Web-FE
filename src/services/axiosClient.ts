@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { LocalStorage } from "@/utils/LocalStorage"
 import { BASE_URL } from "@/utils/constants"
 import axios, { AxiosResponse } from "axios"
@@ -110,10 +111,9 @@ const handleResponse = (res: AxiosResponse<any>) => {
   return res
 }
 
-const handleError = (error: { response: { data: any } }) => {
-  const { data } = error.response
+const handleError = (error: any) => {
   console.error(error)
-  return data
+  return error.response
 }
 
 export default axiosClient

@@ -5,7 +5,6 @@ import "./index.css"
 import { AuthContextProvider } from "./context/AuthContext"
 import { BrowserRouter } from "react-router-dom"
 import TabProvider from "./context/TabContext"
-import VideoProvider from "./context/VideoContext"
 import { SidebarProvider } from "./context/SideBarContext"
 import { ModalProvider } from "./context/ModalContext.tsx"
 import { ChatbotProvider } from "./context/ChatbotContext.jsx"
@@ -17,11 +16,9 @@ ReactDOM.render(
         <TabProvider>
           <ModalProvider>
             <SidebarProvider>
-              <VideoProvider>
-                <ChatbotProvider>
-                  <App />
-                </ChatbotProvider>
-              </VideoProvider>
+              <ChatbotProvider>
+                <App />
+              </ChatbotProvider>
             </SidebarProvider>
           </ModalProvider>
         </TabProvider>

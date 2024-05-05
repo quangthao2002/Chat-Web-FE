@@ -50,8 +50,10 @@ const Member = ({ user, selectedConversation, isAdmin, handleCheckAdmin }: Membe
   )
 
   const handleKickMember = () => handleAction(groupServices.deleteUserFromGroup, "Xoa", "Xoa")
+
   const handleAddAdmin = () =>
     handleAction(groupServices.addAdminToGroup, "Thêm quyền quản trị cho", "Thêm quyền quản trị cho")
+
   const handleDeleteAdmin = () =>
     handleAction(groupServices.deleteAdminFromGroup, "Xóa quyền quản trị cho", "Xóa quyền quản trị cho")
 
