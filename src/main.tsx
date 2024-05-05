@@ -7,7 +7,7 @@ import { BrowserRouter } from "react-router-dom"
 import TabProvider from "./context/TabContext"
 import { SidebarProvider } from "./context/SideBarContext"
 import { ModalProvider } from "./context/ModalContext.tsx"
-import { ChatbotProvider } from "./context/ChatbotContext.jsx"
+import { ChatbotProvider } from "./context/ConversationChatbotContext.jsx"
 
 ReactDOM.render(
   <React.StrictMode>

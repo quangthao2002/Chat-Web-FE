@@ -17,9 +17,9 @@ const Conversation = ({ conversation, lastIndex, usersOnline }: ConversationProp
   const { selectedConversation, setSelectedConversation } = useConversation()
   const isSelected = selectedConversation?.id === conversation?.id
 
-  useEffect(() => {
-    setSelectedConversation(conversation)
-  }, [conversation])
+  // useEffect(() => {
+  //   setSelectedConversation(conversation)
+  // }, [conversation])
 
   return (
     <>

@@ -1,18 +1,17 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useAuthContext } from "@/context/AuthContext"
 import { extractTime } from "@/utils/extractTime"
 
 import axios from "axios"
 import { useCallback, useEffect, useRef, useState } from "react"
 import { IoIosMore } from "react-icons/io"
-import FileMessage from "./FileMessage"
-import useConversation from "@/zustand/useConversation"
 import ModalForwardMessage from "../modals/ModalForwardMessage"
+import FileMessage from "./FileMessage"
 
-const Message = ({ message, isLastMessage }: any) => {
+const Message = ({ message }: any) => {
   const { authUser } = useAuthContext()
   const [isDeleted, setIsDeleted] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const { selectedConversation } = useConversation()
   const [isUnsend, setIsUnsend] = useState(false)
   const [isNearTop, setIsNearTop] = useState(false)
   const messageRef = useRef(null)
@@ -93,7 +92,7 @@ const Message = ({ message, isLastMessage }: any) => {
   const chatClassName = fromMe ? "chat chat-end" : "chat chat-start"
   const avatarClassName = fromMe ? authUser?.user?.avatar : message?.user?.avatar
   const bubbleBgColor = fromMe ? "bg-blue-500" : ""
-  const seenAvatarClassName = fromMe ? selectedConversation.avatar : authUser?.user.avatar
+  // const seenAvatarClassName = fromMe ? selectedConversation.avatar : authUser.user.avatar
   const [showOptions, setShowOptions] = useState(false)
 
   const handleMouseEnter = () => {
