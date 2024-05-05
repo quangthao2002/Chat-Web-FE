@@ -1,8 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 
 *::after,
 *::before,
@@ -20,18 +19,10 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #7589A3 !important;;
+  background: #7589a3 !important;
   border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: #242424;
 }
-/* .lightbox {
-  position: fixed;
-  top: 10;
-  right: 10;
-  bottom: 10;
-  left: 10;
-  z-index: 9999;
-} */

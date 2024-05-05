@@ -8,8 +8,8 @@ const friendServices = {
   getFriends: ({ user }: { user: User }) => {
     return axiosClient.get("/user/get-friends", { params: { user } })
   },
-  searchUser: ({ phone }: { phone: User }) => {
-    return axiosClient.get("/search-user/:searchValue", { params: { searchValue: phone } })
+  searchUser: (phone: string) => {
+    return axiosClient.get(`user/search-user/${phone}`)
   },
   sendFriendRequest: ({ receiverId }: { receiverId: string }) => {
     return axiosClient.post("/user/send-friend-request", { receiverId })
@@ -19,6 +19,9 @@ const friendServices = {
   },
   getListFriendRequestPending: (userId: string) => {
     return axiosClient.get(`/user/get-list-friend-request-pending?userId=${userId}`)
+  },
+  getListFriendRequestSended: (userId: string) => {
+    return axiosClient.get(`/user/get-list-friend-request-sended?userId=${userId}`)
   },
 }
 

@@ -64,7 +64,7 @@ const ModalAddMember: FC = () => {
 
   return (
     <div className={`fixed z-[1] inset-0 bg-black/40 flex justify-center items-center `}>
-      <div className="bg-white w-1/2 p-5">
+      <div className="bg-white w-1/2 p-5 rounded-lg shadow-lg">
         <div className="flex flex-1 justify-between">
           <h2 className="font-bold text-black mb-2">
             Add member to <span className="italic text-blue-900">{selectedConversation?.name}</span>

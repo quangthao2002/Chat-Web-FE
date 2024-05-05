@@ -7,12 +7,12 @@ const SidebarPhoneBook = () => {
 
   const handleOpenFriendList = () => setChildActiveTab(Tab.FriendList)
   const handleOpenJoinedGroups = () => setChildActiveTab(Tab.JoinedGroups)
-  const handleOpenFriendRequest = () => setChildActiveTab(Tab.JoinedRequest)
+  const handleOpenFriendRequest = () => setChildActiveTab(Tab.FriendRequest)
 
   const list = [
     { icon: TiContacts, title: Tab.FriendList, onClick: handleOpenFriendList },
     { icon: TiContacts, title: Tab.JoinedGroups, onClick: handleOpenJoinedGroups },
-    { icon: TiContacts, title: Tab.JoinedRequest, onClick: handleOpenFriendRequest },
+    { icon: TiContacts, title: Tab.FriendRequest, onClick: handleOpenFriendRequest },
   ]
   return (
     <div>

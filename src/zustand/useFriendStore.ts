@@ -9,11 +9,11 @@ type FriendState = {
   listPendingRequest: UserStatusRequest[] | []
   listPendingSended: UserStatusRequest[] | []
 
+  setSenderId: (senderId: string) => void
+  setReceiverId: (receiverId: string) => void
   setListFriend: (listFriend: UserStatusRequest[]) => void
   setListPendingRequest: (listPendingRequest: UserStatusRequest[]) => void
   setListPendingSended: (listPendingSended: UserStatusRequest[]) => void
-  setSenderId: (senderId: string) => void
-  setReceiverId: (receiverId: string) => void
   setIsAccept: (isAccept: boolean) => void
 }
 

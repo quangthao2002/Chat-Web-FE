@@ -1,14 +1,14 @@
-import { UserWithFriend } from "@/types/user"
+import { User } from "@/types/user"
 
 interface IProps {
-  data?: UserWithFriend
+  data?: User
   title?: string
   onClick?: () => void
 }
 
-const AccountItem = ({ data, title, onClick }: IProps) => {
+const AccountItem = ({ data, title = "", onClick }: IProps) => {
   return (
-    <div className={`flex gap-2 items-center border hover:shadow-md rounded p-2 py-1 `}>
+    <div className={`flex gap-2 w-full items-center border hover:shadow-md rounded p-2 py-1 `}>
       <div className="avatar online">
         <div className="w-16 rounded-full">
           <img src={data?.avatar} />
@@ -19,7 +19,7 @@ const AccountItem = ({ data, title, onClick }: IProps) => {
         <p className="text-lg font-semibold">{data?.username}</p>
       </div>
 
-      {onClick && (
+      {onClick ? (
         <button
           type="button"
           onClick={onClick}
@@ -27,6 +27,8 @@ const AccountItem = ({ data, title, onClick }: IProps) => {
         >
           {title}
         </button>
+      ) : (
+        title
       )}
     </div>
   )

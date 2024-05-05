@@ -7,21 +7,22 @@ import { BsThreeDots } from "react-icons/bs"
 import { toast } from "react-toastify"
 import ActionButton from "./ActionButton"
 import useClickOutSide from "@/hooks/group/useClickOutSide"
+import useConversation from "@/zustand/useConversation"
 
 interface MemberProps {
   user: User
-  selectedConversation: any
   isAdmin: boolean
   handleCheckAdmin: (id: string) => boolean
 }
 
-const Member = ({ user, selectedConversation, isAdmin, handleCheckAdmin }: MemberProps) => {
+const Member = ({ user, isAdmin, handleCheckAdmin }: MemberProps) => {
   const [isShowModal, setIsShowModal] = useState(false)
+  const { selectedConversation } = useConversation()
 
   const { authUser } = useAuthContext()
   const userId = authUser?.user?.id
   const isMe = user.id === userId
-  const checkItemAdmin = handleCheckAdmin(user.id)
+  const checkAuthForOther = handleCheckAdmin(user.id)
   const { nodeRef } = useClickOutSide(() => setIsShowModal(false))
 
   const toggleOpenModal = () => {
@@ -46,7 +47,7 @@ const Member = ({ user, selectedConversation, isAdmin, handleCheckAdmin }: Membe
         toast.error(`${errorMessage} ${user.username} thất bại`)
       }
     },
-    [selectedConversation],
+    [selectedConversation?.id, user?.id, user.username],
   )
 
   const handleKickMember = () => handleAction(groupServices.deleteUserFromGroup, "Xoa", "Xoa")
@@ -93,10 +94,12 @@ const Member = ({ user, selectedConversation, isAdmin, handleCheckAdmin }: Membe
       {isAdmin && !isMe && isShowModal && (
         <div className="absolute z-10 right-14 top-0">
           <div className="bg-white border-b border-gray-300 rounded-lg shadow-md w-[15rem]">
-            <ActionButton
-              onClick={checkItemAdmin ? handleDeleteAdmin : handleAddAdmin}
-              text={checkItemAdmin ? "Xóa quyền quản trị" : "Thêm quyền quản trị"}
-            />
+            {!isAdmin && (
+              <ActionButton
+                onClick={checkAuthForOther ? handleDeleteAdmin : handleAddAdmin}
+                text={checkAuthForOther ? "Xóa quyền quản trị" : "Thêm quyền quản trị"}
+              />
+            )}
 
             <ActionButton onClick={handleKickMember} text="Xóa khỏi nhóm" className="text-red-500" />
           </div>

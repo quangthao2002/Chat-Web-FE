@@ -8,7 +8,7 @@ const PhoneBookPage = () => {
 
   return (
     <div>
-      {childActiveTab === Tab.JoinedRequest ? (
+      {childActiveTab === Tab.FriendRequest ? (
         <PhoneBookFriendRequest />
       ) : childActiveTab === Tab.JoinedGroups ? (
         <PhoneBookJoinedGroup />

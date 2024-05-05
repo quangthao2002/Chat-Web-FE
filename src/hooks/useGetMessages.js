@@ -9,6 +9,7 @@ const useGetMessages = () => {
   const { messages, setMessages, selectedConversation } = useConversation()
   const { authUser } = useAuthContext()
   const userId = authUser?.user?.id ?? null
+
   useEffect(() => {
     const getMessages = async () => {
       setLoading(true)
@@ -36,9 +37,11 @@ const useGetMessages = () => {
       getMessages()
     }
   }, [userId, selectedConversation, setMessages]) // Include 'recipientId' in the dependency array
+
   setTimeout(() => {
     setLoading(false)
   }, 500)
+
   return { loading, messages }
 }
 

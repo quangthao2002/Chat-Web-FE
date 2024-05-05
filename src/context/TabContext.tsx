@@ -7,7 +7,7 @@ export enum Tab {
 
   FriendList = "Friend Lists",
   JoinedGroups = "Joined Groups",
-  JoinedRequest = "Friend Requests",
+  FriendRequest = "Friend Requests",
 }
 
 interface TabContextType {

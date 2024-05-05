@@ -208,13 +208,7 @@ const ModalConversationInfo = () => {
                   )}
 
                   {selectedConversation.users.map((user: User, index: number) => (
-                    <Member
-                      key={user.id + index}
-                      user={user}
-                      selectedConversation={selectedConversation}
-                      isAdmin={isAdmin}
-                      handleCheckAdmin={handleCheckAdmin}
-                    />
+                    <Member key={user.id + index} user={user} isAdmin={isAdmin} handleCheckAdmin={handleCheckAdmin} />
                   ))}
                 </div>
               )}

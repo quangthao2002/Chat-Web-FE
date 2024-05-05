@@ -39,19 +39,19 @@ const Search = () => {
 
         <button
           type="submit"
-          className="btn btn-circle border-none bg-gray-200  text-white"
+          className="btn btn-circle border-none bg-gray-200  text-black"
           title="Thêm bạn"
           onClick={handleOpenModalAddFriend}
         >
-          <IoPersonAddOutline />
+          <IoPersonAddOutline size={20} />
         </button>
         <button
           type="submit"
-          className="btn btn-circle border-none bg-gray-200  text-white"
+          className="btn btn-circle border-none bg-gray-200  text-black"
           title="Tạo nhóm chat"
           onClick={handleOpenModalCreateGroup}
         >
-          <AiOutlineUsergroupAdd />
+          <AiOutlineUsergroupAdd size={20} />
         </button>
       </form>
       <div className="divider my-0 py-0 mx-0 h-1 " />
