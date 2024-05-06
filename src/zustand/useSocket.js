@@ -80,7 +80,7 @@ const useSocket = (userId) => {
       socketRef.current.off("add-members")
       socketRef.current.off("delete-members")
     }
-  }, [])
+  }, [currentUserId, setListAdmin, setListMember, userId])
 
   useEffect(() => {
     socketRef.current.on("friend-request-sent", (payload) => {
@@ -92,11 +92,21 @@ const useSocket = (userId) => {
         setIsAccept(true)
       }
     })
+    socketRef.current.on("cancel-friend-request", (payload) => {
+      setSenderId(payload.senderId)
+      setReceiverId(payload.receiverId)
+    })
+    socketRef.current.on("delete-friend-request", (payload) => {
+      setSenderId(payload.senderId)
+      setReceiverId(payload.receiverId)
+    })
     return () => {
       socketRef.current.off("friend-request-sent")
       socketRef.current.off("accept-friend-request")
+      socketRef.current.off("delete-friend-request")
+      socketRef.current.off("cancel-friend-request")
     }
-  }, [])
+  }, [setIsAccept, setReceiverId, setSenderId, userId])
 
   useEffect(() => {
     if (selectedConversation?.ownerId) {

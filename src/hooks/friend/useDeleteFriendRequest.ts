@@ -3,18 +3,18 @@ import friendServices from "@/services/friendServices"
 import { toast } from "react-toastify"
 import useGetListRequestPending from "./useGetListRequestPending"
 
-const useAcceptFriendRequest = () => {
+const useDeleteFriendRequest = () => {
   const { authUser } = useAuthContext()
   const { getListRequestPending } = useGetListRequestPending()
 
-  const acceptFriendRequest = async (senderId: string) => {
+  const deleteFriendRequest = async (senderId: string) => {
     try {
-      const res = await friendServices.acceptFriendRequest({ senderId })
+      const res = await friendServices.deleteFriendRequest({ senderId })
       if (res.data) {
-        toast.success("Accept friend successfully")
+        toast.success("Hủy lời mời kết bạn thành công!")
         getListRequestPending(authUser?.user?.id)
       } else {
-        toast.error("Fail to accept friend")
+        toast.success("Hủy lời mời kết bạn thất bại!")
       }
     } catch (error) {
       console.log("error: ", error)
@@ -22,7 +22,7 @@ const useAcceptFriendRequest = () => {
     }
   }
 
-  return { acceptFriendRequest }
+  return { deleteFriendRequest }
 }
 
-export default useAcceptFriendRequest
+export default useDeleteFriendRequest

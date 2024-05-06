@@ -6,12 +6,20 @@ export interface User {
   isFriend?: boolean
 }
 
-export interface UserStatusRequest {
+interface StatusFriendRequest {
   id: string
-  sender: User
-  status: "pending" | "accepted" | "reject"
+  status: "pending" | "accepted" | "cancel"
 }
 
-export interface UserWithFriend extends User {
-  isFriend?: boolean
+export interface SenderStatusRequest extends StatusFriendRequest {
+  sender: User
+}
+
+export interface ReceiverStatusRequest extends StatusFriendRequest {
+  receiver: User
+}
+
+export interface Friend extends StatusFriendRequest {
+  sender: User
+  receiver: User
 }

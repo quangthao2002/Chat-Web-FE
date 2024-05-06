@@ -15,16 +15,19 @@ import { TiContacts } from "react-icons/ti"
 import { VscRobot } from "react-icons/vsc"
 import PersonalInformation from "../profile/PersonalInformation"
 import ButtonCategories from "./ButtonCategories"
+import useGetFriend from "@/hooks/friend/useGetFriend"
 
 const Categories: React.FC = () => {
+  const [showUserInfo, setShowUserInfo] = useState(false)
+
+  const { authUser } = useAuthContext()
+  const avatar = authUser?.user?.avatar
   const { loading, logout } = useLogOut()
   const { activeTab, setActiveTab } = useTabContext()
+  const { getFriend } = useGetFriend()
   const { getListRequestPending } = useGetListRequestPending()
   const { listPendingRequest } = useFriendStore()
   const { showConversationChatbot, setShowConversationChatbot } = useChatbotContext()
-  const { authUser } = useAuthContext()
-  const [showUserInfo, setShowUserInfo] = useState(false)
-  const avatar = authUser?.user?.avatar
   const { setSelectedConversation, setSelectedConversationChatbot } = useConversation()
 
   const handleAvatarClick = () => {
@@ -38,6 +41,7 @@ const Categories: React.FC = () => {
 
   useEffect(() => {
     getListRequestPending(authUser?.user?.id)
+    getFriend(authUser?.user?.id)
   }, [])
 
   return (

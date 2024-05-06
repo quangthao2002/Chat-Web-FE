@@ -1,20 +1,21 @@
-import { UserStatusRequest } from "@/types/user"
+import { Friend, ReceiverStatusRequest, SenderStatusRequest } from "@/types/user"
 import { create } from "zustand"
 
 type FriendState = {
   senderId: string
   receiverId: string
   isAccept: boolean
-  listFriend: UserStatusRequest[] | []
-  listPendingRequest: UserStatusRequest[] | []
-  listPendingSended: UserStatusRequest[] | []
+  listFriend: Friend[] | []
+  listPendingRequest: SenderStatusRequest[] | []
+  listPendingSended: ReceiverStatusRequest[] | []
 
   setSenderId: (senderId: string) => void
   setReceiverId: (receiverId: string) => void
-  setListFriend: (listFriend: UserStatusRequest[]) => void
-  setListPendingRequest: (listPendingRequest: UserStatusRequest[]) => void
-  setListPendingSended: (listPendingSended: UserStatusRequest[]) => void
+  setListFriend: (listFriend: Friend[]) => void
+  setListPendingRequest: (listPendingRequest: SenderStatusRequest[]) => void
+  setListPendingSended: (listPendingSended: ReceiverStatusRequest[]) => void
   setIsAccept: (isAccept: boolean) => void
+  resetFriendStore: () => void
 }
 
 export const useFriendStore = create<FriendState>((set) => ({
@@ -26,8 +27,9 @@ export const useFriendStore = create<FriendState>((set) => ({
   listPendingSended: [],
   setSenderId: (senderId: string) => set({ senderId }),
   setReceiverId: (receiverId: string) => set({ receiverId }),
-  setListFriend: (listFriend: UserStatusRequest[]) => set({ listFriend }),
-  setListPendingRequest: (listPendingRequest: UserStatusRequest[]) => set({ listPendingRequest }),
-  setListPendingSended: (listPendingSended: UserStatusRequest[]) => set({ listPendingSended }),
+  setListFriend: (listFriend: Friend[]) => set({ listFriend }),
+  setListPendingRequest: (listPendingRequest: SenderStatusRequest[]) => set({ listPendingRequest }),
+  setListPendingSended: (listPendingSended: ReceiverStatusRequest[]) => set({ listPendingSended }),
   setIsAccept: (isAccept: boolean) => set({ isAccept }),
+  resetFriendStore: () => set({ senderId: "", receiverId: "" }),
 }))

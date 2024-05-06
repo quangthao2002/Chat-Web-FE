@@ -1,44 +1,56 @@
+import GifLoading from "@/assets/gif/loading.gif"
+import ImgSearch from "@/assets/img/search.png"
+import { useAuthContext } from "@/context/AuthContext"
 import { useModalContext } from "@/context/ModalContext"
+import useCancelFriendRequest from "@/hooks/friend/useCancelFriendRequest"
+import useDebounce from "@/hooks/friend/useDebounce"
+import useGetListRequestSended from "@/hooks/friend/useGetListRequestSended"
+import useClickOutSide from "@/hooks/group/useClickOutSide"
 import friendServices from "@/services/friendServices"
 import { User } from "@/types/user"
 import { useFriendStore } from "@/zustand/useFriendStore"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import toast from "react-hot-toast"
 import { IoMdClose } from "react-icons/io"
 import AccountItem from "../sidebar/contain/AccountItem"
-import GifLoading from "@/assets/gif/loading.gif"
-import ImgSearch from "@/assets/img/search.png"
-import useDebounce from "@/hooks/friend/useDebounce"
-import useClickOutSide from "@/hooks/group/useClickOutSide"
 
 function ModalAddFriend() {
-  const user = JSON.parse(localStorage.getItem("tokens-user") as string)
-
-  const { listPendingRequest } = useFriendStore()
-  const { isModalOpenAddFriend, handleCloseModalAddFriend: originCloseModal } = useModalContext()
   const [searchValue, setSearchValue] = useState<string>("")
   const [resultSearch, setResultSearch] = useState<User | null>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  const { authUser } = useAuthContext()
+  const user = JSON.parse(localStorage.getItem("tokens-user") as string)
+  const { listPendingSended, resetFriendStore, listFriend } = useFriendStore()
+  const { isModalOpenAddFriend, handleCloseModalAddFriend: originCloseModal } = useModalContext()
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const { getListRequestSended } = useGetListRequestSended()
+  const { cancelFriendRequest } = useCancelFriendRequest()
 
   const debounce = useDebounce({ value: searchValue, delay: 800 })
-  const isFriend = listPendingRequest?.find((item) => item?.sender?.phone === resultSearch?.phone)
+  const isSendRequest = !!listPendingSended?.find((item) => item?.receiver?.phone === resultSearch?.phone)
+  const isFriend = !!listFriend?.find((item) => item?.receiver?.phone === resultSearch?.phone)
   const isMe = resultSearch?.phone === user?.user?.phone
 
   const handleAddFriend = useCallback(async (item: User) => {
     try {
       const res = await friendServices.sendFriendRequest({ receiverId: item.id })
-      console.log(res)
+      if (res?.data) {
+        toast.success(`Đã gửi lời mời kết bạn đến ${item?.username}`)
+        getListRequestSended(authUser?.user?.id)
+      } else {
+        toast.error(`Gửi lời mời kết bạn đến ${item?.username} thất bại`)
+      }
     } catch (error) {
       console.log("Error occurred while adding friend:", error)
       toast.error("Đã xảy ra lỗi khi thêm bạn bè")
     }
   }, [])
 
-  const handleCancelFriend = useCallback(async (item: User) => {
-    if (item?.id) {
-      toast.error(`Đã gửi lời mời kết bạn đến ${item?.username}`)
-    }
-  }, [])
+  const handleCancelRequest = async (item: User) => {
+    resetFriendStore()
+    cancelFriendRequest(item?.id)
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const searchValue = e.target.value
@@ -65,7 +77,6 @@ function ModalAddFriend() {
       setIsLoading(true)
       try {
         const res = await friendServices.searchUser(debounce)
-        console.log("res: ", res)
         if (res?.data?.status === 404) {
           setResultSearch(null)
         } else if (res && res?.data) {
@@ -81,6 +92,12 @@ function ModalAddFriend() {
     }
     handleSearchUser()
   }, [debounce])
+
+  useEffect(() => {
+    if (inputRef?.current) {
+      inputRef?.current?.focus()
+    }
+  }, [inputRef, isModalOpenAddFriend])
 
   if (!isModalOpenAddFriend) return null
 
@@ -100,6 +117,7 @@ function ModalAddFriend() {
 
       <div className="relative">
         <input
+          ref={inputRef}
           onChange={handleChange}
           type="text"
           placeholder="Nhập số điện thoại"
@@ -122,8 +140,14 @@ function ModalAddFriend() {
             {isMe && resultSearch ? (
               <AccountItem data={resultSearch} title="(Bạn)" />
             ) : isFriend && resultSearch ? (
-              <AccountItem data={resultSearch} onClick={() => handleCancelFriend(resultSearch)} title={"Hủy bạn"} />
-            ) : resultSearch && !isFriend ? (
+              <AccountItem data={resultSearch} title="(Bạn bè)" />
+            ) : isSendRequest && resultSearch ? (
+              <AccountItem
+                title={"Hủy lời mời"}
+                data={resultSearch}
+                onClick={() => handleCancelRequest(resultSearch)}
+              />
+            ) : resultSearch ? (
               <AccountItem data={resultSearch} onClick={() => handleAddFriend(resultSearch)} title={"Kết bạn"} />
             ) : (
               <div className="flex flex-1 flex-col items-center justify-center">

@@ -1,12 +1,8 @@
 import axiosClient from "./axiosClient"
 
-interface User {
-  id: string
-}
-
 const friendServices = {
-  getFriends: ({ user }: { user: User }) => {
-    return axiosClient.get("/user/get-friends", { params: { user } })
+  getFriends: (userId: string) => {
+    return axiosClient.get(`/user/get-friends?userId=${userId}`)
   },
   searchUser: (phone: string) => {
     return axiosClient.get(`user/search-user/${phone}`)
@@ -16,6 +12,12 @@ const friendServices = {
   },
   acceptFriendRequest: ({ senderId }: { senderId: string }) => {
     return axiosClient.post("/user/accept-friend-request", { senderId })
+  },
+  deleteFriendRequest: ({ senderId }: { senderId: string }) => {
+    return axiosClient.post("/user/delete-friend-request", { senderId })
+  },
+  cancelFriendRequest: ({ receiverId }: { receiverId: string }) => {
+    return axiosClient.post("/user/cancel-friend-request", { receiverId })
   },
   getListFriendRequestPending: (userId: string) => {
     return axiosClient.get(`/user/get-list-friend-request-pending?userId=${userId}`)

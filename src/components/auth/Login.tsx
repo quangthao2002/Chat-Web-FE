@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react"
 import "./style.css"
 import useSign from "../../hooks/useSignUp.js"
@@ -49,7 +50,7 @@ const Login = () => {
     }
   }
 
-  const handleFileChange = async (event) => {
+  const handleFileChange = async (event: any) => {
     const file = event.target.files[0]
 
     if (file) {
