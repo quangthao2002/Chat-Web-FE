@@ -12,7 +12,8 @@ const useSocket = (userId) => {
   const currentUserId = authUser?.user?.id
   const { setMessages, messages, setIsTyping, setUserOnline, selectedConversation } = useConversation()
   const { setSenderId, setReceiverId, setIsAccept } = useFriendStore()
-  const { setCallingUserId, setCalling, setCallInProgress, setCallEnded } = useVideoCallStore()
+  const { setCallingUserId, setCalling, setCallInProgress, setCallingUserName, setCallingUserAvatar, setCallEnded } =
+    useVideoCallStore()
   const { setListMember, setListAdmin } = useGroupStore()
   const user = JSON.parse(localStorage.getItem("tokens-user"))
   const token = user?.tokens?.accessToken
@@ -160,6 +161,8 @@ const useSocket = (userId) => {
     const handleCallMade = (data) => {
       setCalling(true)
       setCallingUserId(data.from)
+      setCallingUserName(data.name)
+      setCallingUserAvatar(data.avatar)
     }
 
     socketRef.current.on("call-made", handleCallMade)
@@ -190,7 +193,12 @@ const useSocket = (userId) => {
   }
 
   const callUser = async (id) => {
-    socketRef.current.emit("call-user", { from: userId, to: id })
+    socketRef.current.emit("call-user", {
+      from: userId,
+      to: id,
+      name: authUser?.user?.username,
+      avatar: authUser?.user?.avatar,
+    })
   }
 
   const leaveCall = () => {

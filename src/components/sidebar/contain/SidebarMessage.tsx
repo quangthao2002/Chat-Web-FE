@@ -53,7 +53,7 @@ const SidebarMessage = () => {
               lastIndex={index === conversation.length - 1}
             />
           ))}
-          {loading ? <span className="loading loading-spinner"></span> : null}
+          {loading ? <span className="loading loading-spinner m-auto"></span> : null}
         </>
       )}
     </div>

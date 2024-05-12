@@ -49,9 +49,9 @@ const ModalAddMember: FC = () => {
     try {
       const res = await groupServices.addUserToGroup({ roomId: selectedConversation?.id, userIds: selectedUsers })
       if (res?.data) {
-        toast.success(`Add member to ${selectedConversation?.name} successfully`)
+        toast.success(`Thêm thành viên vào ${selectedConversation?.name} thành công!`)
       } else {
-        toast.error(`Add member to ${selectedConversation?.name} failed`)
+        toast.error(`Thêm thành viên vào ${selectedConversation?.name} thất bại!`)
       }
       handleCloseModalAddMember()
     } catch (error) {
@@ -67,7 +67,7 @@ const ModalAddMember: FC = () => {
       <div className="bg-white w-1/2 p-5 rounded-lg shadow-lg">
         <div className="flex flex-1 justify-between">
           <h2 className="font-bold text-black mb-2">
-            Add member to <span className="italic text-blue-900">{selectedConversation?.name}</span>
+            Thêm thành viên vào <span className="italic text-blue-900">{selectedConversation?.name}</span>
           </h2>
           <div className="divider my-0 py-0 mx-1 h-1 " />
           <IoMdClose size={30} className=" hover:text-slate-500 cursor-pointer" onClick={handleCloseModalAddMember} />
@@ -92,16 +92,16 @@ const ModalAddMember: FC = () => {
               </label>
             ))
           ) : (
-            <div className="my-4">No member to add</div>
+            <div className="my-4">Không còn bạn bè để thêm</div>
           )}
         </div>
         <div className="divider my-0 py-0 mx-1 h-1 mb-2" />
         <div className="flex justify-end  gap-2">
           <button type="button" className="btn btn-md" onClick={handleCloseModalAddMember}>
-            Close
+            Đóng
           </button>
           <button type="button" className="btn btn-neutral btn-md" onClick={handleAddMember}>
-            Add member
+            Thêm thành viên
           </button>
         </div>
       </div>

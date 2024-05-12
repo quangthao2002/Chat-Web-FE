@@ -14,7 +14,7 @@ export const useGroupStore = create<GroupState>((set) => ({
   listMember: [],
   listAdmin: [],
   listGroup: [],
-  setListMember: (data: string[]) => set({ listMember: data }),
-  setListAdmin: (data: string[]) => set({ listAdmin: data }),
-  setListGroup: (data: GroupIProps[]) => set({ listGroup: data }),
+  setListMember: (listMember: string[]) => set({ listMember }),
+  setListAdmin: (listAdmin: string[]) => set({ listAdmin }),
+  setListGroup: (listGroup: GroupIProps[]) => set({ listGroup }),
 }))

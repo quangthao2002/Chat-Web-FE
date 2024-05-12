@@ -10,22 +10,26 @@ import { IoIosInformationCircle } from "react-icons/io"
 import { MdGroupAdd } from "react-icons/md"
 
 const GroupButton = () => {
-  const { handleOpenModalVideoCall: originalOpenModal } = useModalContext()
-  const { toggleSidebar } = useSidebarContext()
-  const { selectedConversation } = useConversation()
   const { authUser } = useAuthContext()
   const userId = authUser?.user?.id
   const { callUser } = useSocket(userId)
+  const { handleOpenModalVideoCall: originalOpenModalVideoCall, handleOpenModalAddMember } = useModalContext()
+  const { toggleSidebar } = useSidebarContext()
+  const { selectedConversation } = useConversation()
 
   const handleOpenModalVideoCall = () => {
-    console.log("selectedConversation: ", selectedConversation)
     callUser(selectedConversation?.id)
-    originalOpenModal()
+    originalOpenModalVideoCall()
   }
 
   return (
     <div className="flex gap-6 pr-4">
-      <MdGroupAdd size={35} className="hover:bg-gray-100 rounded-2xl p-1" title="Thêm bạn vào nhóm" />
+      <MdGroupAdd
+        onClick={handleOpenModalAddMember}
+        size={35}
+        className="hover:bg-gray-100 rounded-2xl p-1"
+        title="Thêm bạn vào nhóm"
+      />
 
       <CiSearch size={35} className="hover:bg-gray-100 rounded-2xl" title="Tìm bạn tin nhắn" />
 

@@ -9,7 +9,7 @@ const useGetConversations = () => {
   const [conversation, setConversation] = useState([])
   const { authUser } = useAuthContext()
   const userId = authUser?.user?.id ?? null
-  const { isAccept } = useFriendStore()
+  const { isAccept, setListFriend } = useFriendStore()
   const { listMember, listAdmin } = useGroupStore()
   const [setRefresh] = useState(false)
   const ownerId = JSON.parse(localStorage.getItem("tokens-user"))?.user?.id
@@ -72,6 +72,7 @@ const useGetConversations = () => {
         return isMe ? item.receiver : item.sender
       })
 
+      setListFriend(result)
       setConversation([...result, ...rooms])
     } catch (error) {
       toast.error(error.message)

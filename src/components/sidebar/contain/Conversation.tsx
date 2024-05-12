@@ -17,13 +17,16 @@ const Conversation = ({ conversation, lastIndex, usersOnline }: ConversationProp
   const { selectedConversation, setSelectedConversation } = useConversation()
   const isSelected = selectedConversation?.id === conversation?.id
 
-  // useEffect(() => {
-  //   setSelectedConversation(conversation)
-  // }, [conversation])
+  useEffect(() => {
+    if (isSelected) {
+      setSelectedConversation(conversation)
+    }
+  }, [conversation, isSelected])
 
   return (
     <>
-      <div
+      <button
+        type="button"
         className={`flex gap-2 items-center group rounded p-2 py-1 cursor-pointer ${isSelected ? "bg-slate-200" : "hover:bg-slate-200"}`}
         onClick={() => setSelectedConversation(conversation)}
       >
@@ -40,7 +43,7 @@ const Conversation = ({ conversation, lastIndex, usersOnline }: ConversationProp
             </span>
           </div>
         </div>
-      </div>
+      </button>
 
       {!lastIndex && <div className="divider my-0 py-0 mx-1 h-1 " />}
     </>

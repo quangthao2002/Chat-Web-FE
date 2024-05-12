@@ -8,7 +8,7 @@ import { IoMdClose } from "react-icons/io"
 import { toast } from "react-toastify"
 
 const ModalUserList = () => {
-  const { conversation } = useGetConversations()
+  const { conversation, getConversations } = useGetConversations()
   const [selectedUsers, setSelectedUsers] = useState([])
   const [groupAvatar, setGroupAvatar] = useState(
     "https://png.pngtree.com/png-vector/20190827/ourmid/pngtree-group-avatar-icon-design-vector-png-image_1702778.jpg",
@@ -67,6 +67,7 @@ const ModalUserList = () => {
     try {
       const res = await groupServices.createGroup(newGroup)
       if (res?.data) {
+        getConversations()
         toast.success(`Create group ${res?.data?.name} successfully`)
       } else {
         toast.error("Create group failed")

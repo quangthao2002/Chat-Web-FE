@@ -1,29 +1,30 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useAuthContext } from "@/context/AuthContext"
+import useClickOutSide from "@/hooks/group/useClickOutSide"
+import useGetConversations from "@/hooks/useGetConversations"
 import groupServices from "@/services/groupServices"
 import { User } from "@/types/user"
+import useConversation from "@/zustand/useConversation"
 import { useCallback, useState } from "react"
 import { BsThreeDots } from "react-icons/bs"
 import { toast } from "react-toastify"
 import ActionButton from "./ActionButton"
-import useClickOutSide from "@/hooks/group/useClickOutSide"
-import useConversation from "@/zustand/useConversation"
 
 interface MemberProps {
   user: User
+  isMe: boolean
   isAdmin: boolean
-  handleCheckAdmin: (id: string) => boolean
+  isOwner: boolean
+  hasAdminAuth: boolean
+  hasOwnerAuth: boolean
 }
 
-const Member = ({ user, isAdmin, handleCheckAdmin }: MemberProps) => {
+const Member = ({ user, isMe, isAdmin, isOwner, hasAdminAuth, hasOwnerAuth }: MemberProps) => {
   const [isShowModal, setIsShowModal] = useState(false)
   const { selectedConversation } = useConversation()
-
-  const { authUser } = useAuthContext()
-  const userId = authUser?.user?.id
-  const isMe = user.id === userId
-  const checkAuthForOther = handleCheckAdmin(user.id)
+  const { getConversations } = useGetConversations()
   const { nodeRef } = useClickOutSide(() => setIsShowModal(false))
+
+  const hasAuthentication = (hasAdminAuth && !isMe && !isOwner) || (hasOwnerAuth && !isMe)
 
   const toggleOpenModal = () => {
     setIsShowModal(!isShowModal)
@@ -41,6 +42,7 @@ const Member = ({ user, isAdmin, handleCheckAdmin }: MemberProps) => {
           userIds: [user?.id],
         })
         if (res.data) {
+          getConversations()
           toast.success(`${successMessage} ${user.username} thành công`)
         }
       } catch (error) {
@@ -83,23 +85,19 @@ const Member = ({ user, isAdmin, handleCheckAdmin }: MemberProps) => {
         </div>
       </div>
 
-      {isAdmin && !isMe && (
-        <div className=" hidden group-hover:block">
-          <button onClick={toggleOpenModal} className="ml-auto p-3">
-            <BsThreeDots size={25} />
-          </button>
-        </div>
-      )}
+      <div className={`${hasAuthentication ? "group-hover:visible invisible " : "invisible "} `}>
+        <button onClick={toggleOpenModal} className="ml-auto p-3">
+          <BsThreeDots size={25} />
+        </button>
+      </div>
 
-      {isAdmin && !isMe && isShowModal && (
+      {hasAuthentication && isShowModal && (
         <div className="absolute z-10 right-14 top-0">
           <div className="bg-white border-b border-gray-300 rounded-lg shadow-md w-[15rem]">
-            {!isAdmin && (
-              <ActionButton
-                onClick={checkAuthForOther ? handleDeleteAdmin : handleAddAdmin}
-                text={checkAuthForOther ? "Xóa quyền quản trị" : "Thêm quyền quản trị"}
-              />
-            )}
+            <ActionButton
+              onClick={isAdmin ? handleDeleteAdmin : handleAddAdmin}
+              text={isAdmin ? "Xóa quyền quản trị" : "Thêm quyền quản trị"}
+            />
 
             <ActionButton onClick={handleKickMember} text="Xóa khỏi nhóm" className="text-red-500" />
           </div>

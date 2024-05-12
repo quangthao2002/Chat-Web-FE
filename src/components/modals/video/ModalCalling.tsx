@@ -1,21 +1,25 @@
+import Mp3Sound from "@/assets/mp3/sound.mp3"
 import { useAuthContext } from "@/context/AuthContext"
 import { useModalContext } from "@/context/ModalContext"
 import useSocket from "@/zustand/useSocket"
 import { useVideoCallStore } from "@/zustand/useVideoCallStore"
+import { useRef } from "react"
 import { FaPhoneAlt } from "react-icons/fa"
 import { IoCloseSharp } from "react-icons/io5"
 
 const ModalCalling = () => {
+  const audioRef = useRef<HTMLAudioElement>(null)
+
   const { authUser } = useAuthContext()
   const userId = authUser?.user?.id
   const { answerCall } = useSocket(userId)
   const { handleOpenModalVideoCall } = useModalContext()
-  const { isCalling, setCalling, callingUserId } = useVideoCallStore()
+  const { isCalling, setCalling, callingUserId, callingUserName, callingUserAvatar } = useVideoCallStore()
 
   const handleAccept = async () => {
     handleOpenModalVideoCall()
-    setCalling(false)
     answerCall(callingUserId)
+    setCalling(false)
   }
 
   const handleReject = () => {
@@ -26,11 +30,15 @@ const ModalCalling = () => {
 
   return (
     <div className={`fixed inset-0 flex items-center justify-center z-[100] w-full h-full`}>
-      <div className="p-4 rounded-xl shadow-lg bg-zinc-200 w-[20rem] ">
-        <div className="flex items-center gap-2 w-full justify-center">
-          <span className="text-[20px]">Dav</span>
-          <span className="text-[20px]">đang gọi...</span>
+      <div className="p-4 rounded-xl shadow-lg bg-zinc-200 w-[30rem] flex flex-col gap-6 items-center justify-center">
+        <div className="avatar w-20 h-20 rounded-full overflow-hidden border border-white/40">
+          <img src={callingUserAvatar} alt="calling-user" />
         </div>
+
+        <div className="flex items-center w-full justify-center">
+          <span className="text-[20px]">{callingUserName} đang gọi...</span>
+        </div>
+
         <div className="flex items-center gap-8 justify-center mt-4">
           <button
             type="button"
@@ -49,6 +57,8 @@ const ModalCalling = () => {
             <FaPhoneAlt size={26} color="white" />
           </button>
         </div>
+
+        <audio ref={audioRef} id="audio" src={Mp3Sound} loop autoPlay />
       </div>
     </div>
   )

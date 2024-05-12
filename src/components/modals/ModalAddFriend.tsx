@@ -29,7 +29,7 @@ function ModalAddFriend() {
 
   const debounce = useDebounce({ value: searchValue, delay: 800 })
   const isSendRequest = !!listPendingSended?.find((item) => item?.receiver?.phone === resultSearch?.phone)
-  const isFriend = !!listFriend?.find((item) => item?.receiver?.phone === resultSearch?.phone)
+  const isFriend = !!listFriend?.find((item) => item?.phone === resultSearch?.phone)
   const isMe = resultSearch?.phone === user?.user?.phone
 
   const handleAddFriend = useCallback(async (item: User) => {

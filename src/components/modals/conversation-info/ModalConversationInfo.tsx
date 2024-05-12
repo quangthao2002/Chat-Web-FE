@@ -37,14 +37,17 @@ const ModalConversationInfo = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
   const handleCheckAdmin = (id: string) => {
-    return selectedConversation?.ownerId === id || !!selectedConversation?.admins?.find((item: any) => item.id === id)
+    return !!selectedConversation?.admins?.find((item: any) => item.id === id)
+  }
+
+  const handleCheckOwner = (id: string) => {
+    return selectedConversation?.ownerId === id
   }
 
   const isAdmin = handleCheckAdmin(userId)
+  const isOwner = handleCheckOwner(userId)
 
-  const toggleShowMember = useCallback(() => {
-    setShowMembers((prevShowMembers) => !prevShowMembers)
-  }, [])
+  const toggleShowMember = () => setShowMembers(!showMembers)
 
   const images = useMemo(
     () =>
@@ -207,8 +210,16 @@ const ModalConversationInfo = () => {
                     </button>
                   )}
 
-                  {selectedConversation.users.map((user: User, index: number) => (
-                    <Member key={user.id + index} user={user} isAdmin={isAdmin} handleCheckAdmin={handleCheckAdmin} />
+                  {selectedConversation?.users?.map((user: User, index: number) => (
+                    <Member
+                      key={user?.id + index}
+                      user={user}
+                      isMe={user.id === userId}
+                      isOwner={handleCheckOwner(user?.id)}
+                      isAdmin={handleCheckAdmin(user?.id)}
+                      hasAdminAuth={isAdmin}
+                      hasOwnerAuth={isOwner}
+                    />
                   ))}
                 </div>
               )}
@@ -276,7 +287,7 @@ const ModalConversationInfo = () => {
               <div className="mt-4 ">
                 <Button text="Xóa lịch sử cuộc trò chuyện" onClick={handleLeaveGroup} />
                 <Button text="Rời nhóm" onClick={handleLeaveGroup} />
-                {isAdmin && <Button text="Giải tán nhóm" onClick={handleDeleteGroup} />}
+                {isOwner && <Button text="Giải tán nhóm" onClick={handleDeleteGroup} />}
               </div>
             </div>
           </div>

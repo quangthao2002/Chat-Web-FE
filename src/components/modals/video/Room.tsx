@@ -129,7 +129,7 @@ const Room = () => {
         name: "Đạt's Org",
         debugMode: false, // Add debugMode property with value false
       }}
-      token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlrZXkiOiI2YWNlNDkzMi1iYWNhLTRhOTMtYmIxZC05YTM1OGMxMWE1YWUiLCJwZXJtaXNzaW9ucyI6WyJhbGxvd19qb2luIl0sImlhdCI6MTcxNDgzMzA0MSwiZXhwIjoxNzE0OTE5NDQxfQ.QRElR7I8uWARNJITu77E7wysD_AHZEj9laKkLxtK_o0"
+      token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlrZXkiOiI2YWNlNDkzMi1iYWNhLTRhOTMtYmIxZC05YTM1OGMxMWE1YWUiLCJwZXJtaXNzaW9ucyI6WyJhbGxvd19qb2luIl0sImlhdCI6MTcxNTEwMTgwOCwiZXhwIjoxNzE1MTg4MjA4fQ.1Jcb2Pk4lKd-igeuSWY89YYYZP597Smoql7Mz62VEOo"
     >
       <MeetingView />
     </MeetingProvider>

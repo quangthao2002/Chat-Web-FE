@@ -23,7 +23,6 @@
     "noFallthroughCasesInSwitch": true,
     "paths": {
       "@/*": ["./src/*"],
-      "@/images": ["./src/assets/images"],
     },
   },
   "include": ["src"],

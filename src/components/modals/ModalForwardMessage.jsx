@@ -1,22 +1,17 @@
-import React, { useEffect, useRef, useState } from "react"
-import useGetConversations from "@/hooks/useGetConversations"
-import Modal from "react-modal"
-import { IoMdClose } from "react-icons/io"
-import { FaCamera } from "react-icons/fa"
-import { io } from "socket.io-client"
 import { useAuthContext } from "@/context/AuthContext"
-import toast from "react-hot-toast"
-import useSocket from "@/zustand/useSocket"
+import useGetConversations from "@/hooks/useGetConversations"
 import useConversation from "@/zustand/useConversation"
+import useSocket from "@/zustand/useSocket"
+import { useState } from "react"
+import toast from "react-hot-toast"
+import { IoMdClose } from "react-icons/io"
+import Modal from "react-modal"
 
 const ModalForwardMessage = ({ onClose, messageForward }) => {
   const { sendMessage, sendGroupMessage } = useSocket()
-  const socketRef = useRef()
   const { selectedConversation } = useConversation()
-  const { conversation, addConversation } = useGetConversations()
+  const { conversation } = useGetConversations()
   const [selectedUsers, setSelectedUsers] = useState([])
-  const [groupAvatar, setGroupAvatar] = useState("")
-  const [groupName, setGroupName] = useState("")
   const { authUser } = useAuthContext()
   const ownerId = authUser?.user?.id
 
