@@ -10,6 +10,7 @@ interface VideoCallState {
   isCalling: boolean
   isCallInProgress: boolean
   callEnded: boolean
+  isMicEnabled: boolean
 
   setCallingUserId: (callingUserId: string) => void
   setCallingUserName: (callingUserName: string) => void
@@ -17,6 +18,7 @@ interface VideoCallState {
   setCalling: (isCalling: boolean) => void
   setCallInProgress: (isCallInProgress: boolean) => void
   setCallEnded: (callEnded: boolean) => void
+  toggleMic: () => void
 }
 
 export const useVideoCallStore = create<VideoCallState>((set) => ({
@@ -26,6 +28,7 @@ export const useVideoCallStore = create<VideoCallState>((set) => ({
   isCalling: false,
   isCallInProgress: false,
   callEnded: false,
+  isMicEnabled: true,
 
   setCallingUserId: (callingUserId: string) => set({ callingUserId }),
   setCallingUserName: (callingUserName: string) => set({ callingUserName }),
@@ -33,4 +36,5 @@ export const useVideoCallStore = create<VideoCallState>((set) => ({
   setCalling: (isCalling: boolean) => set({ isCalling }),
   setCallInProgress: (isCallInProgress: boolean) => set({ isCallInProgress }),
   setCallEnded: (callEnded: boolean) => set({ callEnded }),
+  toggleMic: () => set((state) => ({ isMicEnabled: !state.isMicEnabled })),
 }))

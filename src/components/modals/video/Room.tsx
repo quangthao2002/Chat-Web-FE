@@ -5,6 +5,8 @@ import ReactPlayer from "react-player"
 import { ImPhoneHangUp } from "react-icons/im"
 import { IoMdMic } from "react-icons/io"
 import { useModalContext } from "@/context/ModalContext"
+import { useVideoCallStore } from "@/zustand/useVideoCallStore"
+import { CiMicrophoneOff } from "react-icons/ci"
 
 function ParticipantView(props: any) {
   const micRef = useRef(null)
@@ -58,6 +60,7 @@ function ParticipantView(props: any) {
 function MeetingView() {
   const { handleCloseModalVideoCall: originalCloseModal } = useModalContext()
   const [joined, setJoined] = useState(null)
+  const { isMicEnabled, toggleMic } = useVideoCallStore()
   //Get the method which will be used to join the meeting.
   //We will also get the participants list to display all participants
   const { join, participants, end } = useMeeting({
@@ -87,12 +90,6 @@ function MeetingView() {
       {joined && joined == "JOINED" ? (
         <div className="flex items-center flex-wrap gap-4">
           {[...participants.keys()].map((participantId) => {
-            // if (participantId === presenterId)
-            //   return (
-            //     <div className="fixed bottom-0 right-0 w-[20%]">
-            //       <ParticipantView participantId={participantId} key={participantId} />
-            //     </div>
-            //   )
             return <ParticipantView participantId={participantId} key={participantId} />
           })}
         </div>
@@ -102,29 +99,33 @@ function MeetingView() {
         <button onClick={joinMeeting}>Join the meeting</button>
       )}
       <div className="absolute z-10 bottom-0 left-1/2 transform -translate-x-1/2 ">
-        <div className="flex items-center gap-5 justify-center p-4">
-          <IoMdMic
-            size={43}
-            color="#333"
+        <div className="flex items-center gap-5 justify-center p-6">
+          <button
+            type="button"
+            onClick={toggleMic}
             className="p-3 bg-slate-300 border border-gray-400 hover:opacity-70 cursor-pointer shadow-inner rounded-full"
-          />
-          <ImPhoneHangUp
+          >
+            {isMicEnabled ? <IoMdMic size={43} color="#333" /> : <CiMicrophoneOff size={43} color="#333" />}
+          </button>
+          <button
+            type="button"
             onClick={handleCloseModalVideoCall}
-            size={43}
-            color="#fff"
             className="p-3 bg-red-500 border border-red-400 hover:opacity-70 cursor-pointer shadow-inner rounded-full"
-          />
+          >
+            <ImPhoneHangUp size={43} color="#fff" />
+          </button>
         </div>
       </div>
     </div>
   )
 }
 const Room = () => {
+  const { isMicEnabled } = useVideoCallStore()
   return (
     <MeetingProvider
       config={{
         meetingId: import.meta.env.VITE_MEETING_ID,
-        micEnabled: true,
+        micEnabled: isMicEnabled,
         webcamEnabled: true,
         name: "Đạt's Org",
       }}
