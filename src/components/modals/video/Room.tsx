@@ -123,13 +123,12 @@ const Room = () => {
   return (
     <MeetingProvider
       config={{
-        meetingId: "duhf-2o7x-6wt8",
+        meetingId: import.meta.env.VITE_MEETING_ID,
         micEnabled: true,
         webcamEnabled: true,
         name: "Đạt's Org",
-        debugMode: false, // Add debugMode property with value false
       }}
-      token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlrZXkiOiI2YWNlNDkzMi1iYWNhLTRhOTMtYmIxZC05YTM1OGMxMWE1YWUiLCJwZXJtaXNzaW9ucyI6WyJhbGxvd19qb2luIl0sImlhdCI6MTcxNTEwMTgwOCwiZXhwIjoxNzE1MTg4MjA4fQ.1Jcb2Pk4lKd-igeuSWY89YYYZP597Smoql7Mz62VEOo"
+      token={import.meta.env.VITE_MEETING_TOKEN}
     >
       <MeetingView />
     </MeetingProvider>
