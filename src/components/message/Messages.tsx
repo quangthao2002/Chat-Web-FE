@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Message from "./Message.jsx"
 import useGetMessages from "@/hooks/useGetMessages.js"
 import MessageSkeleton from "../skeletons/MessageSkeleton.jsx"
@@ -5,11 +6,13 @@ import { useEffect, useRef } from "react"
 
 const Messages = () => {
   const { loading, messages } = useGetMessages()
-  const lastMessage = useRef()
+  const lastMessage = useRef<any>()
 
   useEffect(() => {
     setTimeout(() => {
-      lastMessage.current?.scrollIntoView({ behavior: "smooth" })
+      if (lastMessage.current) {
+        lastMessage.current?.scrollIntoView({ behavior: "smooth" })
+      }
     }, 500)
   }, [messages])
 

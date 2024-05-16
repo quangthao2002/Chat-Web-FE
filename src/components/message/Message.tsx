@@ -14,11 +14,12 @@ const Message = ({ message }: any) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isUnsend, setIsUnsend] = useState(false)
   const [isNearTop, setIsNearTop] = useState(false)
-  const messageRef = useRef(null)
+  const messageRef = useRef<any>(null)
   const [messageForward, setMessageForward] = useState("")
+
   const checkIsNearTop = useCallback(() => {
     if (messageRef.current) {
-      const messageRect = messageRef.current.getBoundingClientRect()
+      const messageRect = messageRef?.current?.getBoundingClientRect()
       const topThreshold = 390
 
       if (messageRect.top < topThreshold) {
@@ -92,7 +93,6 @@ const Message = ({ message }: any) => {
   const chatClassName = fromMe ? "chat chat-end" : "chat chat-start"
   const avatarClassName = fromMe ? authUser?.user?.avatar : message?.user?.avatar
   const bubbleBgColor = fromMe ? "bg-blue-500" : ""
-  // const seenAvatarClassName = fromMe ? selectedConversation.avatar : authUser.user.avatar
   const [showOptions, setShowOptions] = useState(false)
 
   const handleMouseEnter = () => {

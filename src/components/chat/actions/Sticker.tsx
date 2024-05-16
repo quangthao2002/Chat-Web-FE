@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { LuSticker } from "react-icons/lu"
-import EmojiPicker from "emoji-picker-react"
+import EmojiPicker, { EmojiClickData } from "emoji-picker-react"
 import useConversation from "@/zustand/useConversation"
 import { useAuthContext } from "@/context/AuthContext"
 import useSocket from "@/zustand/useSocket"
@@ -14,7 +14,7 @@ const Action1 = () => {
   const handleOpenEmoji = () => {
     setIsOpen(!isOpen)
   }
-  const onEmojiClicked = async (emojiData: EmojiClickData, event: MouseEvent) => {
+  const onEmojiClicked = async (emojiData: EmojiClickData) => {
     const newMessage = {
       text: emojiData.imageUrl,
       userId: currentUserId,

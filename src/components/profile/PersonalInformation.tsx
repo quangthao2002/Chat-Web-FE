@@ -1,13 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useAuthContext } from "@/context/AuthContext"
-import React, { useState } from "react"
+import { useState } from "react"
+import { toast } from "react-hot-toast"
 import { FaCamera, FaUserEdit } from "react-icons/fa"
 import { IoMdClose } from "react-icons/io"
 import Modal from "react-modal"
-import PersonalUpdate from "./PersonalUpdate"
-import { toast } from "react-hot-toast"
 import ChangeAvatar from "./ChangeAvatar"
+import PersonalUpdate from "./PersonalUpdate"
 
-const PersonalInformation = ({ user, isOpen, onRequestClose }) => {
+const PersonalInformation = ({ user, isOpen, onRequestClose }: any) => {
   const [showChangeAvatar, setShowChangeAvatar] = useState(false)
   const [showPersonalUpdate, setShowPersonalUpdate] = useState(false)
   const { authUser, setAuthUser } = useAuthContext()
@@ -24,7 +25,7 @@ const PersonalInformation = ({ user, isOpen, onRequestClose }) => {
     setShowPersonalUpdate(true)
   }
 
-  const handleImageUpload = async (selectFile) => {
+  const handleImageUpload = async (selectFile: any) => {
     if (selectFile) {
       const formData = new FormData()
       formData.append("avatar", selectFile)
@@ -43,6 +44,7 @@ const PersonalInformation = ({ user, isOpen, onRequestClose }) => {
       }
     }
   }
+
   return (
     <Modal
       isOpen={isOpen}

@@ -1,5 +1,5 @@
 import { useAuthContext } from "@/context/AuthContext"
-import useConversation from "@/zustand/useConversation.js"
+import useConversation from "@/zustand/useConversation"
 import { useCallback, useEffect, useRef } from "react"
 import { io } from "socket.io-client"
 import { useFriendStore } from "./useFriendStore"

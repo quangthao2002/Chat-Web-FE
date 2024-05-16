@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useAuthContext } from "@/context/AuthContext"
 import useGetConversations from "@/hooks/useGetConversations"
 import useConversation from "@/zustand/useConversation"
@@ -7,31 +8,34 @@ import toast from "react-hot-toast"
 import { IoMdClose } from "react-icons/io"
 import Modal from "react-modal"
 
-const ModalForwardMessage = ({ onClose, messageForward }) => {
+const ModalForwardMessage = ({ onClose, messageForward }: any) => {
   const { sendMessage, sendGroupMessage } = useSocket()
   const { selectedConversation } = useConversation()
   const { conversation } = useGetConversations()
-  const [selectedUsers, setSelectedUsers] = useState([])
+  const [selectedUsers, setSelectedUsers] = useState<any[]>([])
   const { authUser } = useAuthContext()
   const ownerId = authUser?.user?.id
 
   Modal.setAppElement("#root")
 
-  const handleUserSelect = (userId) => {
+  const handleUserSelect = (userId: any) => {
     setSelectedUsers((prevSelectedUsers) => [...prevSelectedUsers, userId])
   }
-  const handleUserDeselect = (userId) => {
+  const handleUserDeselect = (userId: any) => {
     setSelectedUsers((prevSelectedUsers) => prevSelectedUsers.filter((id) => id !== userId))
   }
   const handleForwardMessage = () => {
-    selectedUsers.map((newRecipientId) => {
-      const forwardMsg = {}
-      forwardMsg.text = messageForward.text
-      forwardMsg.userId = messageForward?.user?.id
-      forwardMsg.recipientId = !selectedConversation?.ownerId ? newRecipientId : null
-      forwardMsg.roomId = selectedConversation?.ownerId ? newRecipientId : null
-      forwardMsg.created_at = new Date()
-      if (selectedConversation.ownerId) {
+    selectedUsers.forEach((newRecipientId) => {
+      const isGroupMessage = Boolean(selectedConversation?.ownerId)
+      const forwardMsg = {
+        text: messageForward.text,
+        userId: messageForward?.user?.id,
+        recipientId: isGroupMessage ? null : newRecipientId,
+        roomId: isGroupMessage ? newRecipientId : null,
+        created_at: new Date(),
+      }
+
+      if (isGroupMessage) {
         sendGroupMessage(forwardMsg)
       } else {
         sendMessage(forwardMsg)
@@ -66,17 +70,21 @@ const ModalForwardMessage = ({ onClose, messageForward }) => {
       <div className="divider my-0 py-0 mx-1 h-1 " />
       <h2 className="text-black font-semibold mt-2">Add member</h2>
       <div className="max-h-56 overflow-y-auto">
-        {conversation.map((user) => {
-          if (user.id !== ownerId && user?.id !== messageForward.recipientId && user?.id !== messageForward?.user?.id) {
+        {conversation.map((user: any) => {
+          if (
+            user?.id !== ownerId &&
+            user?.id !== messageForward.recipientId &&
+            user?.id !== messageForward?.user?.id
+          ) {
             return (
-              <div key={user.id} className="flex gap-3 p-2">
+              <div key={user?.id} className="flex gap-3 p-2">
                 <input
                   type="checkbox"
                   onChange={(e) => {
                     if (e.target.checked) {
-                      handleUserSelect(user.id)
+                      handleUserSelect(user?.id)
                     } else {
-                      handleUserDeselect(user.id)
+                      handleUserDeselect(user?.id)
                     }
                   }}
                 />
@@ -85,7 +93,7 @@ const ModalForwardMessage = ({ onClose, messageForward }) => {
                     <img src={user?.avatar} />
                   </div>
                 </div>
-                <label className="mt-2">{user.username || user.name}</label>
+                <label className="mt-2">{user?.username || user?.name}</label>
               </div>
             )
           }

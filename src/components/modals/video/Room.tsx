@@ -9,7 +9,7 @@ import { useVideoCallStore } from "@/zustand/useVideoCallStore"
 import { CiMicrophoneOff } from "react-icons/ci"
 
 function ParticipantView(props: any) {
-  const micRef = useRef(null)
+  const micRef = useRef<any>(null)
   const { webcamStream, micStream, webcamOn, micOn, isLocal } = useParticipant(props.participantId)
 
   const videoStream = useMemo(() => {
@@ -26,10 +26,10 @@ function ParticipantView(props: any) {
         const mediaStream = new MediaStream()
         mediaStream.addTrack(micStream.track)
 
-        micRef.current.srcObject = mediaStream
-        micRef.current.play().catch((error) => console.error("videoElem.current.play() failed", error))
+        micRef.current.srcObject = mediaStream // Remove optional chaining operator
+        micRef.current.play().catch((error: any) => console.error("videoElem.current.play() failed", error))
       } else {
-        micRef.current.srcObject = null
+        micRef.current.srcObject = null // Remove optional chaining operator
       }
     }
   }, [micStream, micOn])
@@ -59,7 +59,7 @@ function ParticipantView(props: any) {
 
 function MeetingView() {
   const { handleCloseModalVideoCall: originalCloseModal } = useModalContext()
-  const [joined, setJoined] = useState(null)
+  const [joined, setJoined] = useState<string>("")
   const { isMicEnabled, toggleMic } = useVideoCallStore()
   //Get the method which will be used to join the meeting.
   //We will also get the participants list to display all participants
@@ -128,6 +128,11 @@ const Room = () => {
         micEnabled: isMicEnabled,
         webcamEnabled: true,
         name: "Đạt's Org",
+
+        autoConsume: false,
+        preferredProtocol: undefined,
+        participantId: undefined,
+        debugMode: false,
       }}
       token={import.meta.env.VITE_MEETING_TOKEN}
     >

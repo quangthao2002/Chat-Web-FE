@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { FaFileWord, FaFilePdf, FaFilePowerpoint, FaFile, FaFileExcel } from "react-icons/fa" // Import icons for different file types
 import { saveAs } from "file-saver"
 import { FiDownload } from "react-icons/fi"
 
-const FileMessage = ({ url }) => {
-  const getFileTypeIcon = (url) => {
+const FileMessage = ({ url }: any) => {
+  const getFileTypeIcon = (url: string) => {
     const extension = url.substring(url.lastIndexOf(".")).toLowerCase()
     switch (extension) {
       case ".doc":
@@ -22,8 +23,8 @@ const FileMessage = ({ url }) => {
     }
   }
 
-  const getFileName = (url) => {
-    const filenameFromUrl = decodeURIComponent(url.split("/").pop().split("_").slice(1).join("_"));
+  const getFileName = (url: any) => {
+    const filenameFromUrl = decodeURIComponent(url.split("/").pop().split("_").slice(1).join("_"))
     return filenameFromUrl
   }
 
@@ -31,18 +32,16 @@ const FileMessage = ({ url }) => {
     window.open(url, "_blank")
     return false
   }
-  const handleDownload = (e, url) => {
+  const handleDownload = (e: any, url: any) => {
     e.preventDefault()
-    // Stop the event from propagating to the parent element (openFile)
     e.stopPropagation()
 
-    const filenameToSave = decodeURIComponent(url.split("/").pop().split("_").slice(1).join("_"));
-    // Fetch the file
+    const filenameToSave = decodeURIComponent(url.split("/").pop().split("_").slice(1).join("_"))
 
     saveAs(url, filenameToSave)
   }
 
-  const getBoxColor = (url) => {
+  const getBoxColor = (url: any) => {
     const extension = url.substring(url.lastIndexOf(".")).toLowerCase()
     switch (extension) {
       case ".doc":
@@ -82,8 +81,7 @@ const FileMessage = ({ url }) => {
           className="text-gray-400 text-sm opacity-50 hover:opacity-100 "
         >
           <FiDownload className="w-6 h-6" />
-        </button>{" "}
-        {/* Download icon */}
+        </button>
       </div>
     </div>
   )

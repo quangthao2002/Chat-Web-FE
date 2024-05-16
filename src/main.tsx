@@ -1,13 +1,13 @@
 import React from "react"
 import ReactDOM from "react-dom"
-import App from "./App.tsx"
-import "./index.css"
-import { AuthContextProvider } from "./context/AuthContext"
 import { BrowserRouter } from "react-router-dom"
-import TabProvider from "./context/TabContext"
-import { SidebarProvider } from "./context/SideBarContext"
-import { ModalProvider } from "./context/ModalContext.tsx"
+import App from "./App.tsx"
+import { AuthContextProvider } from "./context/AuthContext"
 import { ChatbotProvider } from "./context/ConversationChatbotContext.jsx"
+import { ModalProvider } from "./context/ModalContext.tsx"
+import { SidebarProvider } from "./context/SideBarContext.tsx"
+import TabProvider from "./context/TabContext"
+import "./index.css"
 
 ReactDOM.render(
   <React.StrictMode>

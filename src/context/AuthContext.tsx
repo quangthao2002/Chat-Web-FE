@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createContext, useContext, useState } from "react"
 
 interface AuthContextType {
@@ -7,9 +8,7 @@ interface AuthContextType {
 
 export const AuthContext = createContext({} as AuthContextType)
 
-export const useAuthContext = () => {
-  return useContext(AuthContext)
-}
+export const useAuthContext = () => useContext(AuthContext)
 
 export const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
   const token = JSON.parse(localStorage.getItem("tokens-user") as string) || null

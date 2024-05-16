@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useAuthContext } from "@/context/AuthContext"
 import useConversation from "@/zustand/useConversation"
 import useSocket from "@/zustand/useSocket"
@@ -16,7 +17,7 @@ const ChatInput = () => {
 
   const [message, setMessage] = useState("")
 
-  const handleSendMessage = (e) => {
+  const handleSendMessage = (e: { preventDefault: () => void }) => {
     e.preventDefault()
     if (!selectedConversation) {
       return
@@ -44,7 +45,8 @@ const ChatInput = () => {
     sendStopTyping(selectedConversation.id)
     setIsOpen(false)
   }
-  const typingHandler = (e) => {
+
+  const typingHandler = (e: any) => {
     setMessage(e.target.value)
     setIsOpen(false)
     if (e.target.value.trim() === "") {
@@ -66,9 +68,11 @@ const ChatInput = () => {
       }
     }, timerLength)
   }
+
   const handleOpenEmojiList = () => {
     setIsOpen(!isOpen)
   }
+
   return (
     <form className="pt-3 pl-4 pr-[10px] pb-[20px] " onSubmit={handleSendMessage}>
       <div className="h-[27px] w-full relative">
@@ -81,7 +85,7 @@ const ChatInput = () => {
         />
         {isOpen && (
           <div className="flex" style={{ position: "absolute", right: 0, bottom: "32px" }}>
-            <Picker data={data} onEmojiSelect={(e) => setMessage(message + e.native)} />
+            <Picker data={data} onEmojiSelect={(e: any) => setMessage(message + e.native)} />
           </div>
         )}
         <div className="absolute inset-y-0 end-0 items-center mr-10 px mt-3 cursor-pointer">

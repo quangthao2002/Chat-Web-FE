@@ -1,5 +1,3 @@
-import React from "react"
-
 const Section = ({ title, buttonText, onClick }: { title: string; buttonText: string; onClick: () => void }) => {
   return (
     <div className="mt-4">

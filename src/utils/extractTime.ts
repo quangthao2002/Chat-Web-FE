@@ -1,4 +1,4 @@
-export function extractTime(dateString) {
+export function extractTime(dateString: string) {
   const date = new Date(dateString)
   const hours = date.getHours()
   const minutes = date.getMinutes()
@@ -7,8 +7,4 @@ export function extractTime(dateString) {
   const minutesString = minutes < 10 ? `0${minutes}` : `${minutes}`
   const strTime = `${hours12}:${minutesString} ${ampm}`
   return strTime
-}
-
-function padZero(number) {
-  return number.toString().padStart(2, "0")
 }

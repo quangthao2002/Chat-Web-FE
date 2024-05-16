@@ -1,9 +1,10 @@
-import { MdAttachFile } from "react-icons/md"
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useAuthContext } from "@/context/AuthContext"
 import useConversation from "@/zustand/useConversation"
+import { MdAttachFile } from "react-icons/md"
 
-import toast from "react-hot-toast"
 import { sendFileToServer } from "@/features/uploadFile/uploadFile"
+import toast from "react-hot-toast"
 
 const File = () => {
   const { selectedConversation, messages, setMessages } = useConversation()
@@ -11,8 +12,9 @@ const File = () => {
 
   const currentUserId = authUser?.user?.id
 
-  const handleFileSelect = async (event) => {
+  const handleFileSelect = async (event: any) => {
     const files = event.target.files
+    const date = String(new Date())
 
     if (!files) {
       toast.error("No file selected.")
@@ -32,7 +34,7 @@ const File = () => {
     formData.append("userId", currentUserId)
     formData.append("roomId", selectedConversation?.ownerId ? selectedConversation.id : null)
     formData.append("recipientId", !selectedConversation?.ownerId ? selectedConversation.id : null)
-    formData.append("created_at", new Date())
+    formData.append("created_at", date)
 
     const fileUrl = await sendFileToServer(formData)
     const newMessages = []

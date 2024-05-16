@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useAuthContext } from "@/context/AuthContext"
 import { useFriendStore } from "@/zustand/useFriendStore"
 import { useGroupStore } from "@/zustand/useGroupStore"
@@ -6,15 +7,15 @@ import toast from "react-hot-toast"
 
 const useGetConversations = () => {
   const [loading, setLoading] = useState(false)
-  const [conversation, setConversation] = useState([])
+  const [conversation, setConversation] = useState<any[]>([])
   const { authUser } = useAuthContext()
   const userId = authUser?.user?.id ?? null
   const { isAccept, setListFriend } = useFriendStore()
   const { listMember, listAdmin } = useGroupStore()
   const [setRefresh] = useState(false)
-  const ownerId = JSON.parse(localStorage.getItem("tokens-user"))?.user?.id
+  const ownerId = JSON.parse(localStorage.getItem("tokens-user") as any)?.user?.id
 
-  const fetchData = useCallback(async (url, accessToken, refreshToken) => {
+  const fetchData = useCallback(async (url: string, accessToken: string, refreshToken: string) => {
     let res = await fetch(url, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -61,7 +62,7 @@ const useGetConversations = () => {
 
     setLoading(true)
     try {
-      const tokensUser = JSON.parse(localStorage.getItem("tokens-user"))
+      const tokensUser = JSON.parse(localStorage.getItem("tokens-user") as any)
       const { accessToken, refreshToken } = tokensUser.tokens
 
       const data = await fetchData(
@@ -75,15 +76,15 @@ const useGetConversations = () => {
         refreshToken,
       )
 
-      const result = data?.map((item) => {
+      const result = data?.map((item: any) => {
         const isMe = item.sender.id === userId
         return isMe ? item.receiver : item.sender
       })
 
       setListFriend(result)
       setConversation([...result, ...rooms])
-    } catch (error) {
-      toast.error(error.message)
+    } catch (error: any) {
+      toast.error(error?.message)
     } finally {
       setLoading(false)
     }
@@ -93,7 +94,7 @@ const useGetConversations = () => {
     getConversations()
   }, [isAccept, listMember, listAdmin, getConversations, authUser])
 
-  const addConversation = (newConversation) => {
+  const addConversation = (newConversation: any) => {
     setConversation((prevConversations) => [...prevConversations, newConversation])
   }
 

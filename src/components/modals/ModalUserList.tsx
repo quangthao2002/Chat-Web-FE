@@ -1,15 +1,16 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useAuthContext } from "@/context/AuthContext"
 import { useModalContext } from "@/context/ModalContext"
 import useGetConversations from "@/hooks/useGetConversations"
 import groupServices from "@/services/groupServices"
-import { useState } from "react"
+import { SetStateAction, useState } from "react"
 import { FaCamera } from "react-icons/fa"
 import { IoMdClose } from "react-icons/io"
 import { toast } from "react-toastify"
 
 const ModalUserList = () => {
   const { conversation, getConversations } = useGetConversations()
-  const [selectedUsers, setSelectedUsers] = useState([])
+  const [selectedUsers, setSelectedUsers] = useState<any[]>([])
   const [groupAvatar, setGroupAvatar] = useState(
     "https://png.pngtree.com/png-vector/20190827/ourmid/pngtree-group-avatar-icon-design-vector-png-image_1702778.jpg",
   )
@@ -18,17 +19,17 @@ const ModalUserList = () => {
   const ownerId = authUser?.user?.id
   const { isModalOpenCreateGroup, handleCloseModalCreateGroup } = useModalContext()
 
-  const handleUserSelect = (userId) => {
+  const handleUserSelect = (userId: any) => {
     setSelectedUsers((prevSelectedUsers) => [...prevSelectedUsers, userId])
   }
-  const handleUserDeselect = (userId) => {
+  const handleUserDeselect = (userId: string) => {
     setSelectedUsers((prevSelectedUsers) => prevSelectedUsers.filter((id) => id !== userId))
   }
 
-  const handleGroupNameChange = (event) => {
+  const handleGroupNameChange = (event: { target: { value: SetStateAction<string> } }) => {
     setGroupName(event.target.value)
   }
-  const handleFileChange = async (event) => {
+  const handleFileChange = async (event: { target: { files: any[] } }) => {
     const file = event.target.files[0]
 
     if (file) {
@@ -93,7 +94,12 @@ const ModalUserList = () => {
           <label htmlFor="avatar-upload">
             <FaCamera size={35} />
           </label>
-          <input id="avatar-upload" type="file" style={{ display: "none" }} onChange={handleFileChange} />
+          <input
+            id="avatar-upload"
+            type="file"
+            style={{ display: "none" }}
+            onChange={(e: any) => handleFileChange(e)}
+          />
           <input
             type="text"
             placeholder="Nhap ten nhom"
@@ -106,22 +112,22 @@ const ModalUserList = () => {
         <h2 className="text-black font-semibold mt-2">Add member</h2>
         <div className="max-h-56 overflow-y-auto">
           {conversation
-            ?.filter((item) => item.username)
-            .map((user) => (
-              <label key={user.id} className="flex gap-3 p-2">
+            ?.filter((item: any) => item?.username)
+            .map((user: any) => (
+              <label key={user?.id} className="flex gap-3 p-2">
                 <input
                   type="checkbox"
                   onChange={(e) => {
                     if (e.target.checked) {
-                      handleUserSelect(user.id)
+                      handleUserSelect(user?.id)
                     } else {
-                      handleUserDeselect(user.id)
+                      handleUserDeselect(user?.id)
                     }
                   }}
                 />
                 <div className="avatar">
                   <div className="w-10 rounded-full">
-                    <img src={user.avatar} onChange={handleFileChange} />
+                    <img src={user.avatar} onChange={(e: any) => handleFileChange(e)} />
                   </div>
                 </div>
                 <div className="mt-2">{user.username}</div>

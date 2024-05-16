@@ -1,18 +1,19 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useAuthContext } from "@/context/AuthContext"
-import React, { useState } from "react"
-import Modal from "react-modal"
+import { useState } from "react"
 import { toast } from "react-hot-toast"
+import Modal from "react-modal"
 
-const PersonalUpdate = ({ user, onRequestClose, isOpen }) => {
+const PersonalUpdate = ({ user, onRequestClose, isOpen }: any) => {
   const [fullName, setFullname] = useState(user.fullName)
   const [email, setEmail] = useState(user.email)
   const [phone, setPhone] = useState(user.phone)
   const { authUser, setAuthUser } = useAuthContext()
 
-  const validateInput = async (updatedUserData) => {
+  const validateInput = async (updatedUserData: any) => {
     // Kiểm tra định dạng email
     const emailRegex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/
-    if (!emailRegex.test(updatedUserData.email)) {
+    if (!emailRegex.test(updatedUserData?.email)) {
       toast.error("Email không hợp lệ")
       return false
     }
@@ -57,7 +58,7 @@ const PersonalUpdate = ({ user, onRequestClose, isOpen }) => {
     return true
   }
 
-  const handleProfileUpdate = async (updatedUserData) => {
+  const handleProfileUpdate = async (updatedUserData: any) => {
     const isValid = await validateInput(updatedUserData)
     if (!isValid) {
       return
@@ -73,15 +74,15 @@ const PersonalUpdate = ({ user, onRequestClose, isOpen }) => {
 
       if (response.ok) {
         const updatedUser = await response.json()
-        setAuthUser((prevState) => ({ ...prevState, user: updatedUser }))
+        setAuthUser((prevState: any) => ({ ...prevState, user: updatedUser }))
         const updatedAuthUser = { ...authUser, user: updatedUser }
         localStorage.setItem("tokens-user", JSON.stringify(updatedAuthUser))
         onRequestClose()
       } else {
         console.log("Error updating profile:", response.statusText)
       }
-    } catch (error) {
-      console.error("Error updating profile:", error.message)
+    } catch (error: any) {
+      console.error("Error updating profile:", error?.message)
     }
   }
 

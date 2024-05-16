@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useAuthContext } from "@/context/AuthContext"
 import useConversation from "@/zustand/useConversation"
 import axios from "axios"
@@ -22,14 +23,14 @@ const useGetMessages = () => {
             `${import.meta.env.VITE_API_ENDPOINT}/messages/${userId}/${selectedConversation?.id}`,
           )
         }
-        if (Array.isArray(response.data)) {
-          setMessages(response.data)
+        if (Array.isArray(response?.data)) {
+          setMessages(response?.data)
         } else {
-          console.error("Invalid data from API:", response.data)
+          console.error("Invalid data from API:", response?.data)
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error("Error fetching messages:", error)
-        toast.error(error.message)
+        toast.error(error?.message)
       } finally {
         setLoading(false) // Set loading state to false after API request completes
       }

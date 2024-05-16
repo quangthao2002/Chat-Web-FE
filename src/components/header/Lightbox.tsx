@@ -1,8 +1,9 @@
-import React, { useState } from "react"
-import { GrCaretPrevious, GrCaretNext } from "react-icons/gr"
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useState } from "react"
+import { GrCaretNext, GrCaretPrevious } from "react-icons/gr"
 import { IoMdClose } from "react-icons/io"
 
-const Lightbox = ({ images, imageIndex, onClose }) => {
+const Lightbox = ({ images, imageIndex, onClose }: any) => {
   const [currentIndex, setCurrentIndex] = useState(imageIndex)
 
   const handleNext = () => {

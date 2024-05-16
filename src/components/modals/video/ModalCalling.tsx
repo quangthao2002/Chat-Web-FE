@@ -29,7 +29,7 @@ const ModalCalling = () => {
   if (!isCalling) return null
 
   return (
-    <div className={`fixed inset-0 flex items-center justify-center z-[100] w-full h-full`}>
+    <div className={`fixed inset-0 flex items-center justify-center z-[100] w-full h-full bg-black/50`}>
       <div className="p-4 rounded-xl shadow-lg bg-zinc-200 w-[30rem] flex flex-col gap-6 items-center justify-center">
         <div className="avatar w-20 h-20 rounded-full overflow-hidden border border-white/40">
           <img src={callingUserAvatar} alt="calling-user" />

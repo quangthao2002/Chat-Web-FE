@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useAuthContext } from "@/context/AuthContext"
 import { LocalStorage } from "@/utils/LocalStorage"
 import { useState } from "react"
@@ -7,7 +8,7 @@ const useLogin = () => {
   const [loadingLogin, setLoading] = useState(false)
   const { setAuthUser } = useAuthContext()
 
-  const login = async ({ username, password }) => {
+  const login = async ({ username, password }: any) => {
     const success = handleInputValidation({ username, password })
     if (!success) {
       return
@@ -27,12 +28,12 @@ const useLogin = () => {
       }
       toast.success("Login successfully")
       localStorage.setItem("tokens-user", JSON.stringify(data))
-      LocalStorage.setToken(data.tokens.accessToken)
-      LocalStorage.setRefreshToken(data.tokens.refreshToken)
+      LocalStorage.setToken(data?.tokens?.accessToken)
+      LocalStorage.setRefreshToken(data?.tokens?.refreshToken)
 
       setAuthUser(data)
-    } catch (error) {
-      toast.error(error.message)
+    } catch (error: any) {
+      toast.error(error?.message)
     } finally {
       setLoading(false)
     }
@@ -41,7 +42,7 @@ const useLogin = () => {
   return { login, loadingLogin }
 }
 export default useLogin
-const handleInputValidation = ({ username, password }) => {
+const handleInputValidation = ({ username, password }: { username: string; password: string }) => {
   if (!username || !password) {
     toast.error("All fields are required")
     return false

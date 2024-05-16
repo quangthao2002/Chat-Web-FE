@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import useConversation from "@/zustand/useConversation"
-import React, { useState } from "react"
+import { useState } from "react"
 
 const ConversationInfo = () => {
   const { selectedConversation } = useConversation()
@@ -36,7 +37,7 @@ const ConversationInfo = () => {
           )}
           {showMembers && selectedConversation.users && (
             <div>
-              {selectedConversation.users.map((user, index) => (
+              {selectedConversation.users.map((user: any, index: number) => (
                 <div key={index} className="flex flex-row gap-2">
                   <div className="avatar mt-1 ml-2">
                     <div className="w-12 rounded-full">
@@ -55,18 +56,15 @@ const ConversationInfo = () => {
         <div className="divider my-0 py-0 mx-1 h-1 mb-2 " />
         <div className="mt-4">
           <p className="text-black font-bold">Ảnh/Video </p>
-          {/* ... */}
           <button className="btn btn-md bg-gray-300 w-80 h-4 text-black">Xem tất cả ảnh</button>
         </div>
         <div className="mt-4 mb-4">
           <p className="text-black font-bold">File</p>
-          {/* ... */}
           <button className="btn btn-md bg-gray-300 w-80 h-4 text-black">Xem tất cả ảnh</button>
         </div>
         <div className="divider my-0 py-0 mx-1 h-1 mb-2" />
         <div className="mt-4">
           <p className="text-black font-bold">Thiết lập bảo mật </p>
-          {/* ... */}
           <div className="mt-4">
             <p className="font-semibold text-red-600 mb-2">Xóa lịch sử cuộc trò chuyện</p>
             <p className="font-semibold text-red-600">Rời nhóm</p>

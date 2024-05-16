@@ -8,7 +8,7 @@ const ModalVideo = () => {
   if (!isModalOpenVideoCall) return null
 
   return (
-    <div className={`fixed inset-0 z-50 w-full h-full`}>
+    <div className={`fixed inset-0 z-50 w-full h-full `}>
       <Room />
       {/* <Test /> */}
     </div>

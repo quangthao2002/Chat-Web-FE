@@ -1,7 +1,6 @@
-import React from "react"
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 const Button = ({ text, onClick }: any) => {
-  // Extracted button component
   return (
     <button
       type="button"
