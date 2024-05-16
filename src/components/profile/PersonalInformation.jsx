@@ -29,7 +29,7 @@ const PersonalInformation = ({ user, isOpen, onRequestClose }) => {
       const formData = new FormData()
       formData.append("avatar", selectFile)
       formData.append("userId", user.id)
-      const rs = await fetch("http://localhost:3000/user/updateAvatar", {
+      const rs = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/user/updateAvatar`, {
         method: "POST",
         body: formData,
       })

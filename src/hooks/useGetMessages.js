@@ -16,9 +16,11 @@ const useGetMessages = () => {
       try {
         let response
         if (selectedConversation?.ownerId) {
-          response = await axios.get(`http://localhost:3000/messages/room/${selectedConversation?.id}`)
+          response = await axios.get(`${import.meta.env.VITE_API_ENDPOINT}/messages/room/${selectedConversation?.id}`)
         } else {
-          response = await axios.get(`http://localhost:3000/messages/${userId}/${selectedConversation?.id}`)
+          response = await axios.get(
+            `${import.meta.env.VITE_API_ENDPOINT}/messages/${userId}/${selectedConversation?.id}`,
+          )
         }
         if (Array.isArray(response.data)) {
           setMessages(response.data)

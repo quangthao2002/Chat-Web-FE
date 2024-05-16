@@ -12,7 +12,7 @@ const Chatbot2 = () => {
   const [messages, setMessages] = useState([{ text: `Hi ${username}👋`, type: "bot" }])
   const { messagesChatbot, setMessagesChatbot, selectedConversationChatbot } = useConversation()
   const [isBotThinking, setIsBotThinking] = useState(false)
-  const API_KEY = "" // Điền API key chatgpt
+  const API_KEY = import.meta.env.VITE_CHAT_BOT // Điền API key chatgpt
 
   const messagesEndRef = useRef(null)
 

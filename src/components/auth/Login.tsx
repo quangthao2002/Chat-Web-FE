@@ -57,7 +57,7 @@ const Login = () => {
       const formData = new FormData()
       formData.append("avatar", file)
 
-      const response = await fetch("http://localhost:3000/messages/uploadImageAndGetUrl", {
+      const response = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/messages/uploadImageAndGetUrl`, {
         method: "POST",
         body: formData,
       })

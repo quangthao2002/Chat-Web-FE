@@ -24,7 +24,7 @@ const useGetConversations = () => {
 
     if (!res.ok) {
       if (data.message === "Unauthorized") {
-        const refreshRes = await fetch("http://localhost:3000/user/refresh-token", {
+        const refreshRes = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/user/refresh-token`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -64,8 +64,16 @@ const useGetConversations = () => {
       const tokensUser = JSON.parse(localStorage.getItem("tokens-user"))
       const { accessToken, refreshToken } = tokensUser.tokens
 
-      const data = await fetchData(`http://localhost:3000/user/get-friends?userId=${userId}`, accessToken, refreshToken)
-      const rooms = await fetchData("http://localhost:3000/room/rooms/user/" + ownerId, accessToken, refreshToken)
+      const data = await fetchData(
+        `${import.meta.env.VITE_API_ENDPOINT}/user/get-friends?userId=${userId}`,
+        accessToken,
+        refreshToken,
+      )
+      const rooms = await fetchData(
+        `${import.meta.env.VITE_API_ENDPOINT}/room/rooms/user/` + ownerId,
+        accessToken,
+        refreshToken,
+      )
 
       const result = data?.map((item) => {
         const isMe = item.sender.id === userId

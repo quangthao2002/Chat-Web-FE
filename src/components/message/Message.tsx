@@ -104,13 +104,13 @@ const Message = ({ message }: any) => {
   }
 
   const handleDeleteMessage = async () => {
-    const response = await axios.post(`http://localhost:3000/messages/deleteMessage/`, { message })
+    const response = await axios.post(`${import.meta.env.VITE_API_ENDPOINT}/messages/deleteMessage/`, { message })
     if (response) {
       setIsDeleted(true)
     }
   }
   const handleUnsendMessage = async () => {
-    const response = await axios.post(`http://localhost:3000/messages/unsendMessage/`, { message })
+    const response = await axios.post(`${import.meta.env.VITE_API_ENDPOINT}/messages/unsendMessage/`, { message })
     if (response) {
       setIsUnsend(true)
     }

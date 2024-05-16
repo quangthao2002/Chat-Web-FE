@@ -25,7 +25,7 @@ const PersonalUpdate = ({ user, onRequestClose, isOpen }) => {
     }
 
     // Kiểm tra xem email hoặc số điện thoại đã tồn tại trong hệ thống hay không
-    const response = await fetch("http://localhost:3000/user/checkExistence", {
+    const response = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/user/checkExistence`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -63,7 +63,7 @@ const PersonalUpdate = ({ user, onRequestClose, isOpen }) => {
       return
     }
     try {
-      const response = await fetch("http://localhost:3000/user/updateProfile", {
+      const response = await fetch("import.meta.env.VITE_API_ENDPOINT/user/updateProfile", {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
