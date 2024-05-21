@@ -4,12 +4,13 @@ import { useChatbotContext } from "@/context/ConversationChatbotContext"
 import useGetConversations from "@/hooks/useGetConversations"
 import { useState } from "react"
 import Conversation from "./Conversation"
+import useConversation from "@/zustand/useConversation"
 
 const SidebarMessage = () => {
   const [userOnline] = useState(new Map())
   const { loading, conversation } = useGetConversations()
   const { showConversationChatbot } = useChatbotContext()
-
+  const { setSelectedChatbotId } = useConversation();
   // useEffect(() => {
   //   const socket = getSocket()
   //   socket?.on("getUsersOnline", (usersOnline: any) => {
