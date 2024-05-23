@@ -2,71 +2,127 @@
 import { useChatbotContext } from "@/context/ConversationChatbotContext"
 import useConversation from "@/zustand/useConversation"
 import { SetStateAction, useRef, useState } from "react"
+import { AiOutlineClose } from "react-icons/ai"
 import { BiLoaderCircle } from "react-icons/bi"
 import { BsRobot, BsSend } from "react-icons/bs"
-import axios from "axios"
+import { CiImageOn } from "react-icons/ci"
+import { MdAttachFile } from "react-icons/md"
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
+
+
+// Just reply to user input with the correct grammar, DO NOT reply to the context of the question or the user input.
+// If the user input is grammatically correct and fluent, just reply "Sounds good."
+
 const Chatbot2 = () => {
+  const GEMINI_API_KEY = 'AIzaSyCR8K7wiULQSDXjs_6s_xki4Mrqo3_5xCU'
   const { showConversationChatbot } = useChatbotContext()
   const [message, setMessage] = useState("")
+  const [image, setImage] = useState(null)
   const { messagesChatbot, setMessagesChatbot, selectedConversationChatbot } = useConversation()
   const [isBotThinking, setIsBotThinking] = useState(false)
-  const API_KEY = import.meta.env.VITE_CHAT_BOT
-
+  const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
   const messagesEndRef = useRef(null)
+  const fileInputRef = useRef(null)
+  const fileInputRefForFile = useRef(null)
+  // const [file, setFile] = useState(null)
+  
+  const handleIconClickForFile = () => {
+    fileInputRefForFile.current.click()
+  }
 
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0])
+  }
+  const handleIconClick = () => {
+    fileInputRef.current.click()
+  }
   const handleChangeMessage = (e: { target: { value: SetStateAction<string> } }) => {
     setMessage(e.target.value)
   }
 
-  const chatbotMessages = messagesChatbot[selectedConversationChatbot.id] || []
+  const chatbotMessages = messagesChatbot[selectedConversationChatbot?.id] || []
+
+  async function fileToGenerativePart(file) {
+    const base64EncodedDataPromise = new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result.split(',')[1]);
+      reader.readAsDataURL(file);
+      
+    });
+    return {
+      inlineData: { data: await base64EncodedDataPromise, mimeType: file.type },
+    };
+  }
   const handleChat = async () => {
     try {
+
       if (!message) return
       setIsBotThinking(true)
-
-      // Add user message to messages
-      setMessagesChatbot(selectedConversationChatbot.id, { text: message, type: "user" })
-
+      setMessagesChatbot(selectedConversationChatbot?.id, { text: message, type: "user" })
+      if(image){
+        const url= URL.createObjectURL(image)
+        setMessagesChatbot(selectedConversationChatbot?.id, { text: url, type: "user" })
+      }
       setMessage("")
-      const API_URL = "https://api.openai.com/v1/chat/completions"
+      const promptText = `Act like you are an expert grammar checker. ${message}  Look for mistakes and make sentences more fluent. Please analyze the following text for a wide range of grammatical aspects and provide corrections. Be thorough in identifying and fixing any grammatical mistakes, including checking for correct punctuation usage, ensuring proper sentence structure, enhancing readability, identifying and correcting spelling mistakes, and verifying subject-verb agreement. Your assistance in ensuring the grammatical accuracy of the text is highly appreciated. Please be thorough in your examination, and provide comprehensive corrections to enhance the overall grammatical integrity of the text.`;
+      setImage(null)
+  
+      if (image) {
+        const model = genAI.getGenerativeModel({ model: "gemini-pro-vision" });
+        const imageParts = await Promise.all(
+          [image].map(fileToGenerativePart)
+        );
+        const result = await model.generateContent([promptText, ...imageParts]);
+        const response = await result.response;
+        const text = response.text();
+        setMessagesChatbot(selectedConversationChatbot?.id, { text: text, type: "bot" })
 
-      // const requestOptions = {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //     Authorization: `Bearer ${API_KEY}`,
-      //   },
-      //   body: JSON.stringify({
-      //     model: "gpt-3.5-turbo",
-      //     messages: [
-      //       {
-      //         role: "system",
-      //         content: "You are a helpful assistant.",
-      //       },
-      //       {
-      //         role: "user",
-      //         content: message,
-      //       },
-      //     ],
-      //   }),
-      // }
-      // const response = await fetch(API_URL, requestOptions)
-      // const data = await response.json()
+      } else {
+        const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+        const result = await model.generateContent(promptText);
+        const response = await result.response;
+        const text = response.text();
+        setMessagesChatbot(selectedConversationChatbot?.id, { text: text, type: "bot" })
+      }
 
-      // console.log(data)
 
-      // const botMessage = data.choices[0].message.content
-      //Flowise
-
-      const response = await axios.post(`http://13.229.141.185:3000/api/v1/prediction/df8adb6d-b146-40a7-9928-3bdd22aabc7f`, { "question":"how are you" })
-      console.log(response);
-      
-      // Add bot message to messages
-      // setMessagesChatbot(selectedConversationChatbot.id, { text: result, type: "bot" })
     } catch (err) {
       console.error(err)
     } finally {
       setIsBotThinking(false)
+    }
+  }
+  const handleImageChange = (e: any) => {
+    
+    setImage(e.target.files[0])
+  }
+  const handleRemoveImage = () => {
+    setImage(null)
+  }
+  function isBlobUrl(url) {
+    return url.startsWith('blob:');
+  }
+  
+  const renderMessage=(msg:any)=> {
+    if (isBlobUrl(msg.text)) {
+      return (
+        <img
+          style={{ maxWidth: "400px", maxHeight: "400px" }}
+          src={msg.text}
+          alt="Uploaded"
+        />
+      );
+    } else {
+      return (
+        <span
+        className={`text-black font-semibold max-w-3xl p-3 rounded-lg ${
+          msg.type === "user" ? "bg-blue-400 text-white mt-4 mb-4" : "bg-gray-300 ml-1 text-red-500"
+        }`}
+      >
+        {msg.text}
+      </span>
+      );
     }
   }
   return (
@@ -77,26 +133,23 @@ const Chatbot2 = () => {
             <div className={`avatar`}>
               <div className="w-12 rounded-full">
                 <img
-                  src={selectedConversationChatbot.avatar}
-                  alt={selectedConversationChatbot.name}
+                  src={selectedConversationChatbot?.avatar}
+                  alt={selectedConversationChatbot?.name}
                   className="rounded-full w-10 h-10"
                 />
               </div>
             </div>
-            <p className="font-bold text-white text-xl mt-2">{selectedConversationChatbot.name}</p>
+            <p className="font-bold text-white text-xl mt-2">{selectedConversationChatbot?.name}</p>
           </div>
 
-          <ul className="p-4 overflow-y-auto flex-grow pb-28">
-            {chatbotMessages.map((msg: any, index: number) => (
+          <ul className="p-4 overflow-y-auto h-24 flex-grow pb-28">
+          {chatbotMessages.map((msg: any, index: number) => (
               <li key={index} className={`flex gap-1 ${msg.type === "user" ? "justify-end" : ""}`}>
                 {msg.type === "bot" && <BsRobot className="w-4 h-4 self-end flex-shrink-0" />}
-                <p
-                  className={`text-black font-normal max-w-80 p-2 rounded-xl ${msg.type === "user" ? "bg-blue-400 text-white mt-4 mb-4" : "bg-gray-300 ml-1"}`}
-                >
-                  {msg.text}
-                </p>
+                {renderMessage(msg)}
               </li>
             ))}
+            
             {isBotThinking && (
               <li className="flex mt-2 ">
                 <BsRobot className="w-6 h-6 self-end mr-2" />
@@ -120,6 +173,36 @@ const Chatbot2 = () => {
                   handleChat()
                 }
               }}
+            />
+            {/* {file && (
+              <div className="relative flex items-center">
+                <span className="mr-2">{file?.name}</span>
+                <AiOutlineClose color="gray" className="cursor-pointer" onClick={() => setFile(null)} />
+              </div>
+            )} */}
+            {image && (
+              <div className="relative">
+                <img src={ URL.createObjectURL(image)} alt="preview" style={{ width: "60px", height: "60px", borderRadius: 5 }} />
+                <AiOutlineClose
+                  color="gray"
+                  className="absolute top-0 right-0 cursor-pointer"
+                  onClick={handleRemoveImage}
+                />
+              </div>
+            )}
+            <MdAttachFile
+              onClick={handleIconClickForFile}
+              size={25}
+              className="text-gray-600 self-center cursor-pointer"
+            />
+            <input type="file" onChange={handleFileChange} style={{ display: "none" }} ref={fileInputRefForFile} />
+            <CiImageOn onClick={handleIconClick} size={25} className="text-gray-600  self-center cursor-pointer" />
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              style={{ display: "none" }}
+              ref={fileInputRef}
             />
             <BsSend className="text-gray-400 w-5 h-5 self-center cursor-pointer" onClick={handleChat} />
           </div>

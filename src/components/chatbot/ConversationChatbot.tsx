@@ -1,5 +1,5 @@
 import useConversation from "@/zustand/useConversation"
-import {  useState } from "react"
+import { useState } from "react"
 
 interface ConversationProps {
   conversation: {
@@ -12,14 +12,16 @@ interface ConversationProps {
 
 const ConversationChatbot = ({ conversation }: ConversationProps) => {
   const [time] = useState(new Date())
-  const { selectedConversationChatbot, setSelectedConversationChatbot } = useConversation()
+  const { selectedConversationChatbot, setSelectedConversationChatbot ,setSelectedChatbotId} = useConversation()
   const isSelected = selectedConversationChatbot?.id === conversation?.id
-
   return (
     <>
       <div
         className={`flex gap-2 items-center hover:bg-sky-500 rounded p-2 py-1 cursor-pointer ${isSelected ? "bg-sky-500" : ""}`}
-        onClick={() => setSelectedConversationChatbot(conversation)}
+        onClick={() => {
+          setSelectedConversationChatbot(conversation);
+          setSelectedChatbotId(conversation.id)
+        }}
       >
         <div className={`avatar`}>
           <div className="w-12 rounded-full">

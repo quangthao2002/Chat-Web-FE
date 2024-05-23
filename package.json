@@ -13,6 +13,7 @@
   "dependencies": {
     "@emoji-mart/data": "^1.1.2",
     "@emoji-mart/react": "^1.1.1",
+    "@google/generative-ai": "^0.11.3",
     "@videosdk.live/react-sdk": "^0.1.90",
     "aws-amplify": "^6.0.23",
     "aws-sdk": "^2.1587.0",

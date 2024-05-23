@@ -134,7 +134,7 @@ const useSocket = (userId) => {
       socketRef.current.off("deleteMessage")
       socketRef.current.off("message")
     }
-  }, [updateMessage])
+  }, [updateMessage,messages,setMessages])
 
   useEffect(() => {
     socketRef.current.on("group-message", (newMessage) => {

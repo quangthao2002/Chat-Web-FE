@@ -6,6 +6,8 @@ type ConversationState = {
   setSelectedConversation: (selectedConversation: any) => void
   selectedConversationChatbot: any
   setSelectedConversationChatbot: (selectedConversationChatbot: any) => void
+  selectedChatbotId: any
+  setSelectedChatbotId: (selectedChatbotId: any) => void
   messages: any[]
   setMessages: (messages: any[]) => void
   messagesChatbot: any
@@ -32,6 +34,8 @@ const useConversation = create<ConversationState>((set) => ({
         [chatbotId]: [...(state.messagesChatbot[chatbotId] || []), newMessage],
       },
     })),
+    selectedChatbotId: null,
+setSelectedChatbotId: (selectedChatbotId) => set({ selectedChatbotId }),
   isTyping: false,
   setIsTyping: (isTyping) => set({ isTyping }),
 

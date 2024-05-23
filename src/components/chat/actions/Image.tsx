@@ -17,7 +17,7 @@ const Image = () => {
       toast.error("No file selected.")
       return
     }
-
+  
     const formData = createFormData(files, currentUserId, selectedConversation)
     const fileUrls = await sendFileToServer(formData)
     const newMessages = createNewMessages(fileUrls, currentUserId, authUser?.user, selectedConversation)

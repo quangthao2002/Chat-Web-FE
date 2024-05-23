@@ -1,6 +1,5 @@
 import { useAuthContext } from "@/context/AuthContext"
 import { useModalContext } from "@/context/ModalContext"
-import { useSidebarContext } from "@/context/SideBarContext"
 import useConversation from "@/zustand/useConversation"
 import useSocket from "@/zustand/useSocket"
 
@@ -13,8 +12,11 @@ const GroupButton = () => {
   const { authUser } = useAuthContext()
   const userId = authUser?.user?.id
   const { callUser } = useSocket(userId)
-  const { handleOpenModalVideoCall: originalOpenModalVideoCall, handleOpenModalAddMember } = useModalContext()
-  const { toggleSidebar } = useSidebarContext()
+  const {
+    handleOpenSidebar,
+    handleOpenModalVideoCall: originalOpenModalVideoCall,
+    handleOpenModalAddMember,
+  } = useModalContext()
   const { selectedConversation } = useConversation()
 
   const handleOpenModalVideoCall = () => {
@@ -44,7 +46,7 @@ const GroupButton = () => {
         size={35}
         className="hover:bg-gray-100 rounded-2xl"
         title="Thông tin hội thoại"
-        onClick={toggleSidebar}
+        onClick={handleOpenSidebar}
       />
     </div>
   )

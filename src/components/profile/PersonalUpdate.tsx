@@ -64,7 +64,7 @@ const PersonalUpdate = ({ user, onRequestClose, isOpen }: any) => {
       return
     }
     try {
-      const response = await fetch("import.meta.env.VITE_API_ENDPOINT/user/updateProfile", {
+      const response = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/user/updateProfile`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
