@@ -24,7 +24,7 @@ const SidebarMessage = () => {
           <ConversationChatbot
             conversation={{
               id: "chatbot1",
-              name: "Chat bot 1",
+              name: "Kaka bot",
               avatar:
                 "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYyIBpDCSNmMpWNR4mDzuhr46_1AuxzoOJsCakUbH2RQ&s",
             }}
@@ -32,7 +32,7 @@ const SidebarMessage = () => {
           <ConversationChatbot
             conversation={{
               id: "chatbot2",
-              name: "Chat bot 2",
+              name: "Depilot",
               avatar:
                 "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYyIBpDCSNmMpWNR4mDzuhr46_1AuxzoOJsCakUbH2RQ&s",
             }}

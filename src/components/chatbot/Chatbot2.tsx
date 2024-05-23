@@ -4,6 +4,7 @@ import useConversation from "@/zustand/useConversation"
 import { SetStateAction, useRef, useState } from "react"
 import { BiLoaderCircle } from "react-icons/bi"
 import { BsRobot, BsSend } from "react-icons/bs"
+import axios from "axios"
 const Chatbot2 = () => {
   const { showConversationChatbot } = useChatbotContext()
   const [message, setMessage] = useState("")
@@ -29,35 +30,39 @@ const Chatbot2 = () => {
       setMessage("")
       const API_URL = "https://api.openai.com/v1/chat/completions"
 
-      const requestOptions = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${API_KEY}`,
-        },
-        body: JSON.stringify({
-          model: "gpt-3.5-turbo",
-          messages: [
-            {
-              role: "system",
-              content: "You are a helpful assistant.",
-            },
-            {
-              role: "user",
-              content: message,
-            },
-          ],
-        }),
-      }
-      const response = await fetch(API_URL, requestOptions)
-      const data = await response.json()
+      // const requestOptions = {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //     Authorization: `Bearer ${API_KEY}`,
+      //   },
+      //   body: JSON.stringify({
+      //     model: "gpt-3.5-turbo",
+      //     messages: [
+      //       {
+      //         role: "system",
+      //         content: "You are a helpful assistant.",
+      //       },
+      //       {
+      //         role: "user",
+      //         content: message,
+      //       },
+      //     ],
+      //   }),
+      // }
+      // const response = await fetch(API_URL, requestOptions)
+      // const data = await response.json()
 
-      console.log(data)
+      // console.log(data)
 
-      const botMessage = data.choices[0].message.content
+      // const botMessage = data.choices[0].message.content
+      //Flowise
 
+      const response = await axios.post(`http://13.229.141.185:3000/api/v1/prediction/df8adb6d-b146-40a7-9928-3bdd22aabc7f`, { "question":"how are you" })
+      console.log(response);
+      
       // Add bot message to messages
-      setMessagesChatbot(selectedConversationChatbot.id, { text: botMessage, type: "bot" })
+      // setMessagesChatbot(selectedConversationChatbot.id, { text: result, type: "bot" })
     } catch (err) {
       console.error(err)
     } finally {
