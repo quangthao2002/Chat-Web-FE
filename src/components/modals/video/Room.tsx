@@ -39,7 +39,7 @@ function ParticipantView(props: any) {
       <audio ref={micRef} autoPlay playsInline muted={isLocal} />
       {webcamOn && (
         <ReactPlayer
-          playsinline // very very imp prop
+          playsinline
           pip={false}
           light={false}
           controls={false}

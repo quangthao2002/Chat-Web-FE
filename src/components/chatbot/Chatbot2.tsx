@@ -7,35 +7,39 @@ import { BiLoaderCircle } from "react-icons/bi"
 import { BsRobot, BsSend } from "react-icons/bs"
 import { CiImageOn } from "react-icons/ci"
 import { MdAttachFile } from "react-icons/md"
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenerativeAI } from "@google/generative-ai"
 
-import Markdown from 'react-markdown'
+import Markdown from "react-markdown"
 
 // Just reply to user input with the correct grammar, DO NOT reply to the context of the question or the user input.
 // If the user input is grammatically correct and fluent, just reply "Sounds good."
 
 const Chatbot2 = () => {
-  const GEMINI_API_KEY = 'AIzaSyCR8K7wiULQSDXjs_6s_xki4Mrqo3_5xCU'
+  const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY
   const { showConversationChatbot } = useChatbotContext()
   const [message, setMessage] = useState("")
   const [image, setImage] = useState(null)
   const { messagesChatbot, setMessagesChatbot, selectedConversationChatbot } = useConversation()
   const [isBotThinking, setIsBotThinking] = useState(false)
-  const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-  const messagesEndRef = useRef(null)
-  const fileInputRef = useRef(null)
-  const fileInputRefForFile = useRef(null)
-  // const [file, setFile] = useState(null)
-  
+  const genAI = new GoogleGenerativeAI(GEMINI_API_KEY)
+  const messagesEndRef = useRef<any>(null)
+  const fileInputRef = useRef<any>(null)
+  const fileInputRefForFile = useRef<any>(null)
+  const [, setFile] = useState(null)
+
   const handleIconClickForFile = () => {
-    fileInputRefForFile.current.click()
+    if (fileInputRefForFile?.current) {
+      fileInputRefForFile?.current?.click()
+    }
   }
 
-  const handleFileChange = (e) => {
+  const handleFileChange = (e: any) => {
     setFile(e.target.files[0])
   }
   const handleIconClick = () => {
-    fileInputRef.current.click()
+    if (fileInputRef?.current) {
+      fileInputRef?.current?.click()
+    }
   }
   const handleChangeMessage = (e: { target: { value: SetStateAction<string> } }) => {
     setMessage(e.target.value)
@@ -43,25 +47,27 @@ const Chatbot2 = () => {
 
   const chatbotMessages = messagesChatbot[selectedConversationChatbot?.id] || []
 
-  async function fileToGenerativePart(file) {
+  async function fileToGenerativePart(file: Blob) {
     const base64EncodedDataPromise = new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result.split(',')[1]);
-      reader.readAsDataURL(file);
-      
-    });
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        if (reader.result) {
+          resolve(reader?.result?.toString()?.split(",")[1])
+        }
+      }
+      reader.readAsDataURL(file)
+    })
     return {
       inlineData: { data: await base64EncodedDataPromise, mimeType: file.type },
-    };
+    }
   }
   const handleChat = async () => {
     try {
-
       if (!message) return
       setIsBotThinking(true)
       setMessagesChatbot(selectedConversationChatbot?.id, { text: message, type: "user" })
-      if(image){
-        const url= URL.createObjectURL(image)
+      if (image) {
+        const url = URL.createObjectURL(image)
         setMessagesChatbot(selectedConversationChatbot?.id, { text: url, type: "user" })
       }
       setMessage("")
@@ -72,7 +78,7 @@ const Chatbot2 = () => {
       Văn bản đã sửa: [Phiên bản văn bản đã được bạn sửa]
       Giải thích: [Giải thích quy tắc ngữ pháp và lý do tại sao phải thay đổi]
       
-      Văn bản gốc: \ ${message}
+      Văn bản gốc:  ${message}
       /* Example Output: 
       - Đoạn văn lúc đầu: Their going to the store, but they're not sure what to buy.  Its a tough decision, you know?  
       - Đoạn văn sau khi sửa: They're going to the store, but they're not sure what to buy. It's a tough decision, you know? 
@@ -85,22 +91,19 @@ const Chatbot2 = () => {
       `
       setImage(null)
       if (image) {
-        const model = genAI.getGenerativeModel({ model: "gemini-pro-vision" });
-        const imageParts = await Promise.all(
-          [image].map(fileToGenerativePart)
-        );
-        const result = await model.generateContent([promptText, ...imageParts]);
-        const response = await result.response;
-        const text = response.text();
+        const model = genAI.getGenerativeModel({ model: "gemini-pro-vision" })
+        const imageParts: any = await Promise.all([image].map(fileToGenerativePart))
+        const result: any = await model.generateContent([promptText, ...imageParts])
+        const response = await result.response
+        const text = response.text()
         setMessagesChatbot(selectedConversationChatbot?.id, { text: text, type: "bot" })
       } else {
-        const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-        const result = await model.generateContent(promptText);
-        const response = await result.response;
-        const text = response.text();     
+        const model = genAI.getGenerativeModel({ model: "gemini-pro" })
+        const result = await model.generateContent(promptText)
+        const response = await result.response
+        const text = response.text()
         setMessagesChatbot(selectedConversationChatbot?.id, { text: text, type: "bot" })
       }
-      
     } catch (err) {
       console.error(err)
     } finally {
@@ -108,34 +111,29 @@ const Chatbot2 = () => {
     }
   }
   const handleImageChange = (e: any) => {
-    
     setImage(e.target.files[0])
   }
   const handleRemoveImage = () => {
     setImage(null)
   }
-  function isBlobUrl(url) {
-    return url.startsWith('blob:');
+  function isBlobUrl(url: string) {
+    return url.startsWith("blob:")
   }
-  
-  const renderMessage=(msg:any)=> {
+
+  const renderMessage = (msg: any) => {
     if (isBlobUrl(msg.text)) {
-      return (
-        <img
-          style={{ maxWidth: "400px", maxHeight: "400px" }}
-          src={msg.text}
-          alt="Uploaded"
-        />
-      );
+      return <img style={{ maxWidth: "400px", maxHeight: "400px" }} src={msg.text} alt="Uploaded" />
     } else {
       const md = msg.text
-      const tag=  msg.type === "user" ? 
-      <p className="text-black max-w-3xl p-3 rounded-lg bg-blue-400 text-white mt-4 mb-4" > {msg.text}</p> : 
-      <p className="text-black max-w-3xl p-3 rounded-lg bg-blue-400 text-white mt-4 mb-4"><Markdown>{md}</Markdown></p>
+      const tag =
+        msg.type === "user" ? (
+          <p className="text-black max-w-3xl p-3 rounded-lg bg-blue-400 text-white mt-4 mb-4"> {msg.text}</p>
+        ) : (
+          <p className="text-black max-w-3xl p-3 rounded-lg bg-blue-400 text-white mt-4 mb-4">
+            <Markdown>{md}</Markdown>
+          </p>
+        )
       return tag
-       
-       
-      
     }
   }
   return (
@@ -156,13 +154,13 @@ const Chatbot2 = () => {
           </div>
 
           <ul className="p-4 overflow-y-auto h-24 flex-grow pb-28">
-          {chatbotMessages.map((msg: any, index: number) => (
+            {chatbotMessages.map((msg: any, index: number) => (
               <li key={index} className={`flex gap-1 ${msg.type === "user" ? "justify-end" : ""}`}>
                 {msg.type === "bot" && <BsRobot className="w-4 h-4 self-end flex-shrink-0" />}
                 {renderMessage(msg)}
               </li>
             ))}
-            
+
             {isBotThinking && (
               <li className="flex mt-2 ">
                 <BsRobot className="w-6 h-6 self-end mr-2" />
@@ -195,7 +193,11 @@ const Chatbot2 = () => {
             )} */}
             {image && (
               <div className="relative">
-                <img src={ URL.createObjectURL(image)} alt="preview" style={{ width: "60px", height: "60px", borderRadius: 5 }} />
+                <img
+                  src={URL.createObjectURL(image)}
+                  alt="preview"
+                  style={{ width: "60px", height: "60px", borderRadius: 5 }}
+                />
                 <AiOutlineClose
                   color="gray"
                   className="absolute top-0 right-0 cursor-pointer"

@@ -26,8 +26,8 @@ const Chatbot1 = () => {
 
       setMessage("")
 
-      const response = await axios.post(`http://13.229.141.185:3000/api/v1/prediction/df8adb6d-b146-40a7-9928-3bdd22aabc7f`, { "question":message })
-     
+      const response = await axios.post(`${import.meta.env.VITE_API_AI_URL}`, { question: message })
+
       // Add bot message to messages
       setMessagesChatbot(selectedConversationChatbot?.id, { text: response?.data?.text, type: "bot" })
     } catch (err) {
