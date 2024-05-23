@@ -5,7 +5,6 @@ import App from "./App.tsx"
 import { AuthContextProvider } from "./context/AuthContext"
 import { ChatbotProvider } from "./context/ConversationChatbotContext.jsx"
 import { ModalProvider } from "./context/ModalContext.tsx"
-import { SidebarProvider } from "./context/SideBarContext.tsx"
 import TabProvider from "./context/TabContext"
 import "./index.css"
 
@@ -15,11 +14,9 @@ ReactDOM.render(
       <AuthContextProvider>
         <TabProvider>
           <ModalProvider>
-            <SidebarProvider>
-              <ChatbotProvider>
-                <App />
-              </ChatbotProvider>
-            </SidebarProvider>
+            <ChatbotProvider>
+              <App />
+            </ChatbotProvider>
           </ModalProvider>
         </TabProvider>
       </AuthContextProvider>

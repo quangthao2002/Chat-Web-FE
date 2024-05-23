@@ -8,6 +8,7 @@ interface ImportMetaEnv {
 
   readonly VITE_MEETING_TOKEN
   readonly VITE_MEETING_ID
+  readonly GEMINI_API_KEY
 }
 
 interface ImportMeta {

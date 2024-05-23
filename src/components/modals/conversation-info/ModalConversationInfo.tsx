@@ -1,21 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, useCallback, useMemo } from "react"
+import Lightbox from "@/components/header/Lightbox"
+import { useAuthContext } from "@/context/AuthContext"
+import { useModalContext } from "@/context/ModalContext"
+import useGetConversations from "@/hooks/useGetConversations"
+import useGetMessages from "@/hooks/useGetMessages"
+import groupServices from "@/services/groupServices"
+import { User } from "@/types/user"
+import useConversation from "@/zustand/useConversation"
 import { saveAs } from "file-saver"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { FaFile, FaFileExcel, FaFilePdf, FaFilePowerpoint, FaFileWord } from "react-icons/fa"
 import { IoIosArrowDown, IoMdClose } from "react-icons/io"
 import { MdFileDownload } from "react-icons/md"
 import { toast } from "react-toastify"
-import { useAuthContext } from "@/context/AuthContext"
-import { useModalContext } from "@/context/ModalContext"
-import { useSidebarContext } from "@/context/SideBarContext"
-import useConversation from "@/zustand/useConversation"
-import useGetConversations from "@/hooks/useGetConversations"
-import useGetMessages from "@/hooks/useGetMessages"
-import Member from "./Member"
 import Button from "./Button"
-import groupServices from "@/services/groupServices"
-import Lightbox from "@/components/header/Lightbox"
-import { User } from "@/types/user"
+import Member from "./Member"
 
 const IMAGE_EXTENSIONS = ["jpg", "jpeg", "png", "gif"]
 const FILE_EXTENSIONS = ["pdf", "doc", "docx", "xls", "xlsx"]
@@ -25,10 +24,9 @@ const ModalConversationInfo = () => {
   const { authUser } = useAuthContext()
   const userId = authUser?.user?.id
   const { selectedConversation, setSelectedConversation } = useConversation()
-  const { isSidebarOpen, toggleSidebar } = useSidebarContext()
-  const { handleOpenModalAddMember } = useModalContext()
+  const { handleOpenModalAddMember, isSidebarOpen, handleCloseSidebar } = useModalContext()
   const { messages } = useGetMessages()
-  const { getConversations } = useGetConversations()
+  const { conversation, getConversations } = useGetConversations()
 
   const [showMembers, setShowMembers] = useState(false)
   const [showAllImages, setShowAllImages] = useState(false)
@@ -135,13 +133,13 @@ const ModalConversationInfo = () => {
       if (res.data) {
         getConversations()
         setSelectedConversation(null)
-        toggleSidebar()
+        handleCloseSidebar()
         toast.success("rời nhóm thành công")
       }
     } catch (error) {
       toast.error("error")
     }
-  }, [getConversations, selectedConversation, setSelectedConversation, toggleSidebar, userId])
+  }, [getConversations, selectedConversation, setSelectedConversation, handleCloseSidebar, userId])
 
   const handleDeleteGroup = useCallback(async () => {
     const listUserId = selectedConversation?.users?.map((item: any) => item.id)
@@ -153,13 +151,20 @@ const ModalConversationInfo = () => {
       if (res.data) {
         getConversations()
         setSelectedConversation(null)
-        toggleSidebar()
+        handleCloseSidebar()
         toast.success("xóa nhóm thành công")
       }
     } catch (error) {
       toast.error("error")
     }
-  }, [getConversations, selectedConversation, setSelectedConversation, toggleSidebar])
+  }, [getConversations, selectedConversation, setSelectedConversation, handleCloseSidebar])
+
+  useEffect(() => {
+    const check = !!conversation?.find((item: any) => item?.id === selectedConversation?.id)
+    if (!check) {
+      handleCloseSidebar()
+    }
+  }, [conversation])
 
   return (
     <>
@@ -172,7 +177,7 @@ const ModalConversationInfo = () => {
               <h1 className="text-black font-extrabold mt-3 mb-3">
                 {selectedConversation?.name ? "Thông tin nhóm" : "Thông tin họp thoại"}
               </h1>
-              <IoMdClose size={30} className=" hover:text-slate-500 cursor-pointer" onClick={toggleSidebar} />
+              <IoMdClose size={30} className=" hover:text-slate-500 cursor-pointer" onClick={handleCloseSidebar} />
             </div>
             <div className="divider my-0 py-0 mx-1 h-1 mb-2" />
             <div className="avatar mt-1 ml-2">
@@ -204,7 +209,7 @@ const ModalConversationInfo = () => {
 
               {showMembers && selectedConversation?.users && (
                 <div className="flex flex-col gap-1 flex-1">
-                  {isAdmin && (
+                  {(isAdmin || isOwner) && (
                     <button onClick={handleOpenModalAddMember} className="btn btn-md bg-gray-400 w-80 h-4 text-black">
                       Thêm thành viên
                     </button>

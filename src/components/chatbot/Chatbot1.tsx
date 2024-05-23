@@ -4,13 +4,12 @@ import useConversation from "@/zustand/useConversation"
 import { SetStateAction, useRef, useState } from "react"
 import { BiLoaderCircle } from "react-icons/bi"
 import { BsRobot, BsSend } from "react-icons/bs"
+import axios from "axios"
 const Chatbot1 = () => {
   const { showConversationChatbot } = useChatbotContext()
   const [message, setMessage] = useState("")
   const { messagesChatbot, setMessagesChatbot, selectedConversationChatbot } = useConversation()
   const [isBotThinking, setIsBotThinking] = useState(false)
-  const API_KEY = import.meta.env.VITE_CHAT_BOT
-
   const messagesEndRef = useRef(null)
 
   const handleChangeMessage = (e: { target: { value: SetStateAction<string> } }) => {
@@ -23,51 +22,20 @@ const Chatbot1 = () => {
       if (!message) return
       setIsBotThinking(true)
 
-      setMessagesChatbot(selectedConversationChatbot.id, { text: message, type: "user" })
+      setMessagesChatbot(selectedConversationChatbot?.id, { text: message, type: "user" })
 
       setMessage("")
-      const API_URL = "https://api.openai.com/v1/chat/completions"
 
-      const requestOptions = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${API_KEY}`,
-        },
-        body: JSON.stringify({
-          model: "gpt-3.5-turbo",
-          messages: [
-            {
-              role: "system",
-              content: "You are a helpful assistant.",
-            },
-            {
-              role: "user",
-              content: message,
-            },
-          ],
-        }),
-      }
-      const response = await fetch(API_URL, requestOptions)
-      const data = await response.json()
-
-
-      const botMessage = data.choices[0].message.content
-
+      const response = await axios.post(`http://13.229.141.185:3000/api/v1/prediction/df8adb6d-b146-40a7-9928-3bdd22aabc7f`, { "question":message })
+     
       // Add bot message to messages
-      setMessagesChatbot(selectedConversationChatbot.id, { text: botMessage, type: "bot" })
+      setMessagesChatbot(selectedConversationChatbot?.id, { text: response?.data?.text, type: "bot" })
     } catch (err) {
       console.error(err)
     } finally {
       setIsBotThinking(false)
     }
   }
-//   const handleImageChange = (e: any) => {
-//     setImage(URL.createObjectURL(e.target.files[0]))
-//   }
-//   const handleRemoveImage = () => {
-//     setImage("")
-//   }
 
   return (
     <>
@@ -83,7 +51,7 @@ const Chatbot1 = () => {
                 />
               </div>
             </div>
-            <p className="font-bold text-white text-xl mt-2">{selectedConversationChatbot.name}</p>
+            <p className="font-bold text-white text-xl mt-2">{selectedConversationChatbot?.name}</p>
           </div>
 
           <ul className="p-4 overflow-y-auto h-24 flex-grow pb-28">
@@ -91,7 +59,7 @@ const Chatbot1 = () => {
               <li key={index} className={`flex gap-1 ${msg.type === "user" ? "justify-end" : ""}`}>
                 {msg.type === "bot" && <BsRobot className="w-4 h-4 self-end flex-shrink-0" />}
                 <p
-                  className={`text-black font-normal max-w-80 p-2 rounded-xl ${msg.type === "user" ? "bg-blue-400 text-white mt-4 mb-4" : "bg-gray-300 ml-1"}`}
+                  className={`text-black  max-w-3xl p-3 rounded-lg ${msg.type === "user" ? "bg-blue-400 text-white mt-4 mb-4" : "bg-gray-300 ml-1 font-semibold"}`}
                 >
                   {msg.text}
                 </p>

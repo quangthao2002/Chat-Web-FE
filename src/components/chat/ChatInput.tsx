@@ -79,7 +79,7 @@ const ChatInput = () => {
         <input
           type="text"
           className="border text-sm rounded-lg  block w-full p-2.5 bg-gray-100 border-gray-600 text-gray-600"
-          placeholder={`Send a message to quangthao`}
+          placeholder={`Send a message`}
           value={message}
           onChange={typingHandler}
         />
