@@ -26,7 +26,7 @@ const Categories: React.FC = () => {
   const { getListRequestPending } = useGetListRequestPending()
   const { listPendingRequest } = useFriendStore()
   const { showConversationChatbot, setShowConversationChatbot } = useChatbotContext()
-  const { setSelectedConversation, setSelectedConversationChatbot } = useConversation()
+  const { setSelectedConversation, setSelectedConversationChatbot,setSelectedChatbotId } = useConversation()
 
   const handleAvatarClick = () => {
     setShowUserInfo(!showUserInfo)
@@ -77,6 +77,7 @@ const Categories: React.FC = () => {
                 onClick={() => {
                   setShowConversationChatbot(false)
                   setSelectedConversationChatbot(null)
+                  setSelectedChatbotId(null)
                 }}
               >
                 <IoMdClose size={30} className="absolute" />

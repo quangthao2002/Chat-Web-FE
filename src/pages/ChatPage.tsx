@@ -10,6 +10,8 @@ import Chatbot2 from "@/components/chatbot/Chatbot2"
 const ChatPage = () => {
   const { selectedConversation, selectedChatbotId, setSelectedConversation } = useConversation()
 
+  console.log(selectedChatbotId, "selectedChatbotId")
+  console.log(selectedConversation, "selectedConversation")
   useEffect(() => {
     return () => {
       setSelectedConversation(null)

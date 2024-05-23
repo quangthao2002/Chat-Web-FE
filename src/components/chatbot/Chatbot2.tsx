@@ -34,7 +34,7 @@ const Chatbot2 = () => {
     setMessage(e.target.value)
   }
 
-  const chatbotMessages = messagesChatbot[selectedConversationChatbot.id] || []
+  const chatbotMessages = messagesChatbot[selectedConversationChatbot?.id] || []
   const handleChat = async () => {
     try {
       if (!message) return
@@ -94,8 +94,8 @@ const Chatbot2 = () => {
             <div className={`avatar`}>
               <div className="w-12 rounded-full">
                 <img
-                  src={selectedConversationChatbot.avatar}
-                  alt={selectedConversationChatbot.name}
+                  src={selectedConversationChatbot?.avatar}
+                  alt={selectedConversationChatbot?.name}
                   className="rounded-full w-10 h-10"
                 />
               </div>

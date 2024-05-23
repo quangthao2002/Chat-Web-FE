@@ -17,5 +17,4 @@ const InfoAccount = () => {
     </div>
   )
 }
-
 export default InfoAccount
