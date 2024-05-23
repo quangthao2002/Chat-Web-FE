@@ -9,7 +9,7 @@ import { CiImageOn } from "react-icons/ci"
 import { MdAttachFile } from "react-icons/md"
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-
+import Markdown from 'react-markdown'
 
 // Just reply to user input with the correct grammar, DO NOT reply to the context of the question or the user input.
 // If the user input is grammatically correct and fluent, just reply "Sounds good."
@@ -65,9 +65,25 @@ const Chatbot2 = () => {
         setMessagesChatbot(selectedConversationChatbot?.id, { text: url, type: "user" })
       }
       setMessage("")
-      const promptText = `Act like you are an expert grammar checker. ${message}  Look for mistakes and make sentences more fluent. Please analyze the following text for a wide range of grammatical aspects and provide corrections. Be thorough in identifying and fixing any grammatical mistakes, including checking for correct punctuation usage, ensuring proper sentence structure, enhancing readability, identifying and correcting spelling mistakes, and verifying subject-verb agreement. Your assistance in ensuring the grammatical accuracy of the text is highly appreciated. Please be thorough in your examination, and provide comprehensive corrections to enhance the overall grammatical integrity of the text.`;
+      const promptText = `Bạn là một AI kiểm tra ngữ pháp chuyên nghiệp. Hãy phân tích kỹ lưỡng văn bản hoặc hình ảnh của người dùng về nhiều khía cạnh ngữ pháp, bao gồm dấu câu, chính tả, ngữ pháp và độ rõ ràng. 
+      Mục tiêu của bạn là đưa ra các chỉnh sửa toàn diện và giải thích rõ ràng để nâng cao độ rõ ràng và chính xác tổng thể của bài viết.:
+      
+      Văn bản gốc: [Văn bản gốc của người dùng]
+      Văn bản đã sửa: [Phiên bản văn bản đã được bạn sửa]
+      Giải thích: [Giải thích quy tắc ngữ pháp và lý do tại sao phải thay đổi]
+      
+      Văn bản gốc: \ ${message}
+      /* Example Output: 
+      - Đoạn văn lúc đầu: Their going to the store, but they're not sure what to buy.  Its a tough decision, you know?  
+      - Đoạn văn sau khi sửa: They're going to the store, but they're not sure what to buy. It's a tough decision, you know? 
+      - Giải thích: 
+        - "Their" sửa thành "They're" bởi vì nó là dạng viết tắt của "they are" 
+        - "Its" sửa thành "It's"  bởi vì nó là dạng viết tắt của "it is". 
+      Remember to just add one /n for each row
+      Instead of using 
+*/
+      `
       setImage(null)
-  
       if (image) {
         const model = genAI.getGenerativeModel({ model: "gemini-pro-vision" });
         const imageParts = await Promise.all(
@@ -77,16 +93,14 @@ const Chatbot2 = () => {
         const response = await result.response;
         const text = response.text();
         setMessagesChatbot(selectedConversationChatbot?.id, { text: text, type: "bot" })
-
       } else {
         const model = genAI.getGenerativeModel({ model: "gemini-pro" });
         const result = await model.generateContent(promptText);
         const response = await result.response;
-        const text = response.text();
+        const text = response.text();     
         setMessagesChatbot(selectedConversationChatbot?.id, { text: text, type: "bot" })
       }
-
-
+      
     } catch (err) {
       console.error(err)
     } finally {
@@ -114,15 +128,14 @@ const Chatbot2 = () => {
         />
       );
     } else {
-      return (
-        <span
-        className={`text-black font-semibold max-w-3xl p-3 rounded-lg ${
-          msg.type === "user" ? "bg-blue-400 text-white mt-4 mb-4" : "bg-gray-300 ml-1 text-red-500"
-        }`}
-      >
-        {msg.text}
-      </span>
-      );
+      const md = msg.text
+      const tag=  msg.type === "user" ? 
+      <p className="text-black max-w-3xl p-3 rounded-lg bg-blue-400 text-white mt-4 mb-4" > {msg.text}</p> : 
+      <p className="text-black max-w-3xl p-3 rounded-lg bg-blue-400 text-white mt-4 mb-4"><Markdown>{md}</Markdown></p>
+      return tag
+       
+       
+      
     }
   }
   return (
