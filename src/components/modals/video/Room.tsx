@@ -125,20 +125,33 @@ const Room = () => {
     <MeetingProvider
       config={{
         meetingId: "duhf-2o7x-6wt8",
-
         micEnabled: isMicEnabled,
         webcamEnabled: true,
         name: "Đạt's Org",
-
-        autoConsume: false,
-        preferredProtocol: undefined,
-        participantId: undefined,
-        debugMode: true,
+        debugMode: false,
       }}
-      token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlrZXkiOiI2YWNlNDkzMi1iYWNhLTRhOTMtYmIxZC05YTM1OGMxMWE1YWUiLCJwZXJtaXNzaW9ucyI6WyJhbGxvd19qb2luIl0sImlhdCI6MTcxNjU1MzkxNSwiZXhwIjoxNzE2NjQwMzE1fQ.Wtj8RFpQzU9DFydBshkrQYwsDzgcfj7IaZOiQo9Xs4w"
+      token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlrZXkiOiI2YWNlNDkzMi1iYWNhLTRhOTMtYmIxZC05YTM1OGMxMWE1YWUiLCJwZXJtaXNzaW9ucyI6WyJhbGxvd19qb2luIl0sImlhdCI6MTcxNjU1OTg1NCwiZXhwIjoxNzE2NjQ2MjU0fQ._h3j2ZKus7kajA_76kWxhHEeaUGyqSuUPIDM-FXcIVg"
     >
       <MeetingView />
     </MeetingProvider>
+
+    // <MeetingProvider
+    //   config={{
+    //     meetingId: "duhf-2o7x-6wt8",
+
+    //     micEnabled: isMicEnabled,
+    //     webcamEnabled: true,
+    //     name: "Đạt's Org",
+
+    //     autoConsume: false,
+    //     preferredProtocol: undefined,
+    //     participantId: undefined,
+    //     debugMode: false,
+    //   }}
+    //   token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlrZXkiOiI2YWNlNDkzMi1iYWNhLTRhOTMtYmIxZC05YTM1OGMxMWE1YWUiLCJwZXJtaXNzaW9ucyI6WyJhbGxvd19qb2luIl0sImlhdCI6MTcxNjU1OTg1NCwiZXhwIjoxNzE2NjQ2MjU0fQ._h3j2ZKus7kajA_76kWxhHEeaUGyqSuUPIDM-FXcIVg"
+    // >
+    //   <MeetingView />
+    // </MeetingProvider>
   )
 }
 export default Room
